@@ -1,9 +1,11 @@
-<!DOCTYPE html><html lang="vi">
+<!DOCTYPE html>
+
+<html lang="vi">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>FilmNoir – Đặt Lịch Chụp</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+<title>FilmNoir – Lấy Số Thứ Tự</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
 <style>
   :root {
     --beige: #f5efe6;
@@ -20,7 +22,7 @@
   body {
     background:var(--beige);
     color:var(--black);
-    font-family:'Cormorant Garamond',serif;
+    font-family:'Be Vietnam Pro',sans-serif;
     min-height:100vh;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='4' height='4' fill='%23f5efe6'/%3E%3Ccircle cx='1' cy='1' r='0.5' fill='%23d4c4b0' opacity='0.4'/%3E%3C/svg%3E");
   }
@@ -31,15 +33,15 @@
   }
   header { text-align:center; padding:48px 24px 32px; border-bottom:1px solid var(--wine); }
   .logo-ornament {
-    font-family:'DM Mono',monospace; font-size:10px; letter-spacing:6px;
+    font-family:'Space Mono',monospace; font-size:10px; letter-spacing:6px;
     color:var(--wine); opacity:0.6; margin-bottom:12px; display:block;
   }
   h1.brand {
-    font-family:'Playfair Display',serif; font-size:clamp(2.5rem,8vw,5rem);
+    font-family:'Libre Baskerville',serif; font-size:clamp(2.5rem,8vw,5rem);
     font-weight:700; color:var(--wine); letter-spacing:0.08em; line-height:1; text-transform:uppercase;
   }
   .brand-sub {
-    font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.1rem;
+    font-family:'Be Vietnam Pro',sans-serif; font-style:italic; font-size:1.1rem;
     color:var(--gray); letter-spacing:0.15em; margin-top:6px;
   }
   nav.tabs {
@@ -47,7 +49,7 @@
     border-bottom:2px solid var(--wine); flex-wrap:wrap;
   }
   nav.tabs button {
-    font-family:'DM Mono',monospace; font-size:11px; letter-spacing:3px; text-transform:uppercase;
+    font-family:'Space Mono',monospace; font-size:11px; letter-spacing:3px; text-transform:uppercase;
     padding:14px 24px; background:transparent; border:none; border-bottom:3px solid transparent;
     margin-bottom:-2px; cursor:pointer; color:var(--gray); transition:all .25s;
   }
@@ -56,13 +58,16 @@
     background:linear-gradient(to top,rgba(107,39,55,0.06),transparent);
   }
   nav.tabs button:hover:not(.active) { color:var(--wine-light); }
-  main { max-width:860px; margin:0 auto; padding:40px 24px 80px; }.room-tabs { display:flex; gap:0; margin-bottom:28px; border-bottom:1px solid var(–beige-dark); flex-wrap:wrap; }
+  main { max-width:860px; margin:0 auto; padding:40px 24px 80px; }
+
+.room-tabs { display:flex; gap:0; margin-bottom:28px; border-bottom:1px solid var(–beige-dark); flex-wrap:wrap; }
 .room-tabs button {
-font-family:‘DM Mono’,monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase;
+font-family:‘Space Mono’,monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase;
 padding:10px 20px; background:transparent; border:none; border-bottom:2px solid transparent;
 margin-bottom:-1px; cursor:pointer; color:var(–gray); transition:all .2s;
 }
 .room-tabs button.active { color:var(–wine); border-bottom-color:var(–wine); }
+
 .card {
 background:var(–cream); border:1px solid var(–beige-dark); padding:36px 40px;
 position:relative; margin-bottom:24px; box-shadow:4px 4px 0 rgba(107,39,55,0.08);
@@ -72,17 +77,18 @@ content:’’; position:absolute; top:6px; left:6px; right:-6px; bottom:-6px;
 border:1px solid rgba(107,39,55,0.12); z-index:-1;
 }
 .card-title {
-font-family:‘Playfair Display’,serif; font-size:1.4rem; font-weight:700;
+font-family:‘Libre Baskerville’,serif; font-size:1.4rem; font-weight:700;
 color:var(–wine); margin-bottom:24px; display:flex; align-items:center; gap:12px;
 }
 .card-title::before { content:’’; display:inline-block; width:28px; height:1px; background:var(–wine); }
+
 .field { margin-bottom:20px; }
 label {
-display:block; font-family:‘DM Mono’,monospace; font-size:10px; letter-spacing:3px;
+display:block; font-family:‘Space Mono’,monospace; font-size:10px; letter-spacing:3px;
 text-transform:uppercase; color:var(–gray); margin-bottom:8px;
 }
 input, select {
-width:100%; padding:12px 16px; font-family:‘Cormorant Garamond’,serif; font-size:1.1rem;
+width:100%; padding:12px 16px; font-family:‘Be Vietnam Pro’,sans-serif; font-size:1.1rem;
 background:var(–beige); border:1px solid var(–beige-dark); color:var(–black);
 outline:none; transition:border-color .2s; -webkit-appearance:none; appearance:none;
 }
@@ -92,8 +98,9 @@ input:focus, select:focus { border-color:var(–wine); }
 content:‘▾’; position:absolute; right:14px; top:50%; transform:translateY(-50%);
 color:var(–wine); pointer-events:none; font-size:14px;
 }
+
 .btn {
-font-family:‘DM Mono’,monospace; font-size:11px; letter-spacing:3px;
+font-family:‘Space Mono’,monospace; font-size:11px; letter-spacing:3px;
 text-transform:uppercase; padding:14px 32px; border:none; cursor:pointer; transition:all .2s;
 }
 .btn-primary { background:var(–wine); color:var(–beige); width:100%; margin-top:8px; }
@@ -102,6 +109,7 @@ text-transform:uppercase; padding:14px 32px; border:none; cursor:pointer; transi
 .btn-primary:disabled { opacity:0.5; cursor:not-allowed; }
 .btn-cancel { background:transparent; color:var(–wine); border:1px solid var(–wine); padding:8px 20px; font-size:10px; }
 .btn-cancel:hover { background:var(–wine); color:var(–beige); }
+
 .ticket {
 background:var(–cream); border:2px solid var(–wine); padding:40px;
 text-align:center; position:relative; overflow:hidden;
@@ -112,16 +120,18 @@ width:24px; height:12px; background:var(–beige); border:2px solid var(–wine)
 }
 .ticket::before { top:-2px; border-top:none; border-radius:0 0 12px 12px; }
 .ticket::after { bottom:-2px; border-bottom:none; border-radius:12px 12px 0 0; }
-.ticket-num { font-family:‘Playfair Display’,serif; font-size:5rem; font-weight:700; color:var(–wine); line-height:1; }
-.ticket-label { font-family:‘DM Mono’,monospace; font-size:10px; letter-spacing:4px; text-transform:uppercase; color:var(–gray); margin-bottom:8px; }
+.ticket-num { font-family:‘Libre Baskerville’,serif; font-size:5rem; font-weight:700; color:var(–wine); line-height:1; }
+.ticket-label { font-family:‘Space Mono’,monospace; font-size:10px; letter-spacing:4px; text-transform:uppercase; color:var(–gray); margin-bottom:8px; }
 .ticket-name { font-style:italic; font-size:1.3rem; color:var(–black); margin-top:12px; }
-.ticket-room { font-family:‘DM Mono’,monospace; font-size:10px; letter-spacing:3px; color:var(–wine); margin-top:8px; }
+.ticket-room { font-family:‘Space Mono’,monospace; font-size:10px; letter-spacing:3px; color:var(–wine); margin-top:8px; }
 .ticket-divider { border:none; border-top:1px dashed var(–wine); opacity:.4; margin:20px 0; }
+
 .notif {
 background:linear-gradient(135deg,var(–wine-dark),var(–wine));
 color:var(–beige); padding:16px 20px; margin-top:16px;
 font-style:italic; font-size:1rem; line-height:1.5;
 }
+
 .rooms-overview { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:28px; }
 .room-overview-card {
 background:var(–cream); border:1px solid var(–beige-dark); padding:20px 16px;
@@ -129,46 +139,54 @@ text-align:center; cursor:pointer; transition:border-color .2s, box-shadow .2s;
 }
 .room-overview-card:hover { border-color:var(–wine); box-shadow:3px 3px 0 rgba(107,39,55,0.12); }
 .room-overview-card.selected { border-color:var(–wine); background:linear-gradient(to bottom,rgba(107,39,55,0.05),var(–cream)); }
-.room-overview-card .room-label { font-family:‘DM Mono’,monospace; font-size:9px; letter-spacing:3px; color:var(–gray); margin-bottom:4px; }
-.room-overview-card .room-name { font-family:‘Playfair Display’,serif; font-size:1rem; color:var(–wine); font-weight:700; margin-bottom:12px; font-style:italic; }
-.room-overview-card .room-count { font-family:‘Playfair Display’,serif; font-size:2.4rem; font-weight:700; color:var(–wine); line-height:1; }
-.room-overview-card .room-sub { font-family:‘DM Mono’,monospace; font-size:8px; letter-spacing:2px; color:var(–gray); margin-top:4px; }
-.room-overview-card .room-serving { font-family:‘DM Mono’,monospace; font-size:9px; letter-spacing:1px; color:var(–gray); margin-top:10px; padding-top:10px; border-top:1px solid var(–beige-dark); }
+.room-overview-card .room-label { font-family:‘Space Mono’,monospace; font-size:9px; letter-spacing:3px; color:var(–gray); margin-bottom:4px; }
+.room-overview-card .room-name { font-family:‘Libre Baskerville’,serif; font-size:1rem; color:var(–wine); font-weight:700; margin-bottom:12px; font-style:italic; }
+.room-overview-card .room-count { font-family:‘Libre Baskerville’,serif; font-size:2.4rem; font-weight:700; color:var(–wine); line-height:1; }
+.room-overview-card .room-sub { font-family:‘Space Mono’,monospace; font-size:8px; letter-spacing:2px; color:var(–gray); margin-top:4px; }
+.room-overview-card .room-serving { font-family:‘Space Mono’,monospace; font-size:9px; letter-spacing:1px; color:var(–gray); margin-top:10px; padding-top:10px; border-top:1px solid var(–beige-dark); }
+
 .queue-item { display:flex; align-items:center; gap:16px; padding:16px 20px; background:var(–cream); border:1px solid var(–beige-dark); margin-bottom:8px; }
 .queue-item.current { border-color:var(–wine); background:linear-gradient(to right,rgba(107,39,55,0.06),var(–cream)); }
 .queue-item.almost { border-color:var(–gold); }
-.q-num { font-family:‘Playfair Display’,serif; font-size:1.6rem; font-weight:700; color:var(–wine); min-width:48px; text-align:center; }
+.q-num { font-family:‘Libre Baskerville’,serif; font-size:1.6rem; font-weight:700; color:var(–wine); min-width:48px; text-align:center; }
 .q-info { flex:1; }
 .q-name { font-size:1.1rem; }
-.q-detail { font-family:‘DM Mono’,monospace; font-size:9px; letter-spacing:2px; color:var(–gray); margin-top:3px; }
-.badge { font-family:‘DM Mono’,monospace; font-size:8px; letter-spacing:2px; text-transform:uppercase; padding:3px 10px; border:1px solid; }
+.q-detail { font-family:‘Space Mono’,monospace; font-size:9px; letter-spacing:2px; color:var(–gray); margin-top:3px; }
+.badge { font-family:‘Space Mono’,monospace; font-size:8px; letter-spacing:2px; text-transform:uppercase; padding:3px 10px; border:1px solid; }
 .badge-now { color:var(–wine); border-color:var(–wine); }
 .badge-soon { color:#a07020; border-color:var(–gold); }
+
 .msg { padding:14px 20px; margin-bottom:20px; font-size:1rem; font-style:italic; }
 .msg-success { background:rgba(107,39,55,0.08); border-left:3px solid var(–wine); }
 .msg-error { background:rgba(180,60,60,0.08); border-left:3px solid #b43c3c; color:#7a1515; }
+
 .qr-wrap { display:flex; flex-direction:column; align-items:center; gap:12px; margin:20px 0; }
-.qr-hint { font-family:‘DM Mono’,monospace; font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(–gray); }
+.qr-hint { font-family:‘Space Mono’,monospace; font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(–gray); }
+
 .ornament { text-align:center; color:var(–wine); opacity:.3; font-size:18px; letter-spacing:8px; margin:8px 0 24px; }
+
 .admin-queue-item { display:flex; align-items:center; gap:12px; padding:12px 16px; border:1px solid var(–beige-dark); margin-bottom:6px; background:var(–cream); }
-.btn-serve { background:var(–wine); color:var(–beige); border:none; font-family:‘DM Mono’,monospace; font-size:9px; letter-spacing:2px; padding:6px 14px; cursor:pointer; white-space:nowrap; }
+.btn-serve { background:var(–wine); color:var(–beige); border:none; font-family:‘Space Mono’,monospace; font-size:9px; letter-spacing:2px; padding:6px 14px; cursor:pointer; white-space:nowrap; }
 .btn-serve:hover { background:var(–wine-dark); }
-.btn-remove { background:transparent; color:#b43c3c; border:1px solid #b43c3c; font-family:‘DM Mono’,monospace; font-size:9px; letter-spacing:2px; padding:6px 14px; cursor:pointer; white-space:nowrap; }
+.btn-remove { background:transparent; color:#b43c3c; border:1px solid #b43c3c; font-family:‘Space Mono’,monospace; font-size:9px; letter-spacing:2px; padding:6px 14px; cursor:pointer; white-space:nowrap; }
 .btn-remove:hover { background:#b43c3c; color:white; }
+
 /* Loading */
 .loading-bar {
 position:fixed; top:0; left:0; height:2px; background:var(–wine);
 transition:width .3s; z-index:99999;
 }
+
 /* Connection status */
 .conn-status {
 position:fixed; bottom:20px; right:20px;
-font-family:‘DM Mono’,monospace; font-size:9px; letter-spacing:2px;
+font-family:‘Space Mono’,monospace; font-size:9px; letter-spacing:2px;
 padding:6px 12px; border:1px solid; z-index:9998;
 transition:all .3s;
 }
 .conn-online { color:var(–wine); border-color:var(–wine); background:var(–cream); }
 .conn-offline { color:#b43c3c; border-color:#b43c3c; background:#fff5f5; }
+
 /* Modal */
 .modal-overlay {
 display:none; position:fixed; inset:0;
@@ -185,43 +203,58 @@ content:’’; position:absolute; top:6px; left:6px; right:-6px; bottom:-6px;
 border:1px solid rgba(107,39,55,0.2); z-index:-1;
 }
 .modal-lock { font-size:2rem; margin-bottom:12px; }
-.modal-title { font-family:‘Playfair Display’,serif; font-size:1.5rem; font-weight:700; color:var(–wine); margin-bottom:6px; }
-.modal-sub { font-family:‘DM Mono’,monospace; font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(–gray); margin-bottom:28px; }
+.modal-title { font-family:‘Libre Baskerville’,serif; font-size:1.5rem; font-weight:700; color:var(–wine); margin-bottom:6px; }
+.modal-sub { font-family:‘Space Mono’,monospace; font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(–gray); margin-bottom:28px; }
 .modal-input {
-width:100%; padding:14px 18px; font-family:‘Cormorant Garamond’,serif; font-size:1.2rem;
+width:100%; padding:14px 18px; font-family:‘Be Vietnam Pro’,sans-serif; font-size:1.2rem;
 background:var(–beige); border:1px solid var(–beige-dark); color:var(–black);
 outline:none; text-align:center; letter-spacing:4px; margin-bottom:8px;
 }
 .modal-input:focus { border-color:var(–wine); }
-.modal-error { font-family:‘DM Mono’,monospace; font-size:10px; letter-spacing:2px; color:#b43c3c; margin-bottom:12px; display:none; }
+.modal-error { font-family:‘Space Mono’,monospace; font-size:10px; letter-spacing:2px; color:#b43c3c; margin-bottom:12px; display:none; }
 .modal-btn {
 width:100%; padding:14px; background:var(–wine); color:var(–beige); border:none;
-font-family:‘DM Mono’,monospace; font-size:11px; letter-spacing:3px; text-transform:uppercase;
+font-family:‘Space Mono’,monospace; font-size:11px; letter-spacing:3px; text-transform:uppercase;
 cursor:pointer; margin-bottom:12px; transition:background .2s;
 }
 .modal-btn:hover { background:var(–wine-dark); }
-.modal-close { font-family:‘DM Mono’,monospace; font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(–gray); background:none; border:none; cursor:pointer; text-decoration:underline; }
+.modal-close { font-family:‘Space Mono’,monospace; font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(–gray); background:none; border:none; cursor:pointer; text-decoration:underline; }
 .modal-close:hover { color:var(–wine); }
+
 .fade-in { animation:fadeIn 0.4s ease forwards; }
 @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
 @media(max-width:600px) {
 .rooms-overview { grid-template-columns:1fr; }
 .card { padding:24px 20px; }
 .room-tabs button { padding:10px 14px; font-size:9px; }
 }
 </style>
+
 </head>
-<body><div class="loading-bar" id="loading-bar" style="width:0%"></div>
-<div class="conn-status conn-online" id="conn-status">● ONLINE</div><header>
+<body>
+
+<div class="loading-bar" id="loading-bar" style="width:0%"></div>
+<div class="conn-status conn-online" id="conn-status">● ONLINE</div>
+
+<header>
   <span class="logo-ornament">✦ &nbsp; photobooth studio &nbsp; ✦</span>
   <h1 class="brand">FilmNoir</h1>
   <p class="brand-sub">Hàng chờ · Queue Management</p>
-</header><nav class="tabs">
+</header>
+
+<nav class="tabs">
   <button class="active" onclick="switchTab('book')">Đặt Lịch</button>
   <button onclick="switchTab('check')">Kiểm Tra Số</button>
   <button onclick="switchTab('queue')">Hàng Chờ</button>
   <button onclick="switchTab('admin')">Quản Lý</button>
-</nav><main><!-- BOOK --><div id="tab-book" class="tab-content">
+</nav>
+
+<main>
+
+  <!-- BOOK -->
+
+  <div id="tab-book" class="tab-content">
     <div class="ornament">— ◈ —</div>
     <div id="msg-book"></div>
     <div class="card fade-in" id="form-card">
@@ -264,7 +297,11 @@ cursor:pointer; margin-bottom:12px; transition:background .2s;
       <br/>
       <button class="btn btn-cancel" onclick="resetForm()">← Đăng Ký Thêm</button>
     </div>
-  </div><!-- CHECK --><div id="tab-check" class="tab-content" style="display:none;">
+  </div>
+
+  <!-- CHECK -->
+
+  <div id="tab-check" class="tab-content" style="display:none;">
     <div class="ornament">— ◈ —</div>
     <div class="card fade-in">
       <div class="card-title">Kiểm Tra Số Thứ Tự</div>
@@ -282,10 +319,10 @@ cursor:pointer; margin-bottom:12px; transition:background .2s;
           <div class="ticket-name" id="chk-name">—</div>
           <div class="ticket-room" id="chk-room">—</div>
           <hr class="ticket-divider"/>
-          <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--gray);">
+          <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--gray);">
             Số đang phục vụ: <span id="chk-current" style="color:var(--wine);font-weight:bold;"></span>
           </div>
-          <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--gray);margin-top:4px;">
+          <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--gray);margin-top:4px;">
             Bạn còn chờ: <span id="chk-wait" style="color:var(--wine);font-weight:bold;"></span> lượt
           </div>
           <div id="chk-notif"></div>
@@ -294,7 +331,11 @@ cursor:pointer; margin-bottom:12px; transition:background .2s;
         <button class="btn btn-cancel" onclick="cancelFromCheck()">✕ Huỷ Lượt Của Tôi</button>
       </div>
     </div>
-  </div><!-- QUEUE --><div id="tab-queue" class="tab-content" style="display:none;">
+  </div>
+
+  <!-- QUEUE -->
+
+  <div id="tab-queue" class="tab-content" style="display:none;">
     <div class="ornament">— ◈ —</div>
     <div class="rooms-overview" id="queue-overview"></div>
     <div class="room-tabs" id="queue-room-tabs">
@@ -303,7 +344,11 @@ cursor:pointer; margin-bottom:12px; transition:background .2s;
       <button onclick="switchRoomQueue(2)">Phòng 3 – Red Cherry</button>
     </div>
     <div id="queue-room-detail"></div>
-  </div><!-- ADMIN --><div id="tab-admin" class="tab-content" style="display:none;">
+  </div>
+
+  <!-- ADMIN -->
+
+  <div id="tab-admin" class="tab-content" style="display:none;">
     <div class="ornament">— ◈ —</div>
     <div class="rooms-overview" id="admin-overview"></div>
     <div class="room-tabs" id="admin-room-tabs">
@@ -320,7 +365,11 @@ cursor:pointer; margin-bottom:12px; transition:background .2s;
       </div>
       <div id="admin-queue-list"></div>
     </div>
-  </div><!-- MODAL --><div class="modal-overlay" id="admin-modal" onclick="if(event.target===this)closeAdminModal()">
+  </div>
+
+  <!-- MODAL -->
+
+  <div class="modal-overlay" id="admin-modal" onclick="if(event.target===this)closeAdminModal()">
     <div class="modal-box">
       <div class="modal-lock">🔒</div>
       <div class="modal-title">Khu Vực Quản Lý</div>
@@ -331,7 +380,13 @@ cursor:pointer; margin-bottom:12px; transition:background .2s;
       <button class="modal-btn" onclick="submitAdminPw()">Xác Nhận</button>
       <button class="modal-close" onclick="closeAdminModal()">Huỷ</button>
     </div>
-  </div></main><!-- Firebase --><script type="module">
+  </div>
+
+</main>
+
+<!-- Firebase -->
+
+<script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getDatabase, ref, onValue, set, get, update, remove, runTransaction, serverTimestamp }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
@@ -504,14 +559,9 @@ function getWaitCount(ri, num) {
 
 function notifMsg(waitCount) {
   if(waitCount === 0) return '<div class="notif">🎬 Đến lượt bạn rồi! Vui lòng vào phòng chụp nhé.</div>';
-  const minutes = waitCount * 6;
-  const hours = Math.floor(minutes / 60);
-  const mins = minutes % 60;
-  const timeStr = hours > 0 ? `${hours} tiếng ${mins} phút` : `${mins} phút`;
-  if(waitCount === 1) return `<div class="notif">⏳ Còn 1 người phía trước, thời gian chờ khoảng ${timeStr}.</div>`;
-  return `<div class="notif">⏳ Còn ${waitCount} người phía trước, thời gian chờ khoảng ${timeStr}.</div>`;
+  if(waitCount <= 3) return '<div class="notif">3 lượt nữa là tới lượt của mình, bạn nên có mặt để giữ chỗ đảm bảo nhen ✨</div>';
+  return '';
 }
-
 
 // ─── BOOK ─────────────────────────────────────────────────────────
 window.bookQueue = async function() {
@@ -764,5 +814,7 @@ function scheduleMidnightReset() {
 startListening();
 scheduleMidnightReset();
 
-</script></body>
+</script>
+
+</body>
 </html>
