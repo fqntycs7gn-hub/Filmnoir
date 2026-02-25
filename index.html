@@ -245,7 +245,7 @@ cursor:pointer; margin-bottom:12px; transition:background .2s;
 
 <nav class="tabs">
   <button class="active" onclick="switchTab('book')">Đặt Lịch</button>
-  <button onclick="switchTab('check')">Kiểm Tra Số</button>
+  <button onclick="switchTab('check')">Kiểm Tra & Huỷ Lịch</button>
   <button onclick="switchTab('queue')">Hàng Chờ</button>
   <button onclick="switchTab('admin')">Quản Lý</button>
 </nav>
@@ -304,8 +304,12 @@ cursor:pointer; margin-bottom:12px; transition:background .2s;
   <div id="tab-check" class="tab-content" style="display:none;">
     <div class="ornament">— ◈ —</div>
     <div class="card fade-in">
-      <div class="card-title">Kiểm Tra Số Thứ Tự</div>
+      <div class="card-title">Kiểm Tra & Huỷ Lịch</div>
       <div id="msg-check"></div>
+      <div style="background:rgba(107,39,55,0.06);border-left:3px solid var(--wine);padding:14px 18px;margin-bottom:20px;font-size:1rem;line-height:1.6;">
+        Nhập số điện thoại đã đăng ký để xem số thứ tự của bạn.<br/>
+        <span style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--gray);">Nếu muốn huỷ lịch, bấm nút <strong style="color:var(--wine)">✕ Huỷ Lượt</strong> sau khi tra cứu.</span>
+      </div>
       <div class="field">
         <label>Số Điện Thoại</label>
         <input type="tel" id="chk-phone" placeholder="Nhập số đã đăng ký"/>
@@ -328,7 +332,7 @@ cursor:pointer; margin-bottom:12px; transition:background .2s;
           <div id="chk-notif"></div>
         </div>
         <br/>
-        <button class="btn btn-cancel" onclick="cancelFromCheck()">✕ Huỷ Lượt Của Tôi</button>
+        <button class="btn btn-primary" style="background:#b43c3c;margin-top:12px;" onclick="cancelFromCheck()">✕ Huỷ Lượt Của Tôi</button>
       </div>
     </div>
   </div>
