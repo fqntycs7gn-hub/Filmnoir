@@ -559,8 +559,12 @@ function getWaitCount(ri, num) {
 
 function notifMsg(waitCount) {
   if(waitCount === 0) return '<div class="notif">🎬 Đến lượt bạn rồi! Vui lòng vào phòng chụp nhé.</div>';
-  if(waitCount <= 3) return '<div class="notif">3 lượt nữa là tới lượt của mình, bạn nên có mặt để giữ chỗ đảm bảo nhen ✨</div>';
-  return '';
+  const minutes = waitCount * 6;
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  const timeStr = hours > 0 ? `${hours} tiếng ${mins} phút` : `${mins} phút`;
+  if(waitCount <= 3) return `<div class="notif">⏳ Còn ${waitCount} người phía trước, thời gian chờ khoảng ${timeStr}. Bạn nên có mặt sẵn nhé!</div>`;
+  return `<div class="notif">⏳ Còn ${waitCount} người phía trước, thời gian chờ khoảng ${timeStr}.</div>`;
 }
 
 // ─── BOOK ─────────────────────────────────────────────────────────
