@@ -155,6 +155,11 @@ text-align:center; cursor:pointer; transition:border-color .2s, box-shadow .2s;
 .badge { font-family:‘Montserrat’,sans-serif; font-size:8px; letter-spacing:2px; text-transform:uppercase; padding:3px 10px; border:1px solid; }
 .badge-now { color:var(–wine); border-color:var(–wine); }
 .badge-soon { color:#a07020; border-color:var(–gold); }
+.badge-pending { color:#b43c3c; border-color:#b43c3c; }
+.btn-approve { background:#2d7a4f; color:white; border:none; font-family:‘Montserrat’,sans-serif; font-size:9px; letter-spacing:2px; padding:6px 14px; cursor:pointer; white-space:nowrap; }
+.btn-approve:hover { background:#1f5c3a; }
+.pending-section-title { font-family:‘Montserrat’,sans-serif; font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(–gray); margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid var(–beige-dark); }
+.queue-section-title { font-family:‘Montserrat’,sans-serif; font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(–gray); margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid var(–beige-dark); }
 
 .msg { padding:14px 20px; margin-bottom:20px; font-size:1rem; font-style:italic; }
 .msg-success { background:rgba(107,39,55,0.08); border-left:3px solid var(–wine); }
@@ -279,16 +284,23 @@ cursor:pointer; margin-bottom:12px; transition:background .2s;
       <button class="btn btn-primary" id="btn-book" onclick="bookQueue()">✦ Lấy Số Thứ Tự</button>
     </div>
     <div id="ticket-wrap" style="display:none;" class="fade-in">
-      <div class="ticket">
-        <div class="ticket-label">số thứ tự của bạn</div>
-        <div class="ticket-num" id="ticket-num">—</div>
-        <hr class="ticket-divider"/>
+      <div class="ticket" id="pending-ticket">
+        <div class="ticket-label">đăng ký thành công</div>
+        <div style="font-size:3rem;margin:12px 0;">⏳</div>
         <div class="ticket-name" id="ticket-name">—</div>
         <div class="ticket-room" id="ticket-room">—</div>
         <hr class="ticket-divider"/>
-        <div style="background:linear-gradient(135deg,var(--wine-dark),var(--wine));color:var(--beige);padding:16px 20px;margin:16px 0;font-family:'Montserrat',sans-serif;font-size:0.85rem;letter-spacing:1px;line-height:1.6;text-align:center;">
-          💳 Vui lòng thanh toán để xác nhận số của bạn nhé!
+        <div style="background:linear-gradient(135deg,var(--wine-dark),var(--wine));color:var(--beige);padding:16px 20px;margin:8px 0;font-family:'Montserrat',sans-serif;font-size:0.85rem;letter-spacing:1px;line-height:1.7;text-align:center;">
+          💳 Vui lòng thanh toán để xác nhận số của bạn nhé!<br/>
+          <span style="font-size:0.75rem;opacity:0.85;">Số thứ tự sẽ được cấp sau khi nhân viên xác nhận thanh toán.</span>
         </div>
+      </div>
+      <div class="ticket fade-in" id="confirmed-ticket" style="display:none;">
+        <div class="ticket-label">số thứ tự của bạn</div>
+        <div class="ticket-num" id="ticket-num">—</div>
+        <hr class="ticket-divider"/>
+        <div class="ticket-name" id="ticket-name-confirmed">—</div>
+        <div class="ticket-room" id="ticket-room-confirmed">—</div>
         <div id="ticket-notif"></div>
       </div>
       <br/>
@@ -364,6 +376,7 @@ cursor:pointer; margin-bottom:12px; transition:background .2s;
         <button class="btn btn-primary" style="width:auto;" onclick="serveNext()">→ Phục Vụ Số Tiếp Theo</button>
         <button class="btn btn-cancel" onclick="resetRoom()">↺ Reset Phòng Này</button>
       </div>
+      <div id="admin-pending-list" style="margin-bottom:20px;"></div>
       <div id="admin-queue-list"></div>
     </div>
   </div>
@@ -601,7 +614,8 @@ window.bookQueue = async function() {
     const entry = {
       id, num: newNum, name, phone,
       time: new Date().toLocaleTimeString('vi-VN'),
-      order: Date.now()
+      order: Date.now(),
+      status: 'pending'
     };
 
     await set(ref(db, `${dbPath()}/${roomKey}/queue/${id}`), entry);
@@ -688,10 +702,11 @@ window.cancelFromCheck = async function() {
 function renderQueueOverview() {
   document.getElementById('queue-overview').innerHTML = ROOMS.map((r,i) => {
     const room = state.rooms[i];
+    const confirmed = room.queue.filter(e => e.status !== 'pending');
     return `<div class="room-overview-card ${i===activeQueueRoom?'selected':''}" onclick="switchRoomQueue(${i})">
       <div class="room-label">${r.label}</div>
       <div class="room-name">${r.name}</div>
-      <div class="room-count">${room.queue.length}</div>
+      <div class="room-count">${confirmed.length}</div>
       <div class="room-sub">đang chờ</div>
       <div class="room-serving">Đang phục vụ: <strong style="color:var(--wine)">${room.currentServing ? String(room.currentServing).padStart(2,'0') : '–'}</strong></div>
     </div>`;
@@ -707,11 +722,12 @@ window.switchRoomQueue = function(ri) {
 function renderQueueRoom(ri) {
   const room = state.rooms[ri];
   const el = document.getElementById('queue-room-detail');
-  if(!room.queue.length) {
+  const confirmed = room.queue.filter(e => e.status !== 'pending');
+  if(!confirmed.length) {
     el.innerHTML=`<div class="card fade-in"><p style="color:var(--gray);font-style:italic;">Phòng ${ROOMS[ri].name} chưa có ai trong hàng chờ.</p></div>`;
     return;
   }
-  el.innerHTML=`<div class="card fade-in">${room.queue.map((entry,idx) => {
+  el.innerHTML=`<div class="card fade-in">${confirmed.map((entry,idx) => {
     let cls='', badge='';
     if(idx===0){cls='current';badge='<span class="badge badge-now">Tiếp Theo</span>';}
     else if(idx<=2){cls='almost';badge='<span class="badge badge-soon">Sắp Tới</span>';}
@@ -730,11 +746,14 @@ function renderQueueRoom(ri) {
 function renderAdminOverview() {
   document.getElementById('admin-overview').innerHTML = ROOMS.map((r,i) => {
     const room = state.rooms[i];
+    const pendingCount = room.queue.filter(e => e.status === 'pending').length;
+    const confirmedCount = room.queue.filter(e => e.status !== 'pending').length;
     return `<div class="room-overview-card ${i===activeAdminRoom?'selected':''}" onclick="switchRoomAdmin(${i})">
       <div class="room-label">${r.label}</div>
       <div class="room-name">${r.name}</div>
-      <div class="room-count">${room.queue.length}</div>
-      <div class="room-sub">đang chờ</div>
+      <div class="room-count">${confirmedCount}</div>
+      <div class="room-sub">hàng chờ chính thức</div>
+      ${pendingCount > 0 ? `<div style="font-family:'Montserrat',sans-serif;font-size:9px;color:#b43c3c;margin-top:4px;">⏳ ${pendingCount} chờ duyệt</div>` : ''}
       <div class="room-serving">Phục vụ: <strong style="color:var(--wine)">${room.currentServing ? String(room.currentServing).padStart(2,'0') : '–'}</strong> &nbsp;|&nbsp; Tổng: <strong style="color:var(--wine)">${room.counter}</strong></div>
     </div>`;
   }).join('');
@@ -751,30 +770,67 @@ function renderAdminRoom(ri) {
   const r = ROOMS[ri];
   document.getElementById('admin-room-title').textContent=`${r.label} – ${r.name}`;
   const room = state.rooms[ri];
+
+  const pending = room.queue.filter(e => e.status === 'pending');
+  const confirmed = room.queue.filter(e => e.status !== 'pending');
+
+  // Pending section
+  const pendingEl = document.getElementById('admin-pending-list');
+  if(pending.length) {
+    pendingEl.innerHTML = `<div class="pending-section-title">⏳ Chờ Xác Nhận Thanh Toán (${pending.length})</div>` +
+      pending.map(entry => `
+        <div class="admin-queue-item" style="border-color:#e8b4b4;background:#fff8f8;">
+          <div class="q-num" style="color:#b43c3c;">?</div>
+          <div class="q-info" style="flex:1;">
+            <div class="q-name">${entry.name}</div>
+            <div class="q-detail">${entry.phone} · ${entry.time}</div>
+          </div>
+          <button class="btn-approve" onclick="approveEntry(${ri},'${entry.id}')">✓ Duyệt</button>
+          <button class="btn-remove" onclick="cancelEntry(${ri},'${entry.id}',${entry.num})">Huỷ</button>
+        </div>
+      `).join('');
+  } else {
+    pendingEl.innerHTML = '';
+  }
+
+  // Confirmed queue section
   const listEl = document.getElementById('admin-queue-list');
-  if(!room.queue.length) {
+  if(!confirmed.length) {
     listEl.innerHTML='<p style="color:var(--gray);font-style:italic;">Hàng chờ phòng này đang trống.</p>';
     return;
   }
-  listEl.innerHTML = room.queue.map((entry,idx) => `
-    <div class="admin-queue-item">
-      <div class="q-num">${String(entry.num).padStart(2,'0')}</div>
-      <div class="q-info" style="flex:1;">
-        <div class="q-name">${entry.name}</div>
-        <div class="q-detail">${entry.phone} · ${entry.time}</div>
+  listEl.innerHTML = `<div class="queue-section-title">✓ Hàng Chờ Chính Thức (${confirmed.length})</div>` +
+    confirmed.map((entry,idx) => `
+      <div class="admin-queue-item">
+        <div class="q-num">${String(entry.num).padStart(2,'0')}</div>
+        <div class="q-info" style="flex:1;">
+          <div class="q-name">${entry.name}</div>
+          <div class="q-detail">${entry.phone} · ${entry.time}</div>
+        </div>
+        ${idx===0?`<button class="btn-serve" onclick="serveNext()">Phục vụ →</button>`:''}
+        <button class="btn-remove" onclick="cancelEntry(${ri},'${entry.id}',${entry.num})">Huỷ</button>
       </div>
-      ${idx===0?`<button class="btn-serve" onclick="serveNext()">Phục vụ →</button>`:''}
-      <button class="btn-remove" onclick="cancelEntry(${ri},'${entry.id}',${entry.num})">Huỷ</button>
-    </div>
-  `).join('');
+    `).join('');
 }
+
+window.approveEntry = async function(ri, id) {
+  setLoading(true);
+  try {
+    await update(ref(db, `${dbPath()}/${ROOMS[ri].key}/queue/${id}`), { status: 'confirmed' });
+    document.getElementById('msg-admin').innerHTML='<div class="msg msg-success">✓ Đã duyệt! Khách được vào hàng chờ chính thức.</div>';
+  } catch(e) {
+    document.getElementById('msg-admin').innerHTML='<div class="msg msg-error">Lỗi. Vui lòng thử lại.</div>';
+  }
+  setLoading(false);
+};
 
 window.serveNext = async function() {
   const room = state.rooms[activeAdminRoom];
-  if(!room.queue.length) {
-    document.getElementById('msg-admin').innerHTML='<div class="msg msg-error">Hàng chờ phòng này đang trống.</div>'; return;
+  const confirmed = room.queue.filter(e => e.status !== 'pending');
+  if(!confirmed.length) {
+    document.getElementById('msg-admin').innerHTML='<div class="msg msg-error">Không có ai trong hàng chờ chính thức.</div>'; return;
   }
-  const served = room.queue[0];
+  const served = confirmed[0];
   setLoading(true);
   try {
     await update(roomRef(activeAdminRoom), { currentServing: served.num });
