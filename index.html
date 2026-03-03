@@ -231,14 +231,16 @@ cursor:pointer; margin-bottom:12px; transition:background .2s;
 
 .cancelled-item { display:flex; align-items:center; gap:12px; padding:12px 16px; border:1px solid #e8b4b4; margin-bottom:6px; background:#fff8f8; }
 .cancelled-num { font-family:‘Lobster’,cursive; font-size:1.4rem; color:#b43c3c; min-width:40px; text-align:center; }
-.fade-in { animation:fadeIn 0.4s ease forwards; }
-.display-room-card { background:rgba(245,239,230,0.05); border:1px solid rgba(245,239,230,0.15); padding:40px 20px; text-align:center; }
+.display-room-card {
+background:rgba(245,239,230,0.05); border:1px solid rgba(245,239,230,0.15);
+padding:40px 20px; text-align:center; border-radius:4px;
+}
+.display-room-name { font-family:‘Pinyon Script’,cursive; font-size:2rem; color:rgba(201,169,110,0.9); margin-bottom:8px; }
+.display-serving-label { font-family:‘Montserrat’,sans-serif; font-size:10px; letter-spacing:4px; color:rgba(245,239,230,0.4); text-transform:uppercase; margin-bottom:12px; }
 .display-serving-num { font-family:‘Lobster’,cursive; font-size:8rem; color:#f5efe6; line-height:1; }
 .display-waiting { font-family:‘Montserrat’,sans-serif; font-size:11px; letter-spacing:2px; color:rgba(245,239,230,0.4); margin-top:12px; }
-.peak-bar-wrap { display:flex; align-items:center; gap:10px; margin-bottom:6px; }
-.peak-bar-label { font-family:‘Montserrat’,sans-serif; font-size:9px; color:var(–gray); min-width:40px; }
-.peak-bar { height:12px; background:var(–wine); opacity:0.7; }
-.peak-bar-num { font-family:‘Montserrat’,sans-serif; font-size:9px; color:var(–gray); }
+.display-closed { font-family:‘Montserrat’,sans-serif; font-size:14px; letter-spacing:4px; color:#b43c3c; margin-top:24px; }
+.fade-in { animation:fadeIn 0.4s ease forwards; }
 @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
 
 @media(max-width:600px) {
@@ -262,6 +264,7 @@ cursor:pointer; margin-bottom:12px; transition:background .2s;
   <button class="active" onclick="switchTab('book')">Đặt Lịch</button>
   <button onclick="switchTab('check')">Kiểm Tra & Huỷ Lịch</button>
   <button onclick="switchTab('queue')">Hàng Chờ</button>
+  <button onclick="switchTab('display')">Màn Hình Quầy</button>
   <button onclick="switchTab('admin')">Quản Lý</button>
 </nav>
 
@@ -305,7 +308,6 @@ cursor:pointer; margin-bottom:12px; transition:background .2s;
         <div style="background:linear-gradient(135deg,var(--wine-dark),var(--wine));color:var(--beige);padding:16px 20px;margin:8px 0;font-family:'Montserrat',sans-serif;font-size:0.85rem;letter-spacing:1px;line-height:1.7;text-align:center;">
           💳 Vui lòng thanh toán để xác nhận số của bạn nhé!<br/>
           <span style="font-size:0.75rem;opacity:0.85;">Số thứ tự sẽ được cấp sau khi nhân viên xác nhận thanh toán.</span>
-          <div id="wait-countdown" style="font-size:0.75rem;opacity:0.7;margin-top:6px;"></div>
         </div>
       </div>
       <div class="ticket fade-in" id="confirmed-ticket" style="display:none;">
@@ -380,6 +382,35 @@ cursor:pointer; margin-bottom:12px; transition:background .2s;
     <div id="queue-room-detail"></div>
   </div>
 
+  <!-- DISPLAY -->
+
+  <div id="tab-display" class="tab-content" style="display:none;">
+    <div id="display-screen" style="
+      position:fixed;inset:0;background:#1a1410;z-index:99990;
+      display:none;flex-direction:column;justify-content:center;align-items:center;
+      font-family:'Lobster',cursive;
+    ">
+      <div style="position:absolute;top:24px;left:50%;transform:translateX(-50%);font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:6px;color:rgba(245,239,230,0.4);text-transform:uppercase;">FilmNoir Photobooth Studio</div>
+      <button onclick="exitDisplay()" style="position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.5);font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:2px;padding:8px 14px;cursor:pointer;">✕ THOÁT</button>
+      <div id="display-rooms" style="display:grid;grid-template-columns:repeat(3,1fr);gap:40px;width:90vw;max-width:1200px;"></div>
+      <div style="position:absolute;bottom:24px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:3px;color:rgba(245,239,230,0.3);" id="display-clock"></div>
+    </div>
+
+```
+<div class="ornament">— ◈ —</div>
+<div class="card fade-in" style="text-align:center;padding:48px 40px;">
+  <div style="font-size:3rem;margin-bottom:16px;">🖥️</div>
+  <div class="card-title" style="justify-content:center;">Màn Hình Quầy</div>
+  <p style="font-family:'Montserrat',sans-serif;font-size:0.85rem;color:var(--gray);margin-bottom:28px;line-height:1.7;">
+    Bật chế độ toàn màn hình để hiển thị số đang phục vụ.<br/>
+    Đặt máy tính ở quầy hướng về phía khách.
+  </p>
+  <button class="btn btn-primary" style="max-width:280px;margin:0 auto;" onclick="launchDisplay()">▶ Bật Màn Hình Quầy</button>
+</div>
+```
+
+  </div>
+
   <!-- ADMIN -->
 
   <div id="tab-admin" class="tab-content" style="display:none;">
@@ -393,12 +424,12 @@ cursor:pointer; margin-bottom:12px; transition:background .2s;
     <div class="card fade-in">
       <div class="card-title" id="admin-room-title">—</div>
       <div id="msg-admin"></div>
-      <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
+      <div style="display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap;">
         <button class="btn btn-primary" style="width:auto;" onclick="serveNext()">→ Phục Vụ Số Tiếp Theo</button>
         <button class="btn btn-cancel" onclick="resetRoom()">↺ Reset Phòng Này</button>
-        <button id="btn-toggle-room" class="btn btn-cancel" style="border-color:var(--gray);color:var(--gray);" onclick="toggleRoom()">⏸ Đóng Phòng</button>
+        <button class="btn btn-cancel" id="btn-toggle-room" style="border-color:var(--gray);color:var(--gray);" onclick="toggleRoom()">⏸ Đóng Phòng</button>
       </div>
-      <div id="room-closed-banner" style="display:none;background:#b43c3c;color:white;padding:10px 16px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:2px;text-align:center;margin-bottom:16px;">⛔ PHÒNG NÀY ĐANG ĐÓNG</div>
+      <div id="room-closed-banner" style="display:none;background:#b43c3c;color:white;padding:10px 16px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:2px;text-align:center;margin-bottom:16px;">⛔ PHÒNG NÀY ĐANG ĐÓNG — Khách không thể đặt lịch</div>
       <div id="admin-pending-list" style="margin-bottom:20px;"></div>
       <div id="admin-queue-list"></div>
     </div>
@@ -425,9 +456,12 @@ cursor:pointer; margin-bottom:12px; transition:background .2s;
 <div id="stats-content" style="display:none;">
   <div class="card fade-in">
     <div class="card-title">Thống Kê Tổng Quan</div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px;" id="stats-summary"></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;" id="stats-revenue"></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;" id="stats-summary"></div>
+
+    <!-- Weekly / Monthly -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px;" id="stats-period"></div>
+
+    <!-- Filter & Export -->
     <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:20px;">
       <div style="flex:1;min-width:160px;">
         <label>Từ ngày</label>
@@ -438,10 +472,10 @@ cursor:pointer; margin-bottom:12px; transition:background .2s;
         <input type="date" id="stats-to" style="width:100%;padding:10px 12px;font-family:'Montserrat',sans-serif;font-size:0.9rem;background:var(--beige);border:1px solid var(--beige-dark);color:var(--black);outline:none;"/>
       </div>
       <button class="btn btn-primary" style="width:auto;white-space:nowrap;" onclick="filterStats()">🔍 Lọc</button>
-      <button class="btn btn-primary" style="width:auto;white-space:nowrap;background:#2d7a4f;" onclick="exportExcel('filtered')">📥 Xuất Đã Lọc</button>
+      <button class="btn btn-primary" style="width:auto;white-space:nowrap;background:#2d7a4f;" onclick="exportExcel('filtered')">📥 Xuất Ngày Đã Lọc</button>
       <button class="btn btn-cancel" style="white-space:nowrap;" onclick="exportExcel('all')">📥 Xuất Tất Cả</button>
     </div>
-    <div id="stats-peak"></div>
+
     <div style="font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gray);margin-bottom:12px;">Lịch Sử Theo Ngày</div>
     <div id="stats-daily"></div>
   </div>
@@ -664,6 +698,7 @@ function renderStatsUI(data, isFiltered=false) {
           <div style="display:flex;gap:12px;align-items:center;">
             <span style="font-family:'Montserrat',sans-serif;font-size:10px;color:var(--wine);">✓ ${dayApproved} khách</span>
             <span style="font-family:'Montserrat',sans-serif;font-size:10px;color:#b43c3c;">✕ ${dayCancelled} huỷ</span>
+            <span style="font-family:'Montserrat',sans-serif;font-size:10px;color:#2d7a4f;">${(dayApproved*120000).toLocaleString('vi-VN')}đ</span>
             <button onclick="exportExcel('day','${day}')" style="font-family:'Montserrat',sans-serif;font-size:8px;letter-spacing:1px;padding:4px 10px;background:var(--wine);color:var(--beige);border:none;cursor:pointer;">↓ Excel</button>
           </div>
         </div>
@@ -695,7 +730,7 @@ window.exportExcel = async function(mode, specificDay='') {
 
   const rows = [];
   // Header
-  rows.push(['Ngày','Phòng 1 – Star Light (Khách)','Phòng 1 (Huỷ)','Phòng 2 – Heart Garden (Khách)','Phòng 2 (Huỷ)','Phòng 3 – Red Cherry (Khách)','Phòng 3 (Huỷ)','Tổng Khách','Tổng Huỷ']);
+  rows.push(['Ngày','Phòng 1 – Star Light (Khách)','Phòng 1 (Huỷ)','Phòng 2 – Heart Garden (Khách)','Phòng 2 (Huỷ)','Phòng 3 – Red Cherry (Khách)','Phòng 3 (Huỷ)','Tổng Khách','Tổng Huỷ','Doanh Thu Ước Tính (VNĐ)']);
 
   let grandApproved=0, grandCancelled=0;
   const sortedDays = Object.entries(exportData).sort((a,b)=>a[0].localeCompare(b[0]));
@@ -706,11 +741,11 @@ window.exportExcel = async function(mode, specificDay='') {
     const ta = (r1.approved||0)+(r2.approved||0)+(r3.approved||0);
     const tc = (r1.cancelled||0)+(r2.cancelled||0)+(r3.cancelled||0);
     grandApproved+=ta; grandCancelled+=tc;
-    rows.push([day, r1.approved||0, r1.cancelled||0, r2.approved||0, r2.cancelled||0, r3.approved||0, r3.cancelled||0, ta, tc]);
+    rows.push([day, r1.approved||0, r1.cancelled||0, r2.approved||0, r2.cancelled||0, r3.approved||0, r3.cancelled||0, ta, tc, ta*120000]);
   });
 
   // Total row
-  rows.push(['TỔNG CỘNG','','','','','','',grandApproved,grandCancelled]);
+  rows.push(['TỔNG CỘNG','','','','','','',grandApproved,grandCancelled,grandApproved*120000]);
 
   // Weekly summary sheet
   const weekRows = [['Tuần (Thứ 2)','Tổng Khách','Tổng Huỷ']];
@@ -772,19 +807,68 @@ window.exportExcel = async function(mode, specificDay='') {
   XLSX.writeFile(wb, `FilmNoir_ThongKe_${label}.xlsx`);
 };
 
-// ─── TOGGLE ROOM ─────────────────────────────────────────────────
+// ─── DISPLAY SCREEN ──────────────────────────────────────────────
+function renderDisplayPreview() {
+  // nothing needed, preview is static card
+}
+
+window.launchDisplay = function() {
+  document.getElementById('display-screen').style.display='flex';
+  updateDisplayScreen();
+  startDisplayClock();
+  // request fullscreen
+  document.getElementById('display-screen').requestFullscreen && 
+  document.getElementById('display-screen').requestFullscreen();
+};
+
+window.exitDisplay = function() {
+  document.getElementById('display-screen').style.display='none';
+  document.exitFullscreen && document.exitFullscreen();
+};
+
+function updateDisplayScreen() {
+  const el = document.getElementById('display-rooms');
+  if(!el || document.getElementById('display-screen').style.display==='none') return;
+  el.innerHTML = ROOMS.map((r,i) => {
+    const room = state.rooms[i];
+    const confirmed = room.queue.filter(e => e.status !== 'pending');
+    const isClosed = room.closed;
+    return `<div class="display-room-card">
+      <div class="display-room-name">${r.name}</div>
+      <div class="display-serving-label">${r.label}</div>
+      ${isClosed
+        ? `<div class="display-closed">⛔ ĐANG ĐÓNG</div>`
+        : `<div class="display-serving-label">Đang phục vụ</div>
+           <div class="display-serving-num">${room.currentServing ? String(room.currentServing).padStart(2,'0') : '–'}</div>
+           <div class="display-waiting">${confirmed.length} người đang chờ</div>`
+      }
+    </div>`;
+  }).join('');
+}
+
+function startDisplayClock() {
+  const el = document.getElementById('display-clock');
+  if(!el) return;
+  const tick = () => {
+    el.textContent = new Date().toLocaleTimeString('vi-VN', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  };
+  tick();
+  setInterval(tick, 1000);
+}
+
+// ─── TOGGLE ROOM OPEN/CLOSED ──────────────────────────────────────
 window.toggleRoom = async function() {
-  const isClosed = state.rooms[activeAdminRoom].closed;
+  const room = state.rooms[activeAdminRoom];
+  const isClosed = room.closed;
   setLoading(true);
   await set(ref(db, `${dbPath()}/${ROOMS[activeAdminRoom].key}/closed`), !isClosed);
   setLoading(false);
 };
 
-function updateToggleBtn() {
-  const isClosed = state.rooms[activeAdminRoom] && state.rooms[activeAdminRoom].closed;
+function updateToggleBtn(isClosed) {
   const btn = document.getElementById('btn-toggle-room');
   const banner = document.getElementById('room-closed-banner');
-  if(!btn || !banner) return;
+  if(!btn) return;
   if(isClosed) {
     btn.textContent = '▶ Mở Phòng';
     btn.style.borderColor = '#2d7a4f';
@@ -797,247 +881,6 @@ function updateToggleBtn() {
     banner.style.display = 'none';
   }
 }
-
-// ─── PUSH NOTIFICATIONS ──────────────────────────────────────────
-let notifGranted = false;
-(async () => {
-  if('Notification' in window) {
-    const p = await Notification.requestPermission();
-    notifGranted = p === 'granted';
-  }
-})();
-
-let prevPos = {};
-function checkNotifications() {
-  try {
-    state.rooms.forEach((room, ri) => {
-      const confirmed = room.queue.filter(e => e.status !== 'pending');
-      confirmed.forEach((entry, idx) => {
-        const key = entry.id;
-        const prev = prevPos[key];
-        if(notifGranted) {
-          if(idx <= 2 && (prev === undefined || prev > 2)) {
-            new Notification('FilmNoir – Sắp đến lượt! 🎬', { body: `${entry.name}: còn ${idx+1} lượt · ${ROOMS[ri].label}` });
-          }
-          if(idx === 0 && prev !== undefined && prev > 0) {
-            new Notification('FilmNoir – Đến lượt rồi! 🎬', { body: `${entry.name} vui lòng vào ${ROOMS[ri].label}` });
-          }
-        }
-        prevPos[key] = idx;
-      });
-    });
-  } catch(e) {}
-}
-
-// ─── COUNTDOWN TIMER ─────────────────────────────────────────────
-function updateCountdown(roomKey) {
-  const cdEl = document.getElementById('wait-countdown');
-  if(!cdEl) return;
-  const ri = ROOMS.findIndex(r => r.key === roomKey);
-  if(ri < 0) return;
-  const confirmed = state.rooms[ri].queue.filter(e => e.status !== 'pending');
-  const wait = confirmed.length;
-  if(wait <= 0) { cdEl.textContent = ''; return; }
-  const mins = wait * 6;
-  const h = Math.floor(mins/60), m = mins%60;
-  cdEl.textContent = `⏱ Ước tính chờ khoảng ${h>0?h+' tiếng ':''}${m} phút`;
-}
-
-// ─── STATS FUNCTIONS ─────────────────────────────────────────────
-let allStatsData = {};
-
-async function renderStats() {
-  try {
-    const snap = await get(ref(db, 'filmnoir/stats'));
-    allStatsData = snap.val() || {};
-    renderStatsUI(allStatsData, false);
-  } catch(e) { console.error('renderStats:', e); }
-}
-
-window.filterStats = function() {
-  const from = document.getElementById('stats-from').value;
-  const to = document.getElementById('stats-to').value;
-  if(!from && !to) { renderStatsUI(allStatsData, false); return; }
-  const filtered = {};
-  Object.entries(allStatsData).forEach(([day,rooms]) => {
-    if((!from||day>=from)&&(!to||day<=to)) filtered[day]=rooms;
-  });
-  renderStatsUI(filtered, true);
-};
-
-function renderStatsUI(data, isFiltered) {
-  try {
-    const summaryEl = document.getElementById('stats-summary');
-    const revenueEl = document.getElementById('stats-revenue');
-    const periodEl = document.getElementById('stats-period');
-    const dailyEl = document.getElementById('stats-daily');
-    if(!summaryEl) return;
-
-    if(!data || !Object.keys(data).length) {
-      summaryEl.innerHTML=''; revenueEl.innerHTML=''; periodEl.innerHTML=''; dailyEl.innerHTML='<p style="color:var(--gray);font-style:italic;">Chưa có dữ liệu.</p>'; return;
-    }
-
-    const days = Object.entries(data).sort((a,b)=>b[0].localeCompare(a[0]));
-    let totalApproved=0, totalCancelled=0;
-    const roomTotals={room1:0,room2:0,room3:0};
-    const weeklyMap={}, monthlyMap={};
-
-    days.forEach(([day,rooms]) => {
-      Object.entries(rooms).forEach(([rk,s]) => {
-        totalApproved+=s.approved||0; totalCancelled+=s.cancelled||0;
-        roomTotals[rk]=(roomTotals[rk]||0)+(s.approved||0);
-      });
-      const d=new Date(day), mon=new Date(d);
-      mon.setDate(d.getDate()-((d.getDay()+6)%7));
-      const wk=mon.toISOString().slice(0,10);
-      if(!weeklyMap[wk]) weeklyMap[wk]={approved:0,cancelled:0};
-      Object.values(rooms).forEach(s=>{weeklyMap[wk].approved+=s.approved||0;weeklyMap[wk].cancelled+=s.cancelled||0;});
-      const mk=day.slice(0,7);
-      if(!monthlyMap[mk]) monthlyMap[mk]={approved:0,cancelled:0};
-      Object.values(rooms).forEach(s=>{monthlyMap[mk].approved+=s.approved||0;monthlyMap[mk].cancelled+=s.cancelled||0;});
-    });
-
-    const topRoomIdx = Object.values(roomTotals).indexOf(Math.max(...Object.values(roomTotals)));
-    const topRoom = ROOMS[topRoomIdx];
-
-    summaryEl.innerHTML=`
-      <div style="background:var(--cream);border:1px solid var(--beige-dark);padding:20px;text-align:center;">
-        <div style="font-family:'Lobster',cursive;font-size:2.5rem;color:var(--wine);">${totalApproved}</div>
-        <div style="font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:2px;color:var(--gray);margin-top:4px;">${isFiltered?'KHÁCH (LỌC)':'TỔNG KHÁCH'}</div>
-      </div>
-      <div style="background:var(--cream);border:1px solid var(--beige-dark);padding:20px;text-align:center;">
-        <div style="font-family:'Lobster',cursive;font-size:2.5rem;color:#b43c3c;">${totalCancelled}</div>
-        <div style="font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:2px;color:var(--gray);margin-top:4px;">${isFiltered?'HUỶ (LỌC)':'TỔNG HUỶ'}</div>
-      </div>
-      <div style="background:var(--cream);border:1px solid var(--beige-dark);padding:20px;text-align:center;">
-        <div style="font-family:'Pinyon Script',cursive;font-size:1.4rem;color:var(--wine);">${topRoom?topRoom.name:'–'}</div>
-        <div style="font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:2px;color:var(--gray);margin-top:4px;">PHÒNG HOT NHẤT</div>
-      </div>`;
-
-    revenueEl.innerHTML=`
-      <div style="background:var(--cream);border:1px solid var(--beige-dark);padding:20px;text-align:center;">
-        <div style="font-family:'Lobster',cursive;font-size:1.8rem;color:#2d7a4f;">${(totalApproved*120000).toLocaleString('vi-VN')}đ</div>
-        <div style="font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:2px;color:var(--gray);margin-top:4px;">DOANH THU ƯỚC TÍNH · 120k/lượt</div>
-      </div>
-      <div style="background:var(--cream);border:1px solid var(--beige-dark);padding:20px;text-align:center;">
-        <div style="font-family:'Lobster',cursive;font-size:1.8rem;color:var(--gray);">${totalApproved>0?(totalCancelled/totalApproved*100).toFixed(1):0}%</div>
-        <div style="font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:2px;color:var(--gray);margin-top:4px;">TỶ LỆ HUỶ</div>
-      </div>`;
-
-    const weeks=Object.entries(weeklyMap).sort((a,b)=>b[0].localeCompare(a[0])).slice(0,5);
-    const months=Object.entries(monthlyMap).sort((a,b)=>b[0].localeCompare(a[0])).slice(0,6);
-    periodEl.innerHTML=`
-      <div style="background:var(--cream);border:1px solid var(--beige-dark);padding:16px;">
-        <div style="font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:3px;color:var(--gray);margin-bottom:10px;">THEO TUẦN</div>
-        ${weeks.map(([wk,s])=>`<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--beige-dark);font-family:'Montserrat',sans-serif;font-size:9px;">
-          <span>${wk}</span><span><span style="color:var(--wine);">✓${s.approved}</span> <span style="color:#b43c3c;">✕${s.cancelled}</span></span></div>`).join('')}
-      </div>
-      <div style="background:var(--cream);border:1px solid var(--beige-dark);padding:16px;">
-        <div style="font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:3px;color:var(--gray);margin-bottom:10px;">THEO THÁNG</div>
-        ${months.map(([mk,s])=>`<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--beige-dark);font-family:'Montserrat',sans-serif;font-size:9px;">
-          <span>${mk}</span><span><span style="color:var(--wine);">✓${s.approved}</span> <span style="color:#b43c3c;">✕${s.cancelled}</span></span></div>`).join('')}
-      </div>`;
-
-    dailyEl.innerHTML=days.map(([day,rooms])=>{
-      const da=Object.values(rooms).reduce((s,r)=>s+(r.approved||0),0);
-      const dc=Object.values(rooms).reduce((s,r)=>s+(r.cancelled||0),0);
-      return `<div style="border:1px solid var(--beige-dark);padding:16px 20px;margin-bottom:8px;background:var(--cream);">
-        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
-          <div style="font-family:'Montserrat',sans-serif;font-size:11px;font-weight:600;">${day}</div>
-          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-            <span style="font-family:'Montserrat',sans-serif;font-size:10px;color:var(--wine);">✓ ${da}</span>
-            <span style="font-family:'Montserrat',sans-serif;font-size:10px;color:#b43c3c;">✕ ${dc}</span>
-            <span style="font-family:'Montserrat',sans-serif;font-size:10px;color:#2d7a4f;">${(da*120000).toLocaleString('vi-VN')}đ</span>
-            <button onclick="exportExcel('day','${day}')" style="font-family:'Montserrat',sans-serif;font-size:8px;padding:4px 10px;background:var(--wine);color:var(--beige);border:none;cursor:pointer;">↓ Excel</button>
-          </div>
-        </div>
-        <div style="display:flex;gap:12px;margin-top:8px;flex-wrap:wrap;">
-          ${ROOMS.map(r=>`<span style="font-family:'Montserrat',sans-serif;font-size:9px;color:var(--gray);">${r.label}: <strong style="color:var(--wine)">${(rooms[r.key]&&rooms[r.key].approved)||0}</strong></span>`).join('')}
-        </div>
-      </div>`;
-    }).join('');
-
-    // Peak hours today
-    get(ref(db,'filmnoir/customers/'+todayKey())).then(snap=>{
-      const peakEl=document.getElementById('stats-peak');
-      if(!peakEl) return;
-      const d=snap.val();
-      if(!d){peakEl.innerHTML='';return;}
-      const hb={};
-      Object.values(d).forEach(c=>{
-        if(c.status!=='approved') return;
-        const h=(c.approvedAt||'').split(':')[0];
-        if(h) hb[h]=(hb[h]||0)+1;
-      });
-      const mv=Math.max(...Object.values(hb),1);
-      const sh=Object.entries(hb).sort((a,b)=>Number(a[0])-Number(b[0]));
-      peakEl.innerHTML=sh.length?`
-        <div style="font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gray);margin-bottom:10px;">⏰ Giờ Cao Điểm Hôm Nay</div>
-        <div style="background:var(--cream);border:1px solid var(--beige-dark);padding:16px;margin-bottom:20px;">
-          ${sh.map(([h,v])=>`<div class="peak-bar-wrap"><div class="peak-bar-label">${h}:00</div><div class="peak-bar" style="width:${Math.round(v/mv*100)}%;min-width:4px;"></div><div class="peak-bar-num">${v}</div></div>`).join('')}
-        </div>`:'';
-    }).catch(()=>{});
-  } catch(e) { console.error('renderStatsUI:', e); }
-}
-
-window.exportExcel = async function(mode, specificDay='') {
-  try {
-    const fromVal=document.getElementById('stats-from').value;
-    const toVal=document.getElementById('stats-to').value;
-    let exportData=allStatsData;
-    if(mode==='day') exportData={[specificDay]:allStatsData[specificDay]||{}};
-    else if(mode==='filtered'){
-      exportData={};
-      Object.entries(allStatsData).forEach(([day,rooms])=>{
-        if((!fromVal||day>=fromVal)&&(!toVal||day<=toVal)) exportData[day]=rooms;
-      });
-    }
-    const rows=[['Ngày','P1 Khách','P1 Huỷ','P2 Khách','P2 Huỷ','P3 Khách','P3 Huỷ','Tổng Khách','Tổng Huỷ','Doanh Thu (VNĐ)']];
-    let gA=0,gC=0;
-    const weeklyMap={},monthlyMap={};
-    const sortedDays=Object.entries(exportData).sort((a,b)=>a[0].localeCompare(b[0]));
-    sortedDays.forEach(([day,rooms])=>{
-      const r1=rooms.room1||{},r2=rooms.room2||{},r3=rooms.room3||{};
-      const ta=(r1.approved||0)+(r2.approved||0)+(r3.approved||0);
-      const tc=(r1.cancelled||0)+(r2.cancelled||0)+(r3.cancelled||0);
-      gA+=ta;gC+=tc;
-      rows.push([day,r1.approved||0,r1.cancelled||0,r2.approved||0,r2.cancelled||0,r3.approved||0,r3.cancelled||0,ta,tc,ta*120000]);
-      const d=new Date(day),mon=new Date(d);mon.setDate(d.getDate()-((d.getDay()+6)%7));
-      const wk=mon.toISOString().slice(0,10);
-      if(!weeklyMap[wk])weeklyMap[wk]={a:0,c:0};
-      weeklyMap[wk].a+=ta;weeklyMap[wk].c+=tc;
-      const mk=day.slice(0,7);
-      if(!monthlyMap[mk])monthlyMap[mk]={a:0,c:0};
-      monthlyMap[mk].a+=ta;monthlyMap[mk].c+=tc;
-    });
-    rows.push(['TỔNG','','','','','','',gA,gC,gA*120000]);
-    const wkRows=[['Tuần','Khách','Huỷ','Doanh Thu']];
-    Object.entries(weeklyMap).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([wk,s])=>wkRows.push([`Tuần ${wk}`,s.a,s.c,s.a*120000]));
-    const mthRows=[['Tháng','Khách','Huỷ','Doanh Thu']];
-    Object.entries(monthlyMap).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([mk,s])=>mthRows.push([mk,s.a,s.c,s.a*120000]));
-    const custSnap=await get(ref(db,'filmnoir/customers'));
-    const custData=custSnap.val()||{};
-    let custDays=Object.entries(custData).sort((a,b)=>a[0].localeCompare(b[0]));
-    if(mode==='day')custDays=custDays.filter(([d])=>d===specificDay);
-    else if(mode==='filtered')custDays=custDays.filter(([d])=>(!fromVal||d>=fromVal)&&(!toVal||d<=toVal));
-    const apRows=[['Ngày','Số TT','Tên','SĐT','Phòng','Giờ Duyệt']];
-    const caRows=[['Ngày','Số TT','Tên','SĐT','Phòng','Giờ Huỷ']];
-    custDays.forEach(([day,custs])=>{
-      Object.values(custs).forEach(c=>{
-        if(c.status==='approved')apRows.push([day,c.num>0?String(c.num).padStart(2,'0'):'–',c.name,c.phone,c.roomName,c.approvedAt||'']);
-        else caRows.push([day,c.num>0?String(c.num).padStart(2,'0'):'–',c.name,c.phone,c.roomName,c.cancelledAt||'']);
-      });
-    });
-    const wb=XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(rows),'Theo Ngày');
-    XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(wkRows),'Theo Tuần');
-    XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(mthRows),'Theo Tháng');
-    XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(apRows),'DS Khách Đã Chụp');
-    XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(caRows),'DS Khách Đã Huỷ');
-    const label=mode==='day'?specificDay:mode==='filtered'?`${fromVal}_${toVal}`:'TatCa';
-    XLSX.writeFile(wb,`FilmNoir_${label}.xlsx`);
-  } catch(e){ console.error('exportExcel:',e); alert('Lỗi xuất Excel: '+e.message); }
-};
 
 function startListening() {
   // Listen cancelled history
@@ -1094,9 +937,12 @@ function startListening() {
 
 function rerenderCurrentTab() {
   if(currentTab === 'queue') { renderQueueOverview(); renderQueueRoom(activeQueueRoom); }
-  if(currentTab === 'admin') { renderAdminOverview(); renderAdminRoom(activeAdminRoom); updateToggleBtn(); }
+  if(currentTab === 'admin') { 
+    renderAdminOverview(); renderAdminRoom(activeAdminRoom);
+    updateToggleBtn(state.rooms[activeAdminRoom].closed);
+  }
+  // Always update display screen if open
   updateDisplayScreen();
-  checkNotifications();
 }
 
 // ─── FIREBASE WRITE HELPERS ───────────────────────────────────────
@@ -1155,7 +1001,7 @@ function doSwitchTab(tab) {
     if(t===tab) document.querySelectorAll('nav.tabs button')[i].classList.add('active');
   });
   if(tab==='queue') { renderQueueOverview(); renderQueueRoom(activeQueueRoom); }
-  if(tab==='admin') { renderAdminOverview(); renderAdminRoom(activeAdminRoom); updateToggleBtn(); }
+  if(tab==='admin') { renderAdminOverview(); renderAdminRoom(activeAdminRoom); }
   if(tab==='check') document.getElementById('check-result').style.display='none';
 }
 
@@ -1190,9 +1036,9 @@ window.bookQueue = async function() {
   if(!name) { msgEl.innerHTML='<div class="msg msg-error">Vui lòng nhập họ tên.</div>'; return; }
   if(!phone||phone.length<8) { msgEl.innerHTML='<div class="msg msg-error">Vui lòng nhập số điện thoại hợp lệ.</div>'; return; }
   if(!roomKey) { msgEl.innerHTML='<div class="msg msg-error">Vui lòng chọn phòng chụp.</div>'; return; }
-  const selRi = ROOMS.findIndex(r => r.key === roomKey);
-  if(state.rooms[selRi] && state.rooms[selRi].closed) {
-    msgEl.innerHTML='<div class="msg msg-error">Phòng này đang đóng, vui lòng chọn phòng khác.</div>'; return;
+  const selectedRi = ROOMS.findIndex(r => r.key === roomKey);
+  if(state.rooms[selectedRi] && state.rooms[selectedRi].closed) {
+    msgEl.innerHTML='<div class="msg msg-error">Phòng này hiện đang đóng, vui lòng chọn phòng khác.</div>'; return;
   }
 
   // Check duplicate across all rooms
@@ -1532,7 +1378,8 @@ function renderAdminRoom(ri) {
           </div>
           <button class="btn-approve" onclick="approveEntry(${ri},'${entry.id}')">✓ Duyệt</button>
           <button class="btn-remove" onclick="cancelEntry(${ri},'${entry.id}',${entry.num})">Huỷ</button>
-        </div>`).join('');
+        </div>
+      `).join('');
   }
 
   pendingEl.innerHTML = pendingHTML || '';
@@ -1660,7 +1507,6 @@ function scheduleMidnightReset() {
 // ─── INIT ─────────────────────────────────────────────────────────
 startListening();
 scheduleMidnightReset();
-if('Notification' in window) Notification.requestPermission();
 
 </script>
 
