@@ -465,7 +465,8 @@ padding:40px 20px; text-align:center; border-radius:4px;
 <div id="stats-content" style="display:none;">
   <div class="card fade-in">
     <div class="card-title">Thống Kê Tổng Quan</div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;" id="stats-summary"></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px;" id="stats-summary"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;" id="stats-revenue"></div>
 
     <!-- Weekly / Monthly -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px;" id="stats-period"></div>
@@ -485,6 +486,7 @@ padding:40px 20px; text-align:center; border-radius:4px;
       <button class="btn btn-cancel" style="white-space:nowrap;" onclick="exportExcel('all')">📥 Xuất Tất Cả</button>
     </div>
 
+    <div id="stats-peak"></div>
     <div style="font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gray);margin-bottom:12px;">Lịch Sử Theo Ngày</div>
     <div id="stats-daily"></div>
   </div>
@@ -602,7 +604,7 @@ let allStatsData = {};
 async function renderStats() {
   const statsSnap = await get(ref(db, 'filmnoir/stats'));
   allStatsData = statsSnap.val() || {};
-  renderStatsUI(allStatsData);
+  try { renderStatsUI(allStatsData); } catch(e) { console.error('renderStats error:', e); }
 }
 
 window.filterStats = function() {
@@ -697,28 +699,21 @@ function renderStatsUI(data, isFiltered=false) {
     </div>
   `;
 
-  // Peak hours analysis from customer data
-  const custSnap2 = await get(ref(db, `filmnoir/customers/${todayKey()}`));
-  const todayCust = custSnap2.val();
-  const peakEl = document.getElementById('stats-peak') || (() => {
-    const d = document.createElement('div');
-    d.id = 'stats-peak';
-    document.getElementById('stats-daily').insertAdjacentElement('beforebegin', d);
-    return d;
-  })();
-
-  if(todayCust) {
-    const hourBuckets = {};
-    Object.values(todayCust).forEach(c => {
-      if(c.status !== 'approved') return;
-      const t = c.approvedAt || '';
-      const h = t.split(':')[0];
-      if(h) hourBuckets[h] = (hourBuckets[h]||0) + 1;
-    });
-    const maxVal = Math.max(...Object.values(hourBuckets), 1);
-    const sortedHours = Object.entries(hourBuckets).sort((a,b)=>a[0]-b[0]);
-    if(sortedHours.length) {
-      peakEl.innerHTML = `
+  // Peak hours
+  try {
+    const custSnap2 = await get(ref(db, `filmnoir/customers/${todayKey()}`));
+    const todayCust = custSnap2.val();
+    const peakEl = document.getElementById('stats-peak');
+    if(todayCust && peakEl) {
+      const hourBuckets = {};
+      Object.values(todayCust).forEach(c => {
+        if(c.status !== 'approved') return;
+        const h = (c.approvedAt||'').split(':')[0];
+        if(h) hourBuckets[h] = (hourBuckets[h]||0) + 1;
+      });
+      const maxVal = Math.max(...Object.values(hourBuckets), 1);
+      const sortedHours = Object.entries(hourBuckets).sort((a,b)=>Number(a[0])-Number(b[0]));
+      peakEl.innerHTML = sortedHours.length ? `
         <div style="font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gray);margin-bottom:12px;">⏰ Giờ Cao Điểm Hôm Nay</div>
         <div style="background:var(--cream);border:1px solid var(--beige-dark);padding:20px;margin-bottom:24px;">
           ${sortedHours.map(([h,v])=>`
@@ -728,10 +723,9 @@ function renderStatsUI(data, isFiltered=false) {
               <div class="peak-bar-num">${v} khách</div>
             </div>
           `).join('')}
-        </div>
-      `;
-    } else { peakEl.innerHTML = ''; }
-  } else { peakEl.innerHTML = ''; }
+        </div>` : '';
+    }
+  } catch(e) { console.warn('Peak hours error:', e); }
 
   dailyEl.innerHTML = days.map(([day, rooms]) => {
     const dayApproved = Object.values(rooms).reduce((s,r)=>s+(r.approved||0),0);
