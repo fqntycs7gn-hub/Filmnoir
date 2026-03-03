@@ -232,8 +232,6 @@ cursor:pointer; margin-bottom:12px; transition:background .2s;
 .cancelled-item { display:flex; align-items:center; gap:12px; padding:12px 16px; border:1px solid #e8b4b4; margin-bottom:6px; background:#fff8f8; }
 .cancelled-num { font-family:‘Lobster’,cursive; font-size:1.4rem; color:#b43c3c; min-width:40px; text-align:center; }
 .fade-in { animation:fadeIn 0.4s ease forwards; }
-.note-input { width:100%; padding:8px 12px; font-family:‘Montserrat’,sans-serif; font-size:0.85rem; background:var(–beige); border:1px solid var(–beige-dark); color:var(–black); outline:none; resize:none; }
-.note-input:focus { border-color:var(–wine); }
 .display-room-card { background:rgba(245,239,230,0.05); border:1px solid rgba(245,239,230,0.15); padding:40px 20px; text-align:center; }
 .display-serving-num { font-family:‘Lobster’,cursive; font-size:8rem; color:#f5efe6; line-height:1; }
 .display-waiting { font-family:‘Montserrat’,sans-serif; font-size:11px; letter-spacing:2px; color:rgba(245,239,230,0.4); margin-top:12px; }
@@ -264,7 +262,6 @@ cursor:pointer; margin-bottom:12px; transition:background .2s;
   <button class="active" onclick="switchTab('book')">Đặt Lịch</button>
   <button onclick="switchTab('check')">Kiểm Tra & Huỷ Lịch</button>
   <button onclick="switchTab('queue')">Hàng Chờ</button>
-  <button onclick="switchTab('display')">Màn Hình Quầy</button>
   <button onclick="switchTab('admin')">Quản Lý</button>
 </nav>
 
@@ -381,24 +378,6 @@ cursor:pointer; margin-bottom:12px; transition:background .2s;
       <button onclick="switchRoomQueue(2)">Phòng 3 – Red Cherry</button>
     </div>
     <div id="queue-room-detail"></div>
-  </div>
-
-  <!-- DISPLAY -->
-
-  <div id="tab-display" class="tab-content" style="display:none;">
-    <div id="display-screen" style="position:fixed;inset:0;background:#1a1410;z-index:99990;display:none;flex-direction:column;justify-content:center;align-items:center;">
-      <div style="position:absolute;top:20px;left:50%;transform:translateX(-50%);font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:5px;color:rgba(245,239,230,0.3);">FILMNOIR PHOTOBOOTH STUDIO</div>
-      <button onclick="exitDisplay()" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.5);font-family:'Montserrat',sans-serif;font-size:10px;padding:6px 12px;cursor:pointer;">✕ THOÁT</button>
-      <div id="display-rooms" style="display:grid;grid-template-columns:repeat(3,1fr);gap:40px;width:90vw;max-width:1100px;"></div>
-      <div id="display-clock" style="position:absolute;bottom:20px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:3px;color:rgba(245,239,230,0.3);"></div>
-    </div>
-    <div class="ornament">— ◈ —</div>
-    <div class="card fade-in" style="text-align:center;padding:48px 40px;">
-      <div style="font-size:3rem;margin-bottom:16px;">🖥️</div>
-      <div class="card-title" style="justify-content:center;">Màn Hình Quầy</div>
-      <p style="font-family:'Montserrat',sans-serif;font-size:0.85rem;color:var(--gray);margin-bottom:28px;line-height:1.7;">Bật toàn màn hình để hiển thị số đang phục vụ.<br/>Đặt máy tính ở quầy hướng về phía khách.</p>
-      <button class="btn btn-primary" style="max-width:280px;margin:0 auto;" onclick="launchDisplay()">▶ Bật Màn Hình Quầy</button>
-    </div>
   </div>
 
   <!-- ADMIN -->
@@ -793,44 +772,6 @@ window.exportExcel = async function(mode, specificDay='') {
   XLSX.writeFile(wb, `FilmNoir_ThongKe_${label}.xlsx`);
 };
 
-// ─── DISPLAY SCREEN ──────────────────────────────────────────────
-window.launchDisplay = function() {
-  const el = document.getElementById('display-screen');
-  el.style.display = 'flex';
-  updateDisplayScreen();
-  setInterval(updateDisplayScreen, 5000);
-  // Clock
-  const clockEl = document.getElementById('display-clock');
-  const tick = () => { if(clockEl) clockEl.textContent = new Date().toLocaleTimeString('vi-VN'); };
-  tick(); setInterval(tick, 1000);
-  if(el.requestFullscreen) el.requestFullscreen();
-};
-
-window.exitDisplay = function() {
-  document.getElementById('display-screen').style.display = 'none';
-  if(document.exitFullscreen) document.exitFullscreen();
-};
-
-function updateDisplayScreen() {
-  const el = document.getElementById('display-rooms');
-  if(!el) return;
-  el.innerHTML = ROOMS.map((r,i) => {
-    const room = state.rooms[i];
-    const confirmed = room.queue.filter(e => e.status !== 'pending');
-    if(room.closed) return `<div class="display-room-card">
-      <div style="font-family:'Pinyon Script',cursive;font-size:2rem;color:rgba(201,169,110,0.9);margin-bottom:8px;">${r.name}</div>
-      <div style="font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:3px;color:rgba(245,239,230,0.3);">${r.label}</div>
-      <div style="font-family:'Montserrat',sans-serif;font-size:14px;letter-spacing:3px;color:#b43c3c;margin-top:20px;">⛔ ĐANG ĐÓNG</div>
-    </div>`;
-    return `<div class="display-room-card">
-      <div style="font-family:'Pinyon Script',cursive;font-size:2rem;color:rgba(201,169,110,0.9);margin-bottom:4px;">${r.name}</div>
-      <div style="font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:3px;color:rgba(245,239,230,0.3);margin-bottom:12px;">${r.label} · ĐANG PHỤC VỤ</div>
-      <div class="display-serving-num">${room.currentServing ? String(room.currentServing).padStart(2,'0') : '–'}</div>
-      <div class="display-waiting">${confirmed.length} người đang chờ</div>
-    </div>`;
-  }).join('');
-}
-
 // ─── TOGGLE ROOM ─────────────────────────────────────────────────
 window.toggleRoom = async function() {
   const isClosed = state.rooms[activeAdminRoom].closed;
@@ -856,13 +797,6 @@ function updateToggleBtn() {
     banner.style.display = 'none';
   }
 }
-
-// ─── SAVE NOTE ────────────────────────────────────────────────────
-window.saveNote = async function(ri, id, note) {
-  try {
-    await update(ref(db, `${dbPath()}/${ROOMS[ri].key}/queue/${id}`), { note });
-  } catch(e) { console.warn('saveNote error:', e); }
-};
 
 // ─── PUSH NOTIFICATIONS ──────────────────────────────────────────
 let notifGranted = false;
@@ -1598,137 +1532,137 @@ function renderAdminRoom(ri) {
           </div>
           <button class="btn-approve" onclick="approveEntry(${ri},'${entry.id}')">✓ Duyệt</button>
           <button class="btn-remove" onclick="cancelEntry(${ri},'${entry.id}',${entry.num})">Huỷ</button>
+        </div>`).join('');
+  }
+
+  pendingEl.innerHTML = pendingHTML || '';
+
+  // Confirmed queue section
+  const listEl = document.getElementById('admin-queue-list');
+  if(!confirmed.length) {
+    listEl.innerHTML='<p style="color:var(--gray);font-style:italic;">Hàng chờ phòng này đang trống.</p>';
+    return;
+  }
+  listEl.innerHTML = `<div class="queue-section-title">✓ Hàng Chờ Chính Thức (${confirmed.length})</div>` +
+    confirmed.map((entry,idx) => `
+      <div class="admin-queue-item">
+        <div class="q-num">${String(entry.num).padStart(2,'0')}</div>
+        <div class="q-info" style="flex:1;">
+          <div class="q-name">${entry.name}</div>
+          <div class="q-detail">${entry.phone} · ${entry.time}</div>
         </div>
-        <div style="padding:4px 16px 10px;background:#fff8f8;border:1px solid #e8b4b4;border-top:none;margin-bottom:2px;">
-          <textarea class="note-input" rows="1" placeholder="Ghi chú..." onchange="saveNote(${ri},'${entry.id}',this.value)">${entry.note||''}</textarea>
-
-```
-    </div>
-  `).join('');
-```
-
-}
-
-pendingEl.innerHTML = pendingHTML || ‘’;
-
-// Confirmed queue section
-const listEl = document.getElementById(‘admin-queue-list’);
-if(!confirmed.length) {
-listEl.innerHTML=’<p style="color:var(--gray);font-style:italic;">Hàng chờ phòng này đang trống.</p>’;
-return;
-}
-listEl.innerHTML = `<div class="queue-section-title">✓ Hàng Chờ Chính Thức (${confirmed.length})</div>` +
-confirmed.map((entry,idx) => ` <div class="admin-queue-item"> <div class="q-num">${String(entry.num).padStart(2,'0')}</div> <div class="q-info" style="flex:1;"> <div class="q-name">${entry.name}</div> <div class="q-detail">${entry.phone} · ${entry.time}</div> </div> ${idx===0?`<button class="btn-serve" onclick="serveNext()">Phục vụ →</button>`:''} <button class="btn-remove" onclick="cancelEntry(${ri},'${entry.id}',${entry.num})">Huỷ</button> </div> `).join(’’);
+        ${idx===0?`<button class="btn-serve" onclick="serveNext()">Phục vụ →</button>`:''}
+        <button class="btn-remove" onclick="cancelEntry(${ri},'${entry.id}',${entry.num})">Huỷ</button>
+      </div>
+    `).join('');
 }
 
 window.approveEntry = async function(ri, id) {
-setLoading(true);
-try {
-// Get entry data from local state BEFORE updating
-const entryData = state.rooms[ri].queue.find(e => e.id === id);
-if(!entryData) { setLoading(false); return; }
+  setLoading(true);
+  try {
+    // Get entry data from local state BEFORE updating
+    const entryData = state.rooms[ri].queue.find(e => e.id === id);
+    if(!entryData) { setLoading(false); return; }
 
-```
-// Assign real queue number via transaction
-const counterRef = ref(db, `${dbPath()}/${ROOMS[ri].key}/counter`);
-let newNum;
-await runTransaction(counterRef, current => { newNum = (current || 0) + 1; return newNum; });
+    // Assign real queue number via transaction
+    const counterRef = ref(db, `${dbPath()}/${ROOMS[ri].key}/counter`);
+    let newNum;
+    await runTransaction(counterRef, current => { newNum = (current || 0) + 1; return newNum; });
 
-// Update status
-await update(ref(db, `${dbPath()}/${ROOMS[ri].key}/queue/${id}`), { status: 'confirmed', num: newNum });
+    // Update status
+    await update(ref(db, `${dbPath()}/${ROOMS[ri].key}/queue/${id}`), { status: 'confirmed', num: newNum });
 
-// Log stats
-const statsRef = ref(db, `filmnoir/stats/${todayKey()}/${ROOMS[ri].key}`);
-await runTransaction(statsRef, current => {
-  const c = current || { approved:0, cancelled:0 };
-  return { ...c, approved: (c.approved||0) + 1 };
-});
+    // Log stats
+    const statsRef = ref(db, `filmnoir/stats/${todayKey()}/${ROOMS[ri].key}`);
+    await runTransaction(statsRef, current => {
+      const c = current || { approved:0, cancelled:0 };
+      return { ...c, approved: (c.approved||0) + 1 };
+    });
 
-// Save customer record using local state data
-await set(ref(db, `filmnoir/customers/${todayKey()}/${id}`), {
-  name: entryData.name,
-  phone: entryData.phone,
-  room: ROOMS[ri].key,
-  roomName: `${ROOMS[ri].label} – ${ROOMS[ri].name}`,
-  num: newNum,
-  approvedAt: new Date().toLocaleTimeString('vi-VN'),
-  status: 'approved'
-});
+    // Save customer record using local state data
+    await set(ref(db, `filmnoir/customers/${todayKey()}/${id}`), {
+      name: entryData.name,
+      phone: entryData.phone,
+      room: ROOMS[ri].key,
+      roomName: `${ROOMS[ri].label} – ${ROOMS[ri].name}`,
+      num: newNum,
+      approvedAt: new Date().toLocaleTimeString('vi-VN'),
+      status: 'approved'
+    });
 
-document.getElementById('msg-admin').innerHTML=`<div class="msg msg-success">✓ Đã duyệt! Cấp số <strong>${String(newNum).padStart(2,'0')}</strong> cho khách.</div>`;
-```
-
-} catch(e) {
-console.error(e);
-document.getElementById(‘msg-admin’).innerHTML=’<div class="msg msg-error">Lỗi. Vui lòng thử lại.</div>’;
-}
-setLoading(false);
+    document.getElementById('msg-admin').innerHTML=`<div class="msg msg-success">✓ Đã duyệt! Cấp số <strong>${String(newNum).padStart(2,'0')}</strong> cho khách.</div>`;
+  } catch(e) {
+    console.error(e);
+    document.getElementById('msg-admin').innerHTML='<div class="msg msg-error">Lỗi. Vui lòng thử lại.</div>';
+  }
+  setLoading(false);
 };
 
 window.serveNext = async function() {
-const room = state.rooms[activeAdminRoom];
-const confirmed = room.queue.filter(e => e.status !== ‘pending’);
-if(!confirmed.length) {
-document.getElementById(‘msg-admin’).innerHTML=’<div class="msg msg-error">Không có ai trong hàng chờ chính thức.</div>’; return;
-}
-const served = confirmed[0];
-setLoading(true);
-try {
-await update(roomRef(activeAdminRoom), { currentServing: served.num });
-await remove(ref(db, `${dbPath()}/${ROOMS[activeAdminRoom].key}/queue/${served.id}`));
-document.getElementById(‘msg-admin’).innerHTML=`<div class="msg msg-success">Đang phục vụ số <strong>${String(served.num).padStart(2,'0')}</strong> – ${served.name}</div>`;
-} catch(e) {
-document.getElementById(‘msg-admin’).innerHTML=’<div class="msg msg-error">Lỗi. Vui lòng thử lại.</div>’;
-}
-setLoading(false);
+  const room = state.rooms[activeAdminRoom];
+  const confirmed = room.queue.filter(e => e.status !== 'pending');
+  if(!confirmed.length) {
+    document.getElementById('msg-admin').innerHTML='<div class="msg msg-error">Không có ai trong hàng chờ chính thức.</div>'; return;
+  }
+  const served = confirmed[0];
+  setLoading(true);
+  try {
+    await update(roomRef(activeAdminRoom), { currentServing: served.num });
+    await remove(ref(db, `${dbPath()}/${ROOMS[activeAdminRoom].key}/queue/${served.id}`));
+    document.getElementById('msg-admin').innerHTML=`<div class="msg msg-success">Đang phục vụ số <strong>${String(served.num).padStart(2,'0')}</strong> – ${served.name}</div>`;
+  } catch(e) {
+    document.getElementById('msg-admin').innerHTML='<div class="msg msg-error">Lỗi. Vui lòng thử lại.</div>';
+  }
+  setLoading(false);
 };
 
 window.cancelRoomChange = async function(ri, id) {
-setLoading(true);
-await update(ref(db, `${dbPath()}/${ROOMS[ri].key}/queue/${id}`), {
-changeRequested: false,
-changeToRoom: null,
-changeToRoomName: null,
-changeRequestedAt: null
-});
-setLoading(false);
-document.getElementById(‘msg-admin’).innerHTML=’<div class="msg msg-error">Đã từ chối yêu cầu đổi phòng.</div>’;
+  setLoading(true);
+  await update(ref(db, `${dbPath()}/${ROOMS[ri].key}/queue/${id}`), {
+    changeRequested: false,
+    changeToRoom: null,
+    changeToRoomName: null,
+    changeRequestedAt: null
+  });
+  setLoading(false);
+  document.getElementById('msg-admin').innerHTML='<div class="msg msg-error">Đã từ chối yêu cầu đổi phòng.</div>';
 };
 
 window.cancelEntry = async function(ri, id, num) {
-setLoading(true);
-await remove(ref(db, `${dbPath()}/${ROOMS[ri].key}/queue/${id}`));
-setLoading(false);
+  setLoading(true);
+  await remove(ref(db, `${dbPath()}/${ROOMS[ri].key}/queue/${id}`));
+  setLoading(false);
 };
 
 window.resetRoom = async function() {
-const r = ROOMS[activeAdminRoom];
-if(!confirm(`Reset toàn bộ hàng chờ ${r.label} – ${r.name}?`)) return;
-setLoading(true);
-await set(roomRef(activeAdminRoom), { queue:{}, currentServing:0, counter:0 });
-setLoading(false);
-document.getElementById(‘msg-admin’).innerHTML=`<div class="msg msg-success">Đã reset hàng chờ ${r.label}.</div>`;
+  const r = ROOMS[activeAdminRoom];
+  if(!confirm(`Reset toàn bộ hàng chờ ${r.label} – ${r.name}?`)) return;
+  setLoading(true);
+  await set(roomRef(activeAdminRoom), { queue:{}, currentServing:0, counter:0 });
+  setLoading(false);
+  document.getElementById('msg-admin').innerHTML=`<div class="msg msg-success">Đã reset hàng chờ ${r.label}.</div>`;
 };
 
 // ─── MIDNIGHT AUTO RESET ──────────────────────────────────────────
 function scheduleMidnightReset() {
-const now = new Date();
-const midnight = new Date(now);
-midnight.setHours(24,0,5,0); // 00:00:05 next day
-const ms = midnight - now;
-setTimeout(() => {
-// Old day’s data stays under old key automatically
-// New day starts fresh since todayKey() changes
-rerenderCurrentTab();
-scheduleMidnightReset();
-}, ms);
+  const now = new Date();
+  const midnight = new Date(now);
+  midnight.setHours(24,0,5,0); // 00:00:05 next day
+  const ms = midnight - now;
+  setTimeout(() => {
+    // Old day's data stays under old key automatically
+    // New day starts fresh since todayKey() changes
+    rerenderCurrentTab();
+    scheduleMidnightReset();
+  }, ms);
 }
 
 // ─── INIT ─────────────────────────────────────────────────────────
 startListening();
 scheduleMidnightReset();
-if(‘Notification’ in window) Notification.requestPermission();
+if('Notification' in window) Notification.requestPermission();
 
 </script>
+
 </body>
 </html>
