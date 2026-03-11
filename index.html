@@ -918,16 +918,6 @@ function notifMsg(waitCount) {
 }
 
 // ─── BOOK ─────────────────────────────────────────────────────────
-window.selectPayment = function(method) {
-  document.getElementById('book-payment').value = method;
-  const cash = document.getElementById('pay-cash-btn');
-  const transfer = document.getElementById('pay-transfer-btn');
-  cash.style.borderColor = method==='cash' ? 'var(--wine)' : 'var(--beige-dark)';
-  cash.style.background = method==='cash' ? 'rgba(107,39,55,0.06)' : 'var(--beige)';
-  transfer.style.borderColor = method==='transfer' ? 'var(--wine)' : 'var(--beige-dark)';
-  transfer.style.background = method==='transfer' ? 'rgba(107,39,55,0.06)' : 'var(--beige)';
-};
-
 window.bookQueue = async function() {
   const name = document.getElementById('inp-name').value.trim();
   const phone = document.getElementById('inp-phone').value.trim();
@@ -958,8 +948,8 @@ window.bookQueue = async function() {
       id, num: 0, name, phone,
       time: new Date().toLocaleTimeString('vi-VN'),
       order: Date.now(),
-      status: 'pending',
-      payment: payMethod
+      payment: payMethod,
+      status: 'pending'
     };
 
     await set(ref(db, `${dbPath()}/${roomKey}/queue/${id}`), entry);
@@ -1000,15 +990,24 @@ window.bookQueue = async function() {
 };
 
 window.resetForm = function() {
-  document.getElementById('book-payment').value = '';
-  const cash = document.getElementById('pay-cash-btn');
-  const transfer = document.getElementById('pay-transfer-btn');
-  if(cash) { cash.style.borderColor='var(--beige-dark)'; cash.style.background='var(--beige)'; }
-  if(transfer) { transfer.style.borderColor='var(--beige-dark)'; transfer.style.background='var(--beige)'; }  document.getElementById('form-card').style.display='block';
+  document.getElementById('form-card').style.display='block';
   document.getElementById('ticket-wrap').style.display='none';
   ['inp-name','inp-phone'].forEach(id => document.getElementById(id).value='');
   document.getElementById('inp-room').value='';
+  document.getElementById('book-payment').value='';
+  document.getElementById('pay-cash-btn').style.borderColor='var(--beige-dark)';
+  document.getElementById('pay-cash-btn').style.background='var(--beige)';
+  document.getElementById('pay-transfer-btn').style.borderColor='var(--beige-dark)';
+  document.getElementById('pay-transfer-btn').style.background='var(--beige)';
   document.getElementById('msg-book').innerHTML='';
+};
+
+window.selectPayment = function(method) {
+  document.getElementById('book-payment').value = method;
+  document.getElementById('pay-cash-btn').style.borderColor = method==='cash' ? 'var(--wine)' : 'var(--beige-dark)';
+  document.getElementById('pay-cash-btn').style.background = method==='cash' ? 'rgba(107,39,55,0.06)' : 'var(--beige)';
+  document.getElementById('pay-transfer-btn').style.borderColor = method==='transfer' ? 'var(--wine)' : 'var(--beige-dark)';
+  document.getElementById('pay-transfer-btn').style.background = method==='transfer' ? 'rgba(107,39,55,0.06)' : 'var(--beige)';
 };
 
 // ─── CHECK ────────────────────────────────────────────────────────
