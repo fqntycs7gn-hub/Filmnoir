@@ -286,6 +286,20 @@ cursor:pointer; margin-bottom:12px; transition:background .2s;
           </select>
         </div>
       </div>
+      <div class="field">
+        <label>Hình Thức Thanh Toán</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px;">
+          <div id="pay-cash-btn" onclick="selectPayment('cash')" style="cursor:pointer;border:1px solid var(--beige-dark);background:var(--beige);padding:16px;text-align:center;transition:all .2s;">
+            <div style="font-size:1.3rem;margin-bottom:4px;">💵</div>
+            <div style="font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:1px;">Tiền mặt</div>
+          </div>
+          <div id="pay-transfer-btn" onclick="selectPayment('transfer')" style="cursor:pointer;border:1px solid var(--beige-dark);background:var(--beige);padding:16px;text-align:center;transition:all .2s;">
+            <div style="font-size:1.3rem;margin-bottom:4px;">📱</div>
+            <div style="font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:1px;">Chuyển khoản</div>
+          </div>
+        </div>
+        <input type="hidden" id="book-payment" value=""/>
+      </div>
       <button class="btn btn-primary" id="btn-book" onclick="bookQueue()">✦ Lấy Số Thứ Tự</button>
     </div>
     <div id="ticket-wrap" style="display:none;" class="fade-in">
@@ -294,7 +308,7 @@ cursor:pointer; margin-bottom:12px; transition:background .2s;
         <div style="font-size:3rem;margin:12px 0;">⏳</div>
         <div class="ticket-name" id="ticket-name">—</div>
         <div class="ticket-room" id="ticket-room">—</div>
-        <div id="ticket-payment" style="font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:2px;color:var(--gray);margin-top:6px;"></div>
+        <div id="ticket-payment-display" style="font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:2px;color:var(--gray);margin-top:6px;"></div>
         <hr class="ticket-divider"/>
         <div style="background:linear-gradient(135deg,var(--wine-dark),var(--wine));color:var(--beige);padding:16px 20px;margin:8px 0;font-family:'Montserrat',sans-serif;font-size:0.85rem;letter-spacing:1px;line-height:1.7;text-align:center;">
           💳 Vui lòng thanh toán để xác nhận số của bạn nhé!<br/>
@@ -906,17 +920,12 @@ function notifMsg(waitCount) {
 // ─── BOOK ─────────────────────────────────────────────────────────
 window.selectPayment = function(method) {
   document.getElementById('book-payment').value = method;
-  const cashEl = document.getElementById('pay-cash-label');
-  const transferEl = document.getElementById('pay-transfer-label');
-  const activeStyle = { borderColor:'var(--wine)', background:'rgba(107,39,55,0.06)', color:'var(--wine)' };
-  const inactiveStyle = { borderColor:'var(--beige-dark)', background:'var(--beige)', color:'' };
-  if(method === 'cash') {
-    Object.assign(cashEl.style, activeStyle);
-    Object.assign(transferEl.style, inactiveStyle);
-  } else {
-    Object.assign(transferEl.style, activeStyle);
-    Object.assign(cashEl.style, inactiveStyle);
-  }
+  const cash = document.getElementById('pay-cash-btn');
+  const transfer = document.getElementById('pay-transfer-btn');
+  cash.style.borderColor = method==='cash' ? 'var(--wine)' : 'var(--beige-dark)';
+  cash.style.background = method==='cash' ? 'rgba(107,39,55,0.06)' : 'var(--beige)';
+  transfer.style.borderColor = method==='transfer' ? 'var(--wine)' : 'var(--beige-dark)';
+  transfer.style.background = method==='transfer' ? 'rgba(107,39,55,0.06)' : 'var(--beige)';
 };
 
 window.bookQueue = async function() {
@@ -949,8 +958,8 @@ window.bookQueue = async function() {
       id, num: 0, name, phone,
       time: new Date().toLocaleTimeString('vi-VN'),
       order: Date.now(),
-      payment: payMethod,
-      status: 'pending'
+      status: 'pending',
+      payment: payMethod
     };
 
     await set(ref(db, `${dbPath()}/${roomKey}/queue/${id}`), entry);
@@ -960,7 +969,7 @@ window.bookQueue = async function() {
     document.getElementById('ticket-wrap').style.display='block';
     document.getElementById('ticket-name').textContent = name;
     document.getElementById('ticket-room').textContent = roomDisplayName(roomKey);
-    document.getElementById('ticket-payment').textContent = payMethod === 'cash' ? '💵 Tiền mặt' : '📱 Chuyển khoản';
+    document.getElementById('ticket-payment-display').textContent = payMethod === 'cash' ? '💵 Tiền mặt' : '📱 Chuyển khoản';
     document.getElementById('pending-ticket').style.display='block';
     document.getElementById('confirmed-ticket').style.display='none';
 
@@ -991,7 +1000,11 @@ window.bookQueue = async function() {
 };
 
 window.resetForm = function() {
-  document.getElementById('form-card').style.display='block';
+  document.getElementById('book-payment').value = '';
+  const cash = document.getElementById('pay-cash-btn');
+  const transfer = document.getElementById('pay-transfer-btn');
+  if(cash) { cash.style.borderColor='var(--beige-dark)'; cash.style.background='var(--beige)'; }
+  if(transfer) { transfer.style.borderColor='var(--beige-dark)'; transfer.style.background='var(--beige)'; }  document.getElementById('form-card').style.display='block';
   document.getElementById('ticket-wrap').style.display='none';
   ['inp-name','inp-phone'].forEach(id => document.getElementById(id).value='');
   document.getElementById('inp-room').value='';
@@ -1267,7 +1280,7 @@ function renderAdminRoom(ri) {
           <div class="q-num" style="color:#b43c3c;">?</div>
           <div class="q-info" style="flex:1;">
             <div class="q-name">${entry.name}</div>
-            <div class="q-detail">${entry.phone} · ${entry.time} · ${entry.payment === 'cash' ? '💵 Tiền mặt' : '📱 CK'}</div>
+            <div class="q-detail">${entry.phone} · ${entry.time} · ${entry.payment === 'cash' ? '💵 Tiền mặt' : entry.payment === 'transfer' ? '📱 CK' : ''}</div>
           </div>
           <button class="btn-approve" onclick="approveEntry(${ri},'${entry.id}')">✓ Duyệt</button>
           <button class="btn-remove" onclick="cancelEntry(${ri},'${entry.id}',${entry.num})">Huỷ</button>
@@ -1300,33 +1313,39 @@ function renderAdminRoom(ri) {
 window.approveEntry = async function(ri, id) {
   setLoading(true);
   try {
+    // Get entry data from local state BEFORE updating
+    const entryData = state.rooms[ri].queue.find(e => e.id === id);
+    if(!entryData) { setLoading(false); return; }
+
     // Assign real queue number via transaction
     const counterRef = ref(db, `${dbPath()}/${ROOMS[ri].key}/counter`);
     let newNum;
     await runTransaction(counterRef, current => { newNum = (current || 0) + 1; return newNum; });
+
+    // Update status
     await update(ref(db, `${dbPath()}/${ROOMS[ri].key}/queue/${id}`), { status: 'confirmed', num: newNum });
-    // Log stats + customer detail
+
+    // Log stats
     const statsRef = ref(db, `filmnoir/stats/${todayKey()}/${ROOMS[ri].key}`);
     await runTransaction(statsRef, current => {
       const c = current || { approved:0, cancelled:0 };
       return { ...c, approved: (c.approved||0) + 1 };
     });
-    // Save customer record
-    const entrySnap2 = await get(ref(db, `${dbPath()}/${ROOMS[ri].key}/queue/${id}`));
-    const entryData = entrySnap2.val();
-    if(entryData) {
-      await set(ref(db, `filmnoir/customers/${todayKey()}/${id}`), {
-        name: entryData.name,
-        phone: entryData.phone,
-        room: ROOMS[ri].key,
-        roomName: `${ROOMS[ri].label} – ${ROOMS[ri].name}`,
-        num: newNum,
-        approvedAt: new Date().toLocaleTimeString('vi-VN'),
-        status: 'approved'
-      });
-    }
+
+    // Save customer record using local state data
+    await set(ref(db, `filmnoir/customers/${todayKey()}/${id}`), {
+      name: entryData.name,
+      phone: entryData.phone,
+      room: ROOMS[ri].key,
+      roomName: `${ROOMS[ri].label} – ${ROOMS[ri].name}`,
+      num: newNum,
+      approvedAt: new Date().toLocaleTimeString('vi-VN'),
+      status: 'approved'
+    });
+
     document.getElementById('msg-admin').innerHTML=`<div class="msg msg-success">✓ Đã duyệt! Cấp số <strong>${String(newNum).padStart(2,'0')}</strong> cho khách.</div>`;
   } catch(e) {
+    console.error(e);
     document.getElementById('msg-admin').innerHTML='<div class="msg msg-error">Lỗi. Vui lòng thử lại.</div>';
   }
   setLoading(false);
