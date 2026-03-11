@@ -430,7 +430,10 @@ cursor:pointer; margin-bottom:12px; transition:background .2s;
 <div id="stats-content" style="display:none;">
   <div class="card fade-in">
     <div class="card-title">Thống Kê Tổng Quan</div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;" id="stats-summary"></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px;" id="stats-summary"></div>
+
+    <!-- Payment method stats -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;" id="stats-payment"></div>
 
     <!-- Weekly / Monthly -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px;" id="stats-period"></div>
@@ -563,11 +566,15 @@ window.unlockStats = function() {
 };
 
 let allStatsData = {};
+let allCustomerData = {};
 
 async function renderStats() {
   const statsSnap = await get(ref(db, 'filmnoir/stats'));
   allStatsData = statsSnap.val() || {};
+  const custSnap = await get(ref(db, 'filmnoir/customers'));
+  allCustomerData = custSnap.val() || {};
   renderStatsUI(allStatsData);
+  renderPaymentStats(allCustomerData);
 }
 
 window.filterStats = function() {
@@ -580,6 +587,33 @@ window.filterStats = function() {
   });
   renderStatsUI(filtered, true);
 };
+
+function renderPaymentStats(custData) {
+  const el = document.getElementById('stats-payment');
+  if(!el) return;
+  let cash = 0, transfer = 0;
+  Object.values(custData).forEach(dayData => {
+    Object.values(dayData).forEach(c => {
+      if(c.status !== 'approved') return;
+      if(c.payment === 'cash') cash++;
+      else if(c.payment === 'transfer') transfer++;
+    });
+  });
+  const total = cash + transfer;
+  if(total === 0) { el.innerHTML = ''; return; }
+  el.innerHTML = `
+    <div style="background:var(--cream);border:1px solid var(--beige-dark);padding:20px;text-align:center;">
+      <div style="font-size:1.5rem;margin-bottom:6px;">💵</div>
+      <div style="font-family:'Lobster',cursive;font-size:2rem;color:var(--wine);">${cash}</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:2px;color:var(--gray);margin-top:4px;">TIỀN MẶT · ${total>0?Math.round(cash/total*100):0}%</div>
+    </div>
+    <div style="background:var(--cream);border:1px solid var(--beige-dark);padding:20px;text-align:center;">
+      <div style="font-size:1.5rem;margin-bottom:6px;">📱</div>
+      <div style="font-family:'Lobster',cursive;font-size:2rem;color:var(--wine);">${transfer}</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:2px;color:var(--gray);margin-top:4px;">CHUYỂN KHOẢN · ${total>0?Math.round(transfer/total*100):0}%</div>
+    </div>
+  `;
+}
 
 function renderStatsUI(data, isFiltered=false) {
   const summaryEl = document.getElementById('stats-summary');
