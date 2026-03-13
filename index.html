@@ -573,8 +573,30 @@ async function renderStats() {
   allStatsData = statsSnap.val() || {};
   const custSnap = await get(ref(db, 'filmnoir/customers'));
   allCustomerData = custSnap.val() || {};
+
+  // Read payment directly from queue entries — most reliable source
+  let cash = 0, transfer = 0;
+  const todaySnap = await get(ref(db, `${dbPath()}`));
+  const todayData = todaySnap.val() || {};
+  ROOMS.forEach(r => {
+    const queue = todayData[r.key] && todayData[r.key].queue ? Object.values(todayData[r.key].queue) : [];
+    queue.forEach(e => {
+      if(e.payment === 'cash') cash++;
+      else if(e.payment === 'transfer') transfer++;
+    });
+  });
+
+  // Also count from customers archive (past days)
+  Object.values(allCustomerData).forEach(dayData => {
+    Object.values(dayData).forEach(c => {
+      if(c.status !== 'approved') return;
+      if(c.payment === 'cash') cash++;
+      else if(c.payment === 'transfer') transfer++;
+    });
+  });
+
   renderStatsUI(allStatsData);
-  renderPaymentStats(allCustomerData);
+  renderPaymentStatsDirect(cash, transfer);
 }
 
 window.filterStats = function() {
@@ -588,20 +610,9 @@ window.filterStats = function() {
   renderStatsUI(filtered, true);
 };
 
-function renderPaymentStats(custData) {
+function renderPaymentStatsDirect(cash, transfer) {
   const el = document.getElementById('stats-payment');
   if(!el) return;
-  let cash = 0, transfer = 0;
-
-  // Only count from customers archive — single source of truth, no duplication
-  Object.values(custData).forEach(dayData => {
-    Object.values(dayData).forEach(c => {
-      if(c.status !== 'approved') return;
-      if(c.payment === 'cash') cash++;
-      else if(c.payment === 'transfer') transfer++;
-    });
-  });
-
   const total = cash + transfer;
   el.innerHTML = `
     <div style="background:var(--cream);border:1px solid var(--beige-dark);padding:20px;text-align:center;">
