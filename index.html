@@ -4,1234 +4,919 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>FilmNoir Studio</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&family=Montserrat:wght@300;400;500;600;700&family=Pinyon+Script&family=Lobster&display=swap"/>
+<title>FilmNoir – Lấy Số Thứ Tự</title>
+<link href="https://fonts.googleapis.com/css2?family=Lobster&family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Italiana&display=swap" rel="stylesheet"/>
 <style>
-
-/* ════════════════════════════════════════════════
-TOKENS
-════════════════════════════════════════════════ */
+/* ─── DESIGN TOKENS ──────────────────────────────────────────── */
 :root {
-–parchment:   #f2ebe0;
-–parchment-2: #ede4d5;
-–parchment-3: #e4d8c4;
-–cream:       #faf6ef;
-–cream-2:     #f5ede0;
-–linen:       #d8ccb8;
-–linen-2:     #c4b59a;
+  --beige:       #f5efe6;
+  --beige-mid:   #ede4d8;
+  --beige-dark:  #ddd0be;
+  --beige-deep:  #c9b89e;
+  --wine:        #6b2737;
+  --wine-dark:   #4a1a25;
+  --wine-light:  #8b3a4e;
+  --wine-muted:  rgba(107,39,55,0.08);
+  --wine-border: rgba(107,39,55,0.18);
+  --cream:       #faf7f2;
+  --cream-deep:  #f4ede3;
+  --gold:        #c9a96e;
+  --gold-light:  #e8d4a8;
+  --black:       #1a1410;
+  --ink:         #2d2420;
+  --gray:        #8a7d74;
+  --gray-light:  #b0a49a;
+  --red-cancel:  #b43c3c;
+  --green-ok:    #2d7a4f;
 
-–burgundy:    #5c1f2e;
-–burgundy-2:  #3e1220;
-–burgundy-3:  #7a2d40;
-–burgundy-4:  #9b4055;
-–burgundy-ghost: rgba(92,31,46,0.06);
-–burgundy-line:  rgba(92,31,46,0.14);
-–burgundy-line2: rgba(92,31,46,0.22);
+–radius-sm:   4px;
+–radius:      8px;
+–radius-lg:   16px;
 
-–gold:        #b8922a;
-–gold-2:      #d4aa48;
-–gold-3:      #e8cc80;
-–gold-light:  rgba(184,146,42,0.12);
-–gold-line:   rgba(184,146,42,0.3);
+–shadow-xs:   0 1px 3px rgba(26,20,16,0.06);
+–shadow-sm:   0 2px 8px rgba(26,20,16,0.08);
+–shadow:      0 4px 20px rgba(26,20,16,0.10);
+–shadow-lg:   0 8px 40px rgba(26,20,16,0.14);
 
-–ink:         #1c1410;
-–ink-2:       #2e2520;
-–ash:         #7a6e64;
-–ash-2:       #a09084;
-–ash-3:       #c4b8ae;
-
-–red:         #a02828;
-–green:       #1e6640;
-
-–f-display:   ‘Playfair Display’, Georgia, serif;
-–f-serif:     ‘Cormorant Garamond’, Georgia, serif;
-–f-sans:      ‘Montserrat’, sans-serif;
-–f-script:    ‘Pinyon Script’, cursive;
-–f-logo:      ‘Lobster’, cursive;
-
-–ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
-–ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+–trans:       all 0.22s ease;
 }
 
-/* ════════════════════════════════════════════════
-RESET + BASE
-════════════════════════════════════════════════ */
+/* ─── RESET & BASE ───────────────────────────────────────────── */
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
-html { scroll-behavior: smooth; }
-
 body {
-font-family: var(–f-sans);
-font-size: 14px;
-background: var(–parchment);
+font-family: ‘Montserrat’, sans-serif;
+background: var(–beige);
 color: var(–ink);
 min-height: 100vh;
-overflow-x: hidden;
--webkit-font-smoothing: antialiased;
-cursor: default;
+background-image:
+radial-gradient(ellipse 80% 60% at 50% -10%, rgba(201,169,110,0.12) 0%, transparent 70%),
+url(“data:image/svg+xml,%3Csvg xmlns=‘http://www.w3.org/2000/svg’ width=‘60’ height=‘60’%3E%3Ccircle cx=‘30’ cy=‘30’ r=‘0.8’ fill=’%23c9b89e’ opacity=‘0.25’/%3E%3C/svg%3E”);
 }
 
-/* Grain overlay — the most important single detail */
-body::after {
-content: ‘’;
-position: fixed;
-inset: 0;
-background-image: url(“data:image/svg+xml,%3Csvg viewBox=‘0 0 512 512’ xmlns=‘http://www.w3.org/2000/svg’%3E%3Cfilter id=‘noise’%3E%3CfeTurbulence type=‘fractalNoise’ baseFrequency=‘0.85’ numOctaves=‘4’ stitchTiles=‘stitch’/%3E%3C/filter%3E%3Crect width=‘100%25’ height=‘100%25’ filter=‘url(%23noise)’ opacity=‘1’/%3E%3C/svg%3E”);
-opacity: 0.028;
-pointer-events: none;
-z-index: 99998;
-}
-
-/* Ambient light from top */
+/* Decorative frame */
 body::before {
 content: ‘’;
 position: fixed;
-top: -200px;
-left: 50%;
-transform: translateX(-50%);
-width: 900px;
-height: 500px;
-background: radial-gradient(ellipse, rgba(184,146,42,0.09) 0%, transparent 70%);
+inset: 10px;
+border: 1px solid rgba(107,39,55,0.15);
 pointer-events: none;
-z-index: 0;
+z-index: 9999;
+border-radius: 2px;
 }
 
-/* Outer frame */
-#frame {
-position: fixed;
-inset: 14px;
-border: 1px solid var(–burgundy-line);
-pointer-events: none;
-z-index: 9997;
-}
-#frame::before {
-content: ‘’;
-position: absolute;
-inset: 4px;
-border: 0.5px solid var(–gold-line);
-opacity: 0.5;
-}
-/* Corner ornaments */
-#frame::after {
-content: ‘◆’;
-position: absolute;
-top: -7px; left: -7px;
-font-size: 10px;
-color: var(–gold);
-background: var(–parchment);
-padding: 0 2px;
-line-height: 1;
-}
-
-/* ════════════════════════════════════════════════
-LOADING BAR
-════════════════════════════════════════════════ */
-#loading-bar {
+/* ─── LOADING BAR ────────────────────────────────────────────── */
+.loading-bar {
 position: fixed;
 top: 0; left: 0;
 height: 2px;
-width: 0%;
-background: linear-gradient(90deg, var(–burgundy), var(–gold-2), var(–burgundy));
+background: linear-gradient(90deg, var(–wine), var(–gold), var(–wine));
 background-size: 200% 100%;
-animation: shimmer-bar 1.5s linear infinite paused;
-z-index: 999999;
-transition: width 0.4s var(–ease-out);
-}
-#loading-bar.active { animation-play-state: running; }
-@keyframes shimmer-bar {
-0%   { background-position: 200% 0; }
-100% { background-position: -200% 0; }
+transition: width 0.3s ease;
+z-index: 99999;
+box-shadow: 0 0 8px rgba(107,39,55,0.4);
 }
 
-/* ════════════════════════════════════════════════
-CONNECTION STATUS
-════════════════════════════════════════════════ */
-#conn-status {
+/* ─── CONNECTION STATUS ──────────────────────────────────────── */
+.conn-status {
 position: fixed;
-bottom: 24px; right: 28px;
-font-family: var(–f-sans);
-font-size: 7px;
-letter-spacing: 3px;
+bottom: 16px; right: 20px;
+font-family: ‘Montserrat’, sans-serif;
+font-size: 8px;
+letter-spacing: 2.5px;
 text-transform: uppercase;
-font-weight: 600;
-padding: 5px 12px 5px 10px;
-z-index: 9998;
-transition: all 0.3s;
+padding: 5px 12px;
 border-radius: 20px;
+z-index: 9998;
+transition: var(–trans);
+font-weight: 600;
 }
-.conn-online  { color: var(–burgundy); background: var(–burgundy-ghost); border: 1px solid var(–burgundy-line); }
-.conn-offline { color: var(–red);      background: rgba(160,40,40,0.07);  border: 1px solid rgba(160,40,40,0.2); }
+.conn-online  { color: var(–wine);       background: rgba(107,39,55,0.08);  border: 1px solid rgba(107,39,55,0.2);  }
+.conn-offline { color: var(–red-cancel); background: rgba(180,60,60,0.08);  border: 1px solid rgba(180,60,60,0.25); }
 
-/* ════════════════════════════════════════════════
-HEADER
-════════════════════════════════════════════════ */
+/* ─── HEADER ─────────────────────────────────────────────────── */
 header {
-position: relative;
 text-align: center;
-padding: 72px 24px 56px;
-z-index: 1;
-overflow: hidden;
+padding: 52px 24px 36px;
+position: relative;
 }
 
-.header-bg-text {
-position: absolute;
-top: 50%;
-left: 50%;
-transform: translate(-50%, -50%);
-font-family: var(–f-logo);
-font-size: clamp(100px, 22vw, 220px);
-color: rgba(92,31,46,0.035);
-white-space: nowrap;
-pointer-events: none;
-user-select: none;
-letter-spacing: 0.05em;
-}
-
-.pre-title {
+.header-ornament {
 display: flex;
 align-items: center;
 justify-content: center;
-gap: 16px;
-margin-bottom: 20px;
-animation: fadeUp 0.8s var(–ease-out) 0.1s both;
+gap: 12px;
+margin-bottom: 16px;
 }
-.pre-title-line { height: 0.5px; width: 48px; background: var(–gold-2); opacity: 0.6; }
-.pre-title-text {
-font-family: var(–f-sans);
-font-size: 7px;
-letter-spacing: 5px;
-text-transform: uppercase;
-color: var(–gold);
-font-weight: 600;
+.header-ornament::before,
+.header-ornament::after {
+content: ‘’;
+display: block;
+width: 60px;
+height: 1px;
+background: linear-gradient(90deg, transparent, var(–wine-border), var(–wine-border));
+}
+.header-ornament::after {
+background: linear-gradient(270deg, transparent, var(–wine-border), var(–wine-border));
+}
+.header-ornament-dot {
+width: 5px; height: 5px;
+background: var(–gold);
+border-radius: 50%;
+box-shadow: 0 0 0 2px rgba(201,169,110,0.25);
 }
 
 h1.brand {
-font-family: var(–f-logo);
-font-size: clamp(4rem, 14vw, 9rem);
-color: var(–burgundy);
-letter-spacing: 0.08em;
-line-height: 0.9;
+font-family: ‘Lobster’, cursive;
+font-size: clamp(3rem, 10vw, 6rem);
+color: var(–wine);
+letter-spacing: 0.1em;
+line-height: 1;
 text-transform: uppercase;
-position: relative;
-z-index: 1;
-animation: fadeUp 0.9s var(–ease-out) 0.2s both;
-/* Pressed ink effect */
-text-shadow:
-1px 2px 0 rgba(62,18,32,0.15),
-2px 4px 0 rgba(62,18,32,0.06);
+text-shadow: 2px 3px 0 rgba(74,26,37,0.12);
 }
 
-.brand-sub {
-font-family: var(–f-serif);
+.brand-tagline {
+font-family: ‘Cormorant Garamond’, serif;
 font-style: italic;
 font-size: 1rem;
-color: var(–ash);
-letter-spacing: 0.35em;
-margin-top: 12px;
-font-weight: 300;
-animation: fadeUp 0.9s var(–ease-out) 0.35s both;
+color: var(–gray);
+letter-spacing: 0.3em;
+margin-top: 8px;
+font-weight: 400;
 }
 
-.header-rule {
-display: flex;
-align-items: center;
-justify-content: center;
-gap: 12px;
-margin-top: 32px;
-animation: fadeUp 0.9s var(–ease-out) 0.45s both;
-}
-.header-rule-line {
-height: 0.5px;
-background: linear-gradient(90deg, transparent, var(–linen), var(–linen-2), var(–linen));
-flex: 1;
-max-width: 120px;
-}
-.header-rule-diamond { color: var(–gold); font-size: 8px; letter-spacing: 6px; }
-
-/* ════════════════════════════════════════════════
-NAVIGATION
-════════════════════════════════════════════════ */
+/* ─── NAVIGATION ─────────────────────────────────────────────── */
 nav.tabs {
+display: flex;
+justify-content: center;
+gap: 0;
+flex-wrap: wrap;
+background: var(–cream);
+border-top: 1px solid var(–beige-mid);
+border-bottom: 1px solid var(–beige-mid);
 position: sticky;
 top: 0;
-z-index: 200;
-display: flex;
-justify-content: center;
-background: rgba(242,235,224,0.92);
-backdrop-filter: blur(20px) saturate(180%);
--webkit-backdrop-filter: blur(20px) saturate(180%);
-border-bottom: 1px solid var(–burgundy-line);
-padding: 0 24px;
-}
-nav.tabs::before {
-content: ‘’;
-position: absolute;
-bottom: 0; left: 0; right: 0;
-height: 1px;
-background: linear-gradient(90deg, transparent, var(–gold-line), transparent);
+z-index: 100;
+box-shadow: var(–shadow-sm);
 }
 
 nav.tabs button {
-position: relative;
-font-family: var(–f-sans);
-font-size: 8px;
-letter-spacing: 3.5px;
+font-family: ‘Montserrat’, sans-serif;
+font-size: 9px;
+letter-spacing: 3px;
 text-transform: uppercase;
 font-weight: 600;
-color: var(–ash);
+padding: 16px 22px;
 background: transparent;
 border: none;
-padding: 18px 24px 17px;
-cursor: pointer;
-transition: color 0.2s;
 border-bottom: 2px solid transparent;
-margin-bottom: -1px;
-}
-nav.tabs button::after {
-content: ‘’;
-position: absolute;
-bottom: -1px; left: 50%; right: 50%;
-height: 2px;
-background: var(–burgundy);
-transition: left 0.3s var(–ease-out), right 0.3s var(–ease-out);
-}
-nav.tabs button.active { color: var(–burgundy); }
-nav.tabs button.active::after { left: 16px; right: 16px; }
-nav.tabs button:hover:not(.active) { color: var(–burgundy-3); }
-
-/* ════════════════════════════════════════════════
-MAIN
-════════════════════════════════════════════════ */
-main {
-max-width: 900px;
-margin: 0 auto;
-padding: 52px 28px 120px;
+cursor: pointer;
+color: var(–gray);
+transition: var(–trans);
 position: relative;
-z-index: 1;
+}
+nav.tabs button:hover:not(.active) {
+color: var(–wine-light);
+background: var(–wine-muted);
+}
+nav.tabs button.active {
+color: var(–wine);
+border-bottom-color: var(–wine);
+background: linear-gradient(to top, rgba(107,39,55,0.06), transparent);
 }
 
-/* ════════════════════════════════════════════════
-SECTION DIVIDER
-════════════════════════════════════════════════ */
-.section-divider {
+/* ─── MAIN LAYOUT ────────────────────────────────────────────── */
+main {
+max-width: 880px;
+margin: 0 auto;
+padding: 36px 20px 100px;
+}
+
+/* ─── DIVIDER ORNAMENT ───────────────────────────────────────── */
+.ornament {
+text-align: center;
+margin: 4px 0 28px;
 display: flex;
 align-items: center;
 justify-content: center;
-gap: 16px;
-margin: 0 0 44px;
+gap: 10px;
+color: var(–gold);
+font-size: 11px;
+letter-spacing: 4px;
 }
-.section-divider::before, .section-divider::after {
+.ornament::before, .ornament::after {
 content: ‘’;
 flex: 1;
-height: 0.5px;
-background: linear-gradient(90deg, transparent, var(–linen));
+max-width: 80px;
+height: 1px;
+background: linear-gradient(90deg, transparent, var(–beige-deep));
 }
-.section-divider::after { background: linear-gradient(270deg, transparent, var(–linen)); }
-.divider-glyph {
-font-family: var(–f-serif);
-font-size: 11px;
-letter-spacing: 8px;
-color: var(–linen-2);
-font-style: italic;
+.ornament::after {
+background: linear-gradient(270deg, transparent, var(–beige-deep));
 }
 
-/* ════════════════════════════════════════════════
-CARDS
-════════════════════════════════════════════════ */
+/* ─── CARD ───────────────────────────────────────────────────── */
 .card {
 background: var(–cream);
-border: 1px solid var(–parchment-3);
-padding: 48px 52px;
+border: 1px solid var(–beige-mid);
+border-radius: var(–radius);
+padding: 36px 40px;
 margin-bottom: 20px;
+box-shadow: var(–shadow-sm);
 position: relative;
-/* Layered shadow for depth */
-box-shadow:
-0 1px 0 rgba(255,255,255,0.6) inset,
-0 2px 4px rgba(28,20,16,0.04),
-0 8px 24px rgba(28,20,16,0.06),
-0 24px 64px rgba(28,20,16,0.04);
+overflow: hidden;
 }
-
-/* Gold top accent line */
-.card::before {
-content: ‘’;
-position: absolute;
-top: 0; left: 52px; right: 52px;
-height: 1px;
-background: linear-gradient(90deg, transparent, var(–gold-line), transparent);
-}
-
-/* Subtle corner marks */
 .card::after {
 content: ‘’;
 position: absolute;
-top: 16px; right: 16px;
-width: 20px; height: 20px;
-border-top: 0.5px solid var(–linen);
-border-right: 0.5px solid var(–linen);
-}
-
-.card-eyebrow {
-font-family: var(–f-sans);
-font-size: 7px;
-letter-spacing: 5px;
-text-transform: uppercase;
-color: var(–gold);
-font-weight: 600;
-margin-bottom: 12px;
-display: flex;
-align-items: center;
-gap: 12px;
-}
-.card-eyebrow::before {
-content: ‘’;
-display: block;
-width: 20px;
-height: 0.5px;
-background: var(–gold-2);
+top: 0; left: 0; right: 0;
+height: 2px;
+background: linear-gradient(90deg, transparent, var(–wine-border), transparent);
 }
 
 .card-title {
-font-family: var(–f-display);
-font-size: 1.7rem;
-font-weight: 400;
-color: var(–burgundy-2);
-margin-bottom: 36px;
-letter-spacing: 0.01em;
-line-height: 1.2;
+font-family: ‘Cormorant Garamond’, serif;
+font-size: 1.5rem;
+font-weight: 500;
+color: var(–wine);
+margin-bottom: 28px;
+display: flex;
+align-items: center;
+gap: 14px;
+letter-spacing: 0.03em;
 }
-
-/* ════════════════════════════════════════════════
-FORM ELEMENTS
-════════════════════════════════════════════════ */
-.field { margin-bottom: 24px; }
-
-.field-label {
-display: block;
-font-family: var(–f-sans);
-font-size: 7px;
-letter-spacing: 4px;
-text-transform: uppercase;
-color: var(–ash-2);
-font-weight: 600;
-margin-bottom: 10px;
-}
-
-.field-input {
-width: 100%;
-padding: 14px 18px;
-font-family: var(–f-sans);
-font-size: 0.92rem;
-font-weight: 400;
-color: var(–ink);
-background: var(–parchment);
-border: 1px solid var(–parchment-3);
-border-bottom-color: var(–linen-2);
-outline: none;
-transition: all 0.25s var(–ease-out);
+.card-title::before {
+content: ‘’;
+display: inline-block;
+width: 3px;
+height: 20px;
+background: var(–wine);
 border-radius: 2px;
+opacity: 0.7;
+}
+
+/* ─── FORM FIELDS ────────────────────────────────────────────── */
+.field { margin-bottom: 20px; }
+
+label {
+display: block;
+font-size: 9px;
+letter-spacing: 3px;
+text-transform: uppercase;
+color: var(–gray);
+margin-bottom: 8px;
+font-weight: 600;
+}
+
+input[type=“text”],
+input[type=“tel”],
+input[type=“password”],
+input[type=“date”],
+select {
+width: 100%;
+padding: 13px 16px;
+font-family: ‘Montserrat’, sans-serif;
+font-size: 0.95rem;
+background: var(–beige);
+border: 1px solid var(–beige-dark);
+border-radius: var(–radius-sm);
+color: var(–ink);
+outline: none;
+transition: var(–trans);
 -webkit-appearance: none;
 appearance: none;
 }
-.field-input::placeholder { color: var(–ash-3); font-style: italic; font-size: 0.88rem; }
-.field-input:focus {
+input:focus, select:focus {
+border-color: var(–wine);
 background: var(–cream);
-border-color: var(–burgundy);
-border-bottom-color: var(–burgundy);
-box-shadow: 0 4px 20px rgba(92,31,46,0.06), 0 0 0 1px rgba(92,31,46,0.08);
+box-shadow: 0 0 0 3px rgba(107,39,55,0.08);
 }
+input::placeholder { color: var(–gray-light); font-style: italic; }
 
 .select-wrap { position: relative; }
 .select-wrap::after {
 content: ‘▾’;
 position: absolute;
-right: 16px; top: 50%;
+right: 14px;
+top: 50%;
 transform: translateY(-50%);
-color: var(–burgundy);
+color: var(–wine);
 pointer-events: none;
-font-size: 11px;
+font-size: 12px;
 }
 
-/* ════════════════════════════════════════════════
-PAYMENT OPTIONS
-════════════════════════════════════════════════ */
-.payment-row {
+/* ─── PAYMENT SELECTOR ───────────────────────────────────────── */
+.payment-grid {
 display: grid;
 grid-template-columns: 1fr 1fr;
-gap: 14px;
+gap: 12px;
+margin-top: 4px;
 }
 
-.pay-card {
-position: relative;
+.pay-option {
 cursor: pointer;
-border: 1px solid var(–parchment-3);
-background: var(–parchment);
-padding: 22px 20px;
+border: 1.5px solid var(–beige-dark);
+background: var(–beige);
+padding: 18px 12px;
 text-align: center;
-transition: all 0.3s var(–ease-out);
-border-radius: 2px;
+transition: var(–trans);
+border-radius: var(–radius-sm);
+position: relative;
 overflow: hidden;
 }
-.pay-card::before {
-content: ‘’;
+.pay-option:hover {
+border-color: var(–wine-light);
+background: var(–cream);
+box-shadow: var(–shadow-xs);
+}
+.pay-option.selected {
+border-color: var(–wine);
+background: rgba(107,39,55,0.05);
+box-shadow: 0 0 0 1px var(–wine);
+}
+.pay-option.selected::before {
+content: ‘✓’;
 position: absolute;
-inset: 0;
-background: linear-gradient(135deg, var(–burgundy) 0%, var(–burgundy-2) 100%);
-opacity: 0;
-transition: opacity 0.3s;
-}
-.pay-card:hover { border-color: var(–burgundy-line2); box-shadow: 0 4px 16px rgba(92,31,46,0.08); }
-.pay-card.active { border-color: var(–burgundy); }
-.pay-card.active::before { opacity: 1; }
-
-.pay-card-inner {
-position: relative;
-z-index: 1;
-transition: color 0.3s;
-}
-.pay-card.active .pay-card-inner { color: var(–cream); }
-
-.pay-icon {
-font-size: 1.5rem;
-margin-bottom: 8px;
-display: block;
-transition: transform 0.3s var(–ease-out);
-}
-.pay-card:hover .pay-icon { transform: scale(1.1); }
-
-.pay-name {
-font-family: var(–f-sans);
-font-size: 8px;
-letter-spacing: 2.5px;
-text-transform: uppercase;
-font-weight: 600;
-color: var(–ash);
-transition: color 0.3s;
-}
-.pay-card.active .pay-name { color: rgba(250,246,239,0.85); }
-
-/* Selected checkmark */
-.pay-check {
-position: absolute;
-top: 8px; right: 10px;
+top: 6px; right: 8px;
 font-size: 9px;
-color: var(–gold-3);
-opacity: 0;
-transform: scale(0.5);
-transition: all 0.2s var(–ease-out);
-z-index: 2;
+color: var(–wine);
 font-weight: 700;
 }
-.pay-card.active .pay-check { opacity: 1; transform: scale(1); }
+.pay-option .pay-icon { font-size: 1.4rem; margin-bottom: 6px; }
+.pay-option .pay-label {
+font-family: ‘Montserrat’, sans-serif;
+font-size: 9px;
+letter-spacing: 1.5px;
+text-transform: uppercase;
+color: var(–gray);
+font-weight: 600;
+}
+.pay-option.selected .pay-label { color: var(–wine); }
 
-/* ════════════════════════════════════════════════
-BUTTONS
-════════════════════════════════════════════════ */
+/* ─── BUTTONS ────────────────────────────────────────────────── */
 .btn {
+font-family: ‘Montserrat’, sans-serif;
+font-size: 10px;
+letter-spacing: 3px;
+text-transform: uppercase;
+font-weight: 600;
+padding: 14px 28px;
+border: none;
+border-radius: var(–radius-sm);
+cursor: pointer;
+transition: var(–trans);
 display: inline-flex;
 align-items: center;
 justify-content: center;
-gap: 10px;
-font-family: var(–f-sans);
-font-size: 8px;
-letter-spacing: 3.5px;
-text-transform: uppercase;
-font-weight: 700;
-padding: 16px 32px;
-border: none;
-cursor: pointer;
-transition: all 0.25s var(–ease-out);
-border-radius: 1px;
-position: relative;
-overflow: hidden;
+gap: 8px;
 }
-
-/* Shimmer effect on hover */
-.btn::after {
-content: ‘’;
-position: absolute;
-top: 0; left: -100%;
-width: 60%;
-height: 100%;
-background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
-transition: left 0.5s var(–ease-out);
-}
-.btn:hover::after { left: 150%; }
 
 .btn-primary {
-background: var(–burgundy);
-color: var(–parchment);
+background: var(–wine);
+color: var(–beige);
 width: 100%;
-margin-top: 10px;
-box-shadow: 0 2px 0 var(–burgundy-2), 0 4px 20px rgba(92,31,46,0.25);
+margin-top: 8px;
+box-shadow: 0 2px 12px rgba(107,39,55,0.25);
 }
 .btn-primary:hover:not(:disabled) {
-background: var(–burgundy-2);
-box-shadow: 0 2px 0 rgba(62,18,32,0.8), 0 8px 32px rgba(92,31,46,0.3);
-transform: translateY(-2px);
+background: var(–wine-dark);
+box-shadow: 0 4px 20px rgba(107,39,55,0.35);
+transform: translateY(-1px);
 }
-.btn-primary:active:not(:disabled) {
-transform: translateY(0);
-box-shadow: 0 1px 0 var(–burgundy-2);
-}
-.btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-primary:active:not(:disabled) { transform: translateY(0); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .btn-ghost {
 background: transparent;
-color: var(–burgundy);
-border: 1px solid var(–burgundy-line2);
-font-size: 7.5px;
-padding: 12px 24px;
+color: var(–wine);
+border: 1.5px solid rgba(107,39,55,0.35);
+font-size: 9px;
+padding: 10px 20px;
 }
-.btn-ghost:hover { background: var(–burgundy); color: var(–cream); border-color: var(–burgundy); }
-
-.btn-danger  { background: var(–red);   color: #fff; width: 100%; margin-top: 10px; box-shadow: 0 2px 0 rgba(100,20,20,0.5), 0 4px 20px rgba(160,40,40,0.2); }
-.btn-danger:hover  { background: #852020; transform: translateY(-1px); }
-.btn-muted   { background: var(–ash);   color: #fff; width: 100%; margin-top: 10px; }
-.btn-muted:hover   { background: var(–ash-2); transform: translateY(-1px); }
-.btn-success { background: var(–green); color: #fff; border: none; font-family: var(–f-sans); font-size: 7.5px; letter-spacing: 2px; font-weight: 700; padding: 8px 16px; cursor: pointer; border-radius: 1px; transition: all 0.2s; white-space: nowrap; }
-.btn-success:hover { background: #155030; }
-
-.btn-sm-wine { background: var(–burgundy); color: var(–parchment); border: none; font-family: var(–f-sans); font-size: 7.5px; letter-spacing: 2px; font-weight: 700; padding: 8px 16px; cursor: pointer; border-radius: 1px; transition: all 0.2s; white-space: nowrap; }
-.btn-sm-wine:hover { background: var(–burgundy-2); }
-.btn-sm-outline { background: transparent; color: var(–red); border: 1px solid rgba(160,40,40,0.3); font-family: var(–f-sans); font-size: 7.5px; letter-spacing: 2px; font-weight: 700; padding: 7px 15px; cursor: pointer; border-radius: 1px; transition: all 0.2s; white-space: nowrap; }
-.btn-sm-outline:hover { background: var(–red); color: #fff; }
-
-/* ════════════════════════════════════════════════
-MESSAGES
-════════════════════════════════════════════════ */
-.msg {
-padding: 16px 20px;
-margin-bottom: 24px;
-border-radius: 2px;
-font-family: var(–f-serif);
-font-style: italic;
-font-size: 1rem;
-line-height: 1.7;
-}
-.msg-success { background: var(–burgundy-ghost); border-left: 2px solid var(–burgundy); }
-.msg-error   { background: rgba(160,40,40,0.06); border-left: 2px solid var(–red); color: #7a1515; }
-.msg-info    { background: var(–gold-light); border-left: 2px solid var(–gold); color: var(–ink-2); }
-
-/* ════════════════════════════════════════════════
-TICKET — the centerpiece
-════════════════════════════════════════════════ */
-.ticket-wrap {
-position: relative;
-margin: 0 auto;
-max-width: 480px;
+.btn-ghost:hover {
+background: var(–wine);
+color: var(–beige);
+border-color: var(–wine);
 }
 
+.btn-danger  { background: var(–red-cancel);  color: white; width: 100%; margin-top: 8px; box-shadow: 0 2px 12px rgba(180,60,60,0.2); }
+.btn-danger:hover  { background: #9a2828; transform: translateY(-1px); }
+.btn-success { background: var(–green-ok); color: white; width: 100%; margin-top: 8px; box-shadow: 0 2px 12px rgba(45,122,79,0.2); }
+.btn-success:hover { background: #1f5c3a; transform: translateY(-1px); }
+.btn-neutral { background: var(–gray); color: white; width: 100%; margin-top: 8px; }
+.btn-neutral:hover { background: #6b5f57; transform: translateY(-1px); }
+
+/* ─── MESSAGES ───────────────────────────────────────────────── */
+.msg { padding: 14px 18px; margin-bottom: 20px; border-radius: var(–radius-sm); font-size: 0.92rem; line-height: 1.6; }
+.msg-success { background: rgba(107,39,55,0.07); border-left: 3px solid var(–wine); }
+.msg-error   { background: rgba(180,60,60,0.07); border-left: 3px solid var(–red-cancel); color: #8a1c1c; }
+
+/* ─── TICKET ─────────────────────────────────────────────────── */
 .ticket {
 background: var(–cream);
-border: 1.5px solid var(–burgundy);
+border: 1.5px solid var(–wine);
+border-radius: var(–radius);
+padding: 40px 32px;
+text-align: center;
 position: relative;
 overflow: hidden;
+box-shadow: var(–shadow);
 }
-
-/* Aged paper texture inside ticket */
 .ticket::before {
 content: ‘’;
 position: absolute;
 inset: 0;
 background:
-radial-gradient(ellipse at 10% 10%, rgba(184,146,42,0.06), transparent 50%),
-radial-gradient(ellipse at 90% 90%, rgba(92,31,46,0.04), transparent 50%),
-repeating-linear-gradient(0deg, transparent, transparent 28px, rgba(92,31,46,0.015) 28px, rgba(92,31,46,0.015) 29px);
+radial-gradient(circle at 10% 90%, rgba(201,169,110,0.06) 0%, transparent 50%),
+radial-gradient(circle at 90% 10%, rgba(107,39,55,0.04) 0%, transparent 50%);
 pointer-events: none;
 }
 
-.ticket-header {
-background: var(–burgundy-2);
-padding: 22px 36px 20px;
+/* Perforated edge */
+.ticket-perforation {
 display: flex;
-align-items: center;
-justify-content: space-between;
+justify-content: space-around;
+margin: 20px -32px;
 position: relative;
 }
-.ticket-header::after {
+.ticket-perforation::before {
 content: ‘’;
 position: absolute;
-bottom: 0; left: 0; right: 0;
+top: 50%; left: 0; right: 0;
 height: 1px;
-background: linear-gradient(90deg, transparent, var(–gold), transparent);
+background: repeating-linear-gradient(90deg, var(–beige-dark) 0, var(–beige-dark) 6px, transparent 6px, transparent 12px);
 }
-
-.ticket-logo {
-font-family: var(–f-logo);
-font-size: 1.6rem;
-color: var(–parchment);
-letter-spacing: 0.06em;
-opacity: 0.95;
-}
-.ticket-studio-tag {
-font-family: var(–f-sans);
-font-size: 6.5px;
-letter-spacing: 4px;
-text-transform: uppercase;
-color: rgba(242,235,224,0.5);
-font-weight: 500;
-}
-
-.ticket-body {
-padding: 36px 36px 28px;
-position: relative;
+.ticket-perf-hole {
+width: 16px; height: 16px;
+background: var(–beige);
+border-radius: 50%;
+border: 1.5px solid var(–wine);
+z-index: 1;
 }
 
 .ticket-eyebrow {
-font-family: var(–f-sans);
-font-size: 7px;
-letter-spacing: 4.5px;
+font-family: ‘Montserrat’, sans-serif;
+font-size: 8px;
+letter-spacing: 4px;
 text-transform: uppercase;
-color: var(–ash-2);
-font-weight: 600;
-margin-bottom: 8px;
+color: var(–gray-light);
+font-weight: 500;
+margin-bottom: 6px;
 }
-
-.ticket-number-display {
-font-family: var(–f-logo);
-font-size: 7rem;
-color: var(–burgundy);
-line-height: 0.85;
-letter-spacing: -0.02em;
-text-shadow: 3px 4px 0 rgba(62,18,32,0.1), 6px 8px 12px rgba(62,18,32,0.06);
-margin-bottom: 4px;
+.ticket-number {
+font-family: ‘Lobster’, cursive;
+font-size: 5.5rem;
+color: var(–wine);
+line-height: 1;
+text-shadow: 3px 4px 0 rgba(74,26,37,0.1);
 }
-
-.ticket-name-display {
-font-family: var(–f-script);
-font-size: 2.2rem;
-color: var(–ink-2);
+.ticket-name {
+font-family: ‘Pinyon Script’, cursive;
+font-size: 2rem;
+color: var(–ink);
+margin-top: 8px;
 line-height: 1.3;
+}
+.ticket-room {
+font-family: ‘Montserrat’, sans-serif;
+font-size: 8px;
+letter-spacing: 3px;
+color: var(–wine);
+font-weight: 600;
+text-transform: uppercase;
+margin-top: 8px;
+}
+
+.ticket-notif {
+background: linear-gradient(135deg, var(–wine-dark), var(–wine));
+color: var(–beige);
+padding: 14px 18px;
+border-radius: var(–radius-sm);
 margin-top: 12px;
+font-family: ‘Montserrat’, sans-serif;
+font-size: 0.82rem;
+letter-spacing: 0.3px;
+line-height: 1.7;
 }
 
-.ticket-room-tag {
+/* pending ticket */
+.pending-badge {
 display: inline-flex;
 align-items: center;
 gap: 8px;
-margin-top: 10px;
-background: var(–burgundy-ghost);
-border: 1px solid var(–burgundy-line);
-padding: 6px 14px;
-border-radius: 1px;
-}
-.ticket-room-tag span {
-font-family: var(–f-sans);
-font-size: 7px;
-letter-spacing: 3px;
-text-transform: uppercase;
-color: var(–burgundy);
-font-weight: 600;
-}
-
-/* Tear perforation */
-.ticket-tear {
-display: flex;
-align-items: center;
-position: relative;
-margin: 0;
-padding: 0 36px;
-}
-.ticket-tear::before {
-content: ‘’;
-flex: 1;
-height: 1px;
-background: repeating-linear-gradient(90deg, var(–linen-2) 0, var(–linen-2) 5px, transparent 5px, transparent 10px);
-}
-.tear-hole {
-width: 18px; height: 18px;
-background: var(–parchment);
-border-radius: 50%;
-border: 1.5px solid var(–burgundy);
-margin: 0 -1px;
-flex-shrink: 0;
-position: relative;
-}
-.tear-hole::after {
-content: ‘’;
-position: absolute;
-inset: 2px;
-border-radius: 50%;
-background: radial-gradient(circle, rgba(92,31,46,0.06), transparent 70%);
-}
-
-.ticket-footer {
-padding: 24px 36px 28px;
-position: relative;
-}
-
-.ticket-notif-box {
-background: linear-gradient(135deg, var(–burgundy-2), var(–burgundy));
-padding: 16px 20px;
-border-radius: 1px;
-position: relative;
-overflow: hidden;
-}
-.ticket-notif-box::before {
-content: ‘’;
-position: absolute;
-top: 0; left: 0; right: 0;
-height: 1px;
-background: linear-gradient(90deg, transparent, var(–gold-line), transparent);
-}
-.ticket-notif-text {
-font-family: var(–f-sans);
-font-size: 0.8rem;
-color: var(–parchment);
-line-height: 1.8;
-letter-spacing: 0.2px;
-opacity: 0.9;
-}
-
-/* Pending state */
-.pending-pill {
-display: inline-flex;
-align-items: center;
-gap: 8px;
-background: rgba(184,146,42,0.1);
-border: 1px solid var(–gold-line);
-padding: 8px 18px;
+background: rgba(201,169,110,0.15);
+border: 1px solid var(–gold);
 border-radius: 20px;
-margin-bottom: 16px;
-}
-.pending-pill-dot {
-width: 6px; height: 6px;
-background: var(–gold-2);
-border-radius: 50%;
-animation: pulse-dot 1.5s ease-in-out infinite;
-}
-.pending-pill-text {
-font-family: var(–f-sans);
-font-size: 7px;
-letter-spacing: 3px;
+padding: 6px 16px;
+font-family: ‘Montserrat’, sans-serif;
+font-size: 8px;
+letter-spacing: 2px;
 text-transform: uppercase;
-color: var(–gold);
+color: #a07020;
 font-weight: 600;
-}
-@keyframes pulse-dot {
-0%, 100% { opacity: 1; transform: scale(1); }
-50%       { opacity: 0.5; transform: scale(0.7); }
+margin-bottom: 12px;
 }
 
-/* ════════════════════════════════════════════════
-ROOM OVERVIEW CARDS
-════════════════════════════════════════════════ */
+/* ─── ROOM OVERVIEW GRID ─────────────────────────────────────── */
 .rooms-overview {
 display: grid;
 grid-template-columns: repeat(3, 1fr);
-gap: 16px;
+gap: 14px;
 margin-bottom: 24px;
 }
 
-.room-card {
+.room-overview-card {
 background: var(–cream);
-border: 1px solid var(–parchment-3);
-padding: 26px 20px 22px;
+border: 1px solid var(–beige-mid);
+border-radius: var(–radius);
+padding: 22px 16px;
 text-align: center;
 cursor: pointer;
-transition: all 0.3s var(–ease-out);
-position: relative;
-overflow: hidden;
-box-shadow: 0 2px 8px rgba(28,20,16,0.04);
+transition: var(–trans);
+box-shadow: var(–shadow-xs);
 }
-.room-card::before {
-content: ‘’;
-position: absolute;
-top: 0; left: 0; right: 0;
-height: 2px;
-background: linear-gradient(90deg, transparent, var(–burgundy), transparent);
-opacity: 0;
-transition: opacity 0.3s;
+.room-overview-card:hover {
+border-color: var(–wine-light);
+box-shadow: var(–shadow-sm);
+transform: translateY(-2px);
 }
-.room-card:hover { border-color: var(–burgundy-line2); box-shadow: 0 8px 28px rgba(92,31,46,0.1); transform: translateY(-3px); }
-.room-card:hover::before { opacity: 1; }
-.room-card.selected { border-color: var(–burgundy); box-shadow: 0 8px 28px rgba(92,31,46,0.12), 0 0 0 1px rgba(92,31,46,0.12); }
-.room-card.selected::before { opacity: 1; }
+.room-overview-card.selected {
+border-color: var(–wine);
+background: linear-gradient(to bottom, rgba(107,39,55,0.04), var(–cream));
+box-shadow: 0 0 0 1px var(–wine), var(–shadow-sm);
+}
 
-.room-card-label  { font-family: var(–f-sans); font-size: 7px; letter-spacing: 3.5px; color: var(–ash-2); font-weight: 600; text-transform: uppercase; margin-bottom: 4px; }
-.room-card-name   { font-family: var(–f-script); font-size: 1.4rem; color: var(–burgundy); line-height: 1.2; margin-bottom: 14px; }
-.room-card-number { font-family: var(–f-logo); font-size: 3rem; color: var(–burgundy); line-height: 1; }
-.room-card-sub    { font-family: var(–f-sans); font-size: 7px; letter-spacing: 2.5px; color: var(–ash-2); text-transform: uppercase; margin-top: 2px; }
-.room-card-serving {
-font-family: var(–f-sans);
-font-size: 8px;
+.room-label   { font-size: 8px; letter-spacing: 3px; color: var(–gray-light); font-weight: 600; text-transform: uppercase; margin-bottom: 2px; }
+.room-name    { font-family: ‘Pinyon Script’, cursive; font-size: 1.3rem; color: var(–wine); margin-bottom: 10px; }
+.room-count   { font-family: ‘Lobster’, cursive; font-size: 2.6rem; color: var(–wine); line-height: 1; }
+.room-sub     { font-size: 8px; letter-spacing: 2px; color: var(–gray-light); margin-top: 2px; text-transform: uppercase; }
+.room-serving {
+font-size: 9px;
 letter-spacing: 1px;
-color: var(–ash);
-margin-top: 12px;
-padding-top: 12px;
-border-top: 1px solid var(–parchment-3);
+color: var(–gray);
+margin-top: 10px;
+padding-top: 10px;
+border-top: 1px solid var(–beige-mid);
+font-family: ‘Montserrat’, sans-serif;
 }
 
-/* ════════════════════════════════════════════════
-ROOM SEGMENT CONTROL
-════════════════════════════════════════════════ */
+/* ─── ROOM TABS ──────────────────────────────────────────────── */
 .room-tabs {
 display: flex;
+gap: 0;
+margin-bottom: 20px;
 background: var(–cream);
-border: 1px solid var(–parchment-3);
-padding: 5px;
-gap: 4px;
-margin-bottom: 22px;
-box-shadow: 0 1px 4px rgba(28,20,16,0.05);
+border: 1px solid var(–beige-mid);
+border-radius: var(–radius);
+overflow: hidden;
+padding: 4px;
+box-shadow: var(–shadow-xs);
 }
 .room-tabs button {
-flex: 1;
-font-family: var(–f-sans);
-font-size: 7.5px;
-letter-spacing: 2.5px;
+font-family: ‘Montserrat’, sans-serif;
+font-size: 9px;
+letter-spacing: 2px;
 text-transform: uppercase;
 font-weight: 600;
-color: var(–ash);
+padding: 10px 16px;
 background: transparent;
 border: none;
-padding: 10px 12px;
+border-radius: 6px;
 cursor: pointer;
-transition: all 0.25s var(–ease-out);
-border-radius: 1px;
+color: var(–gray);
+transition: var(–trans);
+flex: 1;
 }
-.room-tabs button.active { background: var(–burgundy); color: var(–cream); box-shadow: 0 2px 8px rgba(92,31,46,0.2); }
-.room-tabs button:hover:not(.active) { color: var(–burgundy); background: var(–burgundy-ghost); }
+.room-tabs button.active {
+background: var(–wine);
+color: var(–beige);
+box-shadow: var(–shadow-xs);
+}
+.room-tabs button:hover:not(.active) {
+color: var(–wine);
+background: var(–wine-muted);
+}
 
-/* ════════════════════════════════════════════════
-QUEUE ITEMS
-════════════════════════════════════════════════ */
-.list-section-heading {
-font-family: var(–f-sans);
-font-size: 7px;
-letter-spacing: 4px;
+/* ─── QUEUE ITEMS ────────────────────────────────────────────── */
+.queue-section-title,
+.pending-section-title {
+font-size: 9px;
+letter-spacing: 3px;
 text-transform: uppercase;
-color: var(–ash-2);
-font-weight: 600;
+color: var(–gray);
 margin-bottom: 12px;
 padding-bottom: 10px;
-border-bottom: 1px solid var(–parchment-3);
-display: flex;
-align-items: center;
-gap: 10px;
+border-bottom: 1px solid var(–beige-mid);
+font-weight: 600;
 }
 
 .queue-item {
 display: flex;
 align-items: center;
-gap: 18px;
-padding: 16px 20px;
+gap: 16px;
+padding: 14px 18px;
 background: var(–cream);
-border: 1px solid var(–parchment-3);
+border: 1px solid var(–beige-mid);
+border-radius: var(–radius-sm);
 margin-bottom: 8px;
-transition: all 0.2s;
-position: relative;
-overflow: hidden;
+transition: var(–trans);
 }
-.queue-item::before {
-content: ‘’;
-position: absolute;
-left: 0; top: 0; bottom: 0;
-width: 2px;
-background: transparent;
-transition: background 0.2s;
+.queue-item:hover { box-shadow: var(–shadow-xs); }
+.queue-item.current {
+border-color: var(–wine);
+background: linear-gradient(to right, rgba(107,39,55,0.06), var(–cream));
+box-shadow: var(–shadow-xs);
 }
-.queue-item:hover { box-shadow: 0 2px 12px rgba(28,20,16,0.06); border-color: var(–linen); }
-.queue-item.current::before { background: var(–burgundy); }
-.queue-item.current { background: linear-gradient(to right, rgba(92,31,46,0.04), var(–cream) 30%); border-color: var(–burgundy-line2); }
-.queue-item.almost::before { background: var(–gold-2); }
-.queue-item.almost { border-color: var(–gold-line); }
+.queue-item.almost { border-color: var(–gold); background: rgba(201,169,110,0.04); }
 
 .admin-queue-item {
 display: flex;
 align-items: center;
-gap: 14px;
-padding: 14px 18px;
-border: 1px solid var(–parchment-3);
+gap: 12px;
+padding: 12px 16px;
+border: 1px solid var(–beige-mid);
+border-radius: var(–radius-sm);
 margin-bottom: 8px;
 background: var(–cream);
-transition: all 0.2s;
+transition: var(–trans);
 }
-.admin-queue-item:hover { box-shadow: 0 2px 8px rgba(28,20,16,0.05); }
+.admin-queue-item:hover { box-shadow: var(–shadow-xs); }
 
 .change-request-item {
 display: flex;
 align-items: center;
-gap: 14px;
-padding: 14px 18px;
-border: 1px solid var(–gold-line);
+gap: 12px;
+padding: 12px 16px;
+border: 1px solid var(–gold);
+border-radius: var(–radius-sm);
 margin-bottom: 8px;
-background: rgba(184,146,42,0.03);
+background: #fffdf5;
 }
 
 .cancelled-item {
 display: flex;
 align-items: center;
-gap: 14px;
+gap: 12px;
 padding: 12px 16px;
-border: 1px solid rgba(160,40,40,0.2);
+border: 1px solid #e8b4b4;
+border-radius: var(–radius-sm);
 margin-bottom: 8px;
-background: rgba(160,40,40,0.03);
+background: #fff8f8;
 }
-.cancelled-num { font-family: var(–f-logo); font-size: 1.4rem; color: var(–red); min-width: 42px; text-align: center; }
+.cancelled-num { font-family: ‘Lobster’, cursive; font-size: 1.4rem; color: var(–red-cancel); min-width: 40px; text-align: center; }
 
-.q-num { font-family: var(–f-logo); font-size: 2rem; color: var(–burgundy); min-width: 56px; text-align: center; line-height: 1; }
-.q-info { flex: 1; min-width: 0; }
-.q-name { font-size: 0.95rem; font-weight: 500; color: var(–ink); }
-.q-meta { font-family: var(–f-sans); font-size: 8px; letter-spacing: 1.5px; color: var(–ash-2); margin-top: 4px; }
+.q-num { font-family: ‘Lobster’, cursive; font-size: 1.9rem; color: var(–wine); min-width: 52px; text-align: center; line-height: 1; }
+.q-info { flex: 1; }
+.q-name { font-size: 1rem; font-weight: 500; color: var(–ink); }
+.q-detail { font-size: 9px; letter-spacing: 1.5px; color: var(–gray); margin-top: 4px; }
 
 .badge {
-font-family: var(–f-sans);
-font-size: 7px;
+font-size: 8px;
 letter-spacing: 2px;
 text-transform: uppercase;
-font-weight: 700;
-padding: 4px 12px;
+padding: 3px 10px;
+border-radius: 12px;
+font-weight: 600;
 white-space: nowrap;
-border-radius: 1px;
 }
-.badge-now  { color: var(–burgundy); background: var(–burgundy-ghost); border: 1px solid var(–burgundy-line2); }
-.badge-soon { color: #8a6010; background: var(–gold-light); border: 1px solid var(–gold-line); }
+.badge-now  { color: var(–wine);  background: rgba(107,39,55,0.08);   border: 1px solid rgba(107,39,55,0.2); }
+.badge-soon { color: #a07020;       background: rgba(201,169,110,0.12); border: 1px solid rgba(201,169,110,0.3); }
 
-/* ════════════════════════════════════════════════
-ADMIN ACTION BAR
-════════════════════════════════════════════════ */
+/* Action buttons inside lists */
+.btn-serve {
+background: var(–wine); color: var(–beige); border: none;
+font-family: ‘Montserrat’, sans-serif; font-size: 8px; letter-spacing: 2px; font-weight: 600;
+padding: 7px 14px; cursor: pointer; border-radius: var(–radius-sm);
+white-space: nowrap; transition: var(–trans);
+}
+.btn-serve:hover { background: var(–wine-dark); }
+
+.btn-approve {
+background: var(–green-ok); color: white; border: none;
+font-family: ‘Montserrat’, sans-serif; font-size: 8px; letter-spacing: 2px; font-weight: 600;
+padding: 7px 14px; cursor: pointer; border-radius: var(–radius-sm);
+white-space: nowrap; transition: var(–trans);
+}
+.btn-approve:hover { background: #1f5c3a; }
+
+.btn-remove {
+background: transparent; color: var(–red-cancel); border: 1.5px solid rgba(180,60,60,0.35);
+font-family: ‘Montserrat’, sans-serif; font-size: 8px; letter-spacing: 2px; font-weight: 600;
+padding: 6px 13px; cursor: pointer; border-radius: var(–radius-sm);
+white-space: nowrap; transition: var(–trans);
+}
+.btn-remove:hover { background: var(–red-cancel); color: white; border-color: var(–red-cancel); }
+
+/* Room change button */
+.btn-room-change {
+background: var(–cream);
+border: 1.5px solid rgba(107,39,55,0.25);
+color: var(–wine);
+font-family: ‘Montserrat’, sans-serif;
+font-size: 9px;
+letter-spacing: 2px;
+padding: 12px 16px;
+cursor: pointer;
+text-align: left;
+width: 100%;
+transition: var(–trans);
+border-radius: var(–radius-sm);
+}
+.btn-room-change:hover { background: var(–wine); color: var(–beige); }
+
+/* ─── ADMIN OVERVIEW BUTTONS ─────────────────────────────────── */
 .admin-actions {
 display: flex;
 gap: 12px;
-margin-bottom: 28px;
+margin-bottom: 24px;
 flex-wrap: wrap;
 }
 .admin-actions .btn { width: auto; margin-top: 0; }
 
-/* ════════════════════════════════════════════════
-STATS
-════════════════════════════════════════════════ */
-.stats-grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 20px; }
-.stats-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+/* ─── STATS ──────────────────────────────────────────────────── */
+.stats-grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 16px; }
+.stats-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
 
-.stat-card {
+.stat-box {
 background: var(–cream);
-border: 1px solid var(–parchment-3);
-padding: 28px 20px 24px;
+border: 1px solid var(–beige-mid);
+border-radius: var(–radius);
+padding: 22px 18px;
 text-align: center;
-position: relative;
-overflow: hidden;
-box-shadow: 0 2px 8px rgba(28,20,16,0.04);
+box-shadow: var(–shadow-xs);
 }
-.stat-card::before {
-content: ‘’;
-position: absolute;
-top: 0; left: 20%; right: 20%;
-height: 1px;
-background: linear-gradient(90deg, transparent, var(–gold-line), transparent);
-}
-.stat-icon   { font-size: 1.2rem; margin-bottom: 10px; display: block; }
-.stat-value  { font-family: var(–f-logo); font-size: 2.8rem; color: var(–burgundy); line-height: 1; }
-.stat-value.red { color: var(–red); }
-.stat-label  { font-family: var(–f-sans); font-size: 7px; letter-spacing: 3px; text-transform: uppercase; color: var(–ash-2); margin-top: 8px; font-weight: 600; }
+.stat-value { font-family: ‘Lobster’, cursive; font-size: 2.2rem; color: var(–wine); line-height: 1; }
+.stat-value.big { font-size: 2.8rem; }
+.stat-value.red { color: var(–red-cancel); }
+.stat-label { font-size: 8px; letter-spacing: 2.5px; color: var(–gray); margin-top: 6px; text-transform: uppercase; font-weight: 600; }
+.stat-icon  { font-size: 1.3rem; margin-bottom: 8px; }
 
-.period-card { background: var(–cream); border: 1px solid var(–parchment-3); padding: 22px; box-shadow: 0 2px 8px rgba(28,20,16,0.04); }
-.period-card-title { font-family: var(–f-sans); font-size: 7px; letter-spacing: 4px; text-transform: uppercase; color: var(–ash-2); font-weight: 600; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(–parchment-3); }
-.period-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid var(–parchment-2); font-size: 8.5px; }
+.period-box {
+background: var(–cream);
+border: 1px solid var(–beige-mid);
+border-radius: var(–radius);
+padding: 18px;
+box-shadow: var(–shadow-xs);
+}
+.period-heading {
+font-size: 9px;
+letter-spacing: 3px;
+color: var(–gray);
+font-weight: 600;
+text-transform: uppercase;
+margin-bottom: 12px;
+}
+.period-row {
+display: flex;
+justify-content: space-between;
+padding: 7px 0;
+border-bottom: 1px solid var(–beige-mid);
+font-size: 9px;
+letter-spacing: 1px;
+}
 .period-row:last-child { border-bottom: none; }
-.period-row-label { color: var(–ink-2); }
-.period-row-vals { display: flex; gap: 10px; }
 
+.day-stat-box {
+border: 1px solid var(–beige-mid);
+border-radius: var(–radius-sm);
+padding: 16px 20px;
+margin-bottom: 8px;
+background: var(–cream);
+box-shadow: var(–shadow-xs);
+}
+
+/* Stats filter bar */
 .filter-bar {
 display: flex;
-gap: 12px;
+gap: 10px;
 flex-wrap: wrap;
 align-items: flex-end;
-background: var(–parchment-2);
-border: 1px solid var(–parchment-3);
-padding: 20px 22px;
-margin-bottom: 24px;
+margin-bottom: 20px;
+background: var(–beige-mid);
+padding: 16px 18px;
+border-radius: var(–radius-sm);
 }
 .filter-bar .btn { margin-top: 0; }
 
-.day-stat-row {
-border: 1px solid var(–parchment-3);
-padding: 18px 22px;
-margin-bottom: 8px;
-background: var(–cream);
-box-shadow: 0 1px 4px rgba(28,20,16,0.04);
-}
-
-/* Stats lock */
-.stats-lock-area {
-text-align: center;
-padding: 32px 20px;
-}
-.stats-lock-icon { font-size: 1.8rem; margin-bottom: 14px; display: block; }
-.stats-lock-area input {
-max-width: 260px;
-text-align: center;
-letter-spacing: 8px;
-margin: 0 auto 10px;
-display: block;
-}
-
-/* ════════════════════════════════════════════════
-INFO BOX
-════════════════════════════════════════════════ */
-.info-box {
-background: var(–burgundy-ghost);
-border-left: 2px solid var(–burgundy-line2);
-padding: 16px 20px;
-margin-bottom: 24px;
-font-family: var(–f-serif);
-font-style: italic;
-font-size: 1rem;
-line-height: 1.8;
-color: var(–ink-2);
-}
-
-/* ════════════════════════════════════════════════
-ROOM CHANGE BUTTON
-════════════════════════════════════════════════ */
-.btn-room-change {
-background: var(–cream);
-border: 1px solid var(–burgundy-line2);
-color: var(–burgundy);
-font-family: var(–f-sans);
-font-size: 8px;
-letter-spacing: 2px;
-padding: 14px 18px;
-cursor: pointer;
-text-align: left;
-width: 100%;
-transition: all 0.25s var(–ease-out);
-border-radius: 1px;
-}
-.btn-room-change:hover { background: var(–burgundy); color: var(–cream); }
-
-/* ════════════════════════════════════════════════
-MODAL
-════════════════════════════════════════════════ */
+/* ─── MODAL ──────────────────────────────────────────────────── */
 .modal-overlay {
 display: none;
 position: fixed;
 inset: 0;
-background: rgba(28, 20, 16, 0.72);
+background: rgba(26,20,16,0.65);
 z-index: 10000;
 justify-content: center;
 align-items: center;
-backdrop-filter: blur(8px) saturate(60%);
--webkit-backdrop-filter: blur(8px) saturate(60%);
+backdrop-filter: blur(6px);
 }
-.modal-overlay.show { display: flex; }
+.modal-overlay.open { display: flex; }
 
 .modal-box {
 background: var(–cream);
-border: 1.5px solid var(–burgundy);
-padding: 56px 48px;
-width: min(440px, 92vw);
+border: 1.5px solid var(–wine);
+border-radius: var(–radius-lg);
+padding: 48px 40px;
+width: min(420px, 90vw);
 text-align: center;
 position: relative;
-animation: modalIn 0.4s var(–ease-out);
-box-shadow: 0 32px 80px rgba(28,20,16,0.3), 0 0 0 1px rgba(92,31,46,0.1);
+box-shadow: var(–shadow-lg);
+animation: modalIn 0.3s cubic-bezier(0.16,1,0.3,1);
 }
 .modal-box::before {
 content: ‘’;
 position: absolute;
-top: 0; left: 32px; right: 32px;
-height: 1px;
-background: linear-gradient(90deg, transparent, var(–gold-2), transparent);
-}
-.modal-box::after {
-content: ‘’;
-position: absolute;
 inset: 0;
-background: radial-gradient(ellipse at 50% 0%, rgba(92,31,46,0.05), transparent 60%);
+background: radial-gradient(ellipse at 50% 0%, rgba(107,39,55,0.06) 0%, transparent 60%);
+border-radius: inherit;
 pointer-events: none;
 }
-.modal-icon  { font-size: 1.8rem; margin-bottom: 16px; display: block; position: relative; z-index: 1; }
-.modal-title { font-family: var(–f-display); font-size: 1.8rem; font-weight: 400; color: var(–burgundy-2); margin-bottom: 6px; position: relative; z-index: 1; }
-.modal-sub   { font-family: var(–f-sans); font-size: 7.5px; letter-spacing: 3.5px; text-transform: uppercase; color: var(–ash-2); margin-bottom: 32px; position: relative; z-index: 1; }
-.modal-input {
-width: 100%; padding: 15px 18px;
-font-family: var(–f-sans); font-size: 1.1rem;
-background: var(–parchment); border: 1px solid var(–parchment-3); border-bottom-color: var(–linen-2);
-color: var(–ink); outline: none; text-align: center; letter-spacing: 6px; margin-bottom: 10px;
-border-radius: 2px; position: relative; z-index: 1;
+
+.modal-lock   { font-size: 2rem; margin-bottom: 12px; }
+.modal-title  { font-family: ‘Cormorant Garamond’, serif; font-size: 1.7rem; font-weight: 500; color: var(–wine); margin-bottom: 4px; }
+.modal-sub    { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(–gray); margin-bottom: 28px; }
+.modal-input  {
+width: 100%; padding: 14px 18px; font-family: ‘Montserrat’, sans-serif; font-size: 1.2rem;
+background: var(–beige); border: 1px solid var(–beige-dark); border-radius: var(–radius-sm);
+color: var(–ink); outline: none; text-align: center; letter-spacing: 6px; margin-bottom: 8px;
 }
-.modal-input:focus { border-color: var(–burgundy); box-shadow: 0 0 0 3px rgba(92,31,46,0.07); }
-.modal-error { font-family: var(–f-sans); font-size: 9px; letter-spacing: 1px; color: var(–red); margin-bottom: 12px; display: none; position: relative; z-index: 1; }
-.modal-btn { width: 100%; padding: 15px; background: var(–burgundy); color: var(–cream); border: none; font-family: var(–f-sans); font-size: 8.5px; letter-spacing: 3.5px; text-transform: uppercase; font-weight: 700; cursor: pointer; margin-bottom: 14px; transition: all 0.2s; position: relative; z-index: 1; border-radius: 1px; }
-.modal-btn:hover { background: var(–burgundy-2); }
-.modal-close { font-family: var(–f-sans); font-size: 8px; letter-spacing: 2.5px; text-transform: uppercase; color: var(–ash-2); background: none; border: none; cursor: pointer; text-decoration: underline; position: relative; z-index: 1; }
-.modal-close:hover { color: var(–burgundy); }
+.modal-input:focus { border-color: var(–wine); box-shadow: 0 0 0 3px rgba(107,39,55,0.08); }
+.modal-error  { font-size: 10px; letter-spacing: 1px; color: var(–red-cancel); margin-bottom: 10px; display: none; }
+.modal-btn    { width: 100%; padding: 14px; background: var(–wine); color: var(–beige); border: none; border-radius: var(–radius-sm); font-family: ‘Montserrat’, sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; font-weight: 600; cursor: pointer; transition: var(–trans); margin-bottom: 12px; }
+.modal-btn:hover { background: var(–wine-dark); }
+.modal-close  { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(–gray); background: none; border: none; cursor: pointer; text-decoration: underline; }
+.modal-close:hover { color: var(–wine); }
 
-/* ════════════════════════════════════════════════
-ANIMATIONS
-════════════════════════════════════════════════ */
-.fade-up { animation: fadeUp 0.5s var(–ease-out) both; }
-.fade-up-2 { animation: fadeUp 0.5s var(–ease-out) 0.08s both; }
-.fade-up-3 { animation: fadeUp 0.5s var(–ease-out) 0.16s both; }
+/* ─── INFO BOX ───────────────────────────────────────────────── */
+.info-box {
+background: rgba(107,39,55,0.05);
+border-left: 3px solid var(–wine);
+border-radius: 0 var(–radius-sm) var(–radius-sm) 0;
+padding: 14px 18px;
+margin-bottom: 20px;
+font-size: 0.92rem;
+line-height: 1.7;
+color: var(–ink);
+}
 
-@keyframes fadeUp {
-from { opacity: 0; transform: translateY(16px); }
-to   { opacity: 1; transform: translateY(0); }
+/* Stats password section */
+.stats-lock-wrap {
+text-align: center;
+padding: 24px 0;
+}
+.stats-lock-wrap input {
+max-width: 260px;
+text-align: center;
+letter-spacing: 6px;
+margin-bottom: 8px;
+}
+.stats-lock-wrap .btn { max-width: 260px; }
+
+/* ─── ANIMATIONS ─────────────────────────────────────────────── */
+.fade-in { animation: fadeIn 0.35s ease forwards; }
+
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(10px); }
+to   { opacity: 1; transform: translateY(0);    }
 }
 @keyframes modalIn {
-from { opacity: 0; transform: scale(0.94) translateY(24px); }
-to   { opacity: 1; transform: scale(1) translateY(0); }
+from { opacity: 0; transform: scale(0.92) translateY(20px); }
+to   { opacity: 1; transform: scale(1) translateY(0);       }
 }
-@keyframes ticketReveal {
-from { opacity: 0; transform: translateY(20px) scale(0.98); }
-to   { opacity: 1; transform: translateY(0) scale(1); }
-}
-.ticket-animate { animation: ticketReveal 0.6s var(–ease-out) both; }
 
-/* ════════════════════════════════════════════════
-RESPONSIVE
-════════════════════════════════════════════════ */
-@media (max-width: 640px) {
+/* ─── RESPONSIVE ─────────────────────────────────────────────── */
+@media (max-width: 620px) {
 .rooms-overview     { grid-template-columns: 1fr; }
-.card               { padding: 32px 24px; }
+.card               { padding: 24px 18px; }
+.room-tabs button   { font-size: 8px; padding: 9px 10px; }
 .stats-grid-3       { grid-template-columns: 1fr; }
-nav.tabs button     { padding: 16px 12px; font-size: 7px; letter-spacing: 2.5px; }
+nav.tabs button     { padding: 14px 14px; font-size: 8px; }
 .admin-actions      { flex-direction: column; }
 .admin-actions .btn { width: 100%; }
-.ticket-number-display { font-size: 5rem; }
-.filter-bar         { flex-direction: column; }
-.filter-bar > *     { width: 100%; }
-h1.brand            { font-size: clamp(3.5rem, 15vw, 7rem); }
 }
-
 </style>
+
 </head>
 <body>
 
-<div id="frame"></div>
-<div id="loading-bar"></div>
-<div id="conn-status" class="conn-online">● ONLINE</div>
+<div class="loading-bar" id="loading-bar" style="width:0%"></div>
+<div class="conn-status conn-online" id="conn-status">● ONLINE</div>
 
-<!-- ════════════════════
-     HEADER
-════════════════════ -->
+<!-- ─── HEADER ─────────────────────────────────────────────── -->
 
 <header>
-  <div class="header-bg-text" aria-hidden="true">FilmNoir</div>
-
-  <div class="pre-title">
-    <div class="pre-title-line"></div>
-    <div class="pre-title-text">Self Booth Studio · Việt Nam</div>
-    <div class="pre-title-line"></div>
+  <div class="header-ornament">
+    <div class="header-ornament-dot"></div>
+    <span style="font-family:'Montserrat',sans-serif;font-size:8px;letter-spacing:5px;color:var(--gray-light);text-transform:uppercase;font-weight:600;">Self Booth Studio</span>
+    <div class="header-ornament-dot"></div>
   </div>
-
   <h1 class="brand">FilmNoir</h1>
-  <div class="brand-sub">where every frame tells a story</div>
-
-  <div class="header-rule">
-    <div class="header-rule-line"></div>
-    <div class="header-rule-diamond">◆ &nbsp; ◆ &nbsp; ◆</div>
-    <div class="header-rule-line" style="background:linear-gradient(270deg,transparent,var(--linen),var(--linen-2));"></div>
-  </div>
+  <div class="brand-tagline">where every frame tells a story</div>
 </header>
 
-<!-- ════════════════════
-     NAV
-════════════════════ -->
+<!-- ─── NAV ────────────────────────────────────────────────── -->
 
-<nav class="tabs" role="navigation">
+<nav class="tabs">
   <button class="active" onclick="switchTab('book')">Đặt Lịch</button>
   <button onclick="switchTab('check')">Kiểm Tra & Huỷ</button>
   <button onclick="switchTab('queue')">Hàng Chờ</button>
@@ -1240,31 +925,34 @@ h1.brand            { font-size: clamp(3.5rem, 15vw, 7rem); }
 
 <main>
 
-<!-- ══════════════════════════════════════════
-     TAB · BOOK
-══════════════════════════════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════
+     TAB: BOOK
+═══════════════════════════════════════════════════════════════ -->
 
 <div id="tab-book" class="tab-content">
-  <div class="section-divider"><span class="divider-glyph">Đăng ký lượt chụp</span></div>
+  <div class="ornament">◈</div>
   <div id="msg-book"></div>
 
-  <div class="card fade-up" id="form-card">
-    <div class="card-eyebrow">Bước đầu tiên</div>
-    <div class="card-title">Lấy Số Thứ Tự</div>
+  <!-- Booking Form -->
+
+  <div class="card fade-in" id="form-card">
+    <div class="card-title">Đăng Ký Lượt Chụp</div>
 
 ```
 <div class="field">
-  <label class="field-label">Họ &amp; Tên</label>
-  <input class="field-input" type="text" id="inp-name" placeholder="Nguyễn Văn A"/>
+  <label>Họ &amp; Tên</label>
+  <input type="text" id="inp-name" placeholder="Nguyễn Văn A"/>
 </div>
+
 <div class="field">
-  <label class="field-label">Số Điện Thoại</label>
-  <input class="field-input" type="tel" id="inp-phone" placeholder="0901 234 567"/>
+  <label>Số Điện Thoại</label>
+  <input type="tel" id="inp-phone" placeholder="0901 234 567"/>
 </div>
+
 <div class="field">
-  <label class="field-label">Phòng Chụp</label>
+  <label>Chọn Phòng Chụp</label>
   <div class="select-wrap">
-    <select class="field-input" id="inp-room">
+    <select id="inp-room">
       <option value="">— Chọn phòng —</option>
       <option value="room1">Phòng 1 – Star Light</option>
       <option value="room2">Phòng 2 – Heart Garden</option>
@@ -1272,167 +960,124 @@ h1.brand            { font-size: clamp(3.5rem, 15vw, 7rem); }
     </select>
   </div>
 </div>
+
 <div class="field">
-  <label class="field-label">Thanh Toán</label>
-  <div class="payment-row">
-    <div class="pay-card" id="pay-cash-btn" onclick="selectPayment('cash')">
-      <span class="pay-check">✓</span>
-      <div class="pay-card-inner">
-        <span class="pay-icon">💵</span>
-        <div class="pay-name">Tiền mặt</div>
-      </div>
+  <label>Hình Thức Thanh Toán</label>
+  <div class="payment-grid">
+    <div class="pay-option" id="pay-cash-btn" onclick="selectPayment('cash')">
+      <div class="pay-icon">💵</div>
+      <div class="pay-label">Tiền mặt</div>
     </div>
-    <div class="pay-card" id="pay-transfer-btn" onclick="selectPayment('transfer')">
-      <span class="pay-check">✓</span>
-      <div class="pay-card-inner">
-        <span class="pay-icon">📱</span>
-        <div class="pay-name">Chuyển khoản</div>
-      </div>
+    <div class="pay-option" id="pay-transfer-btn" onclick="selectPayment('transfer')">
+      <div class="pay-icon">📱</div>
+      <div class="pay-label">Chuyển khoản</div>
     </div>
   </div>
   <input type="hidden" id="book-payment" value=""/>
 </div>
 
-<button class="btn btn-primary" id="btn-book" onclick="bookQueue()">
-  <span>✦</span> Lấy Số Thứ Tự
-</button>
+<button class="btn btn-primary" id="btn-book" onclick="bookQueue()">✦ Lấy Số Thứ Tự</button>
 ```
 
   </div>
 
   <!-- Ticket -->
 
-  <div id="ticket-wrap" style="display:none;">
-    <div class="ticket-wrap ticket-animate">
+  <div id="ticket-wrap" style="display:none;" class="fade-in">
 
 ```
-  <!-- PENDING -->
-  <div class="ticket" id="pending-ticket">
-    <div class="ticket-header">
-      <div class="ticket-logo">FilmNoir</div>
-      <div class="ticket-studio-tag">Self Booth Studio</div>
-    </div>
-    <div class="ticket-body" style="text-align:center;">
-      <div class="pending-pill">
-        <div class="pending-pill-dot"></div>
-        <span class="pending-pill-text">Chờ xác nhận thanh toán</span>
-      </div>
-      <div class="ticket-name-display" id="ticket-name">—</div>
-      <div style="display:flex;justify-content:center;margin-top:10px;">
-        <div class="ticket-room-tag">
-          <span id="ticket-room">—</span>
-        </div>
-      </div>
-      <div id="ticket-payment-display" style="font-family:var(--f-sans);font-size:8px;letter-spacing:2px;color:var(--ash-2);margin-top:10px;"></div>
-    </div>
-    <div class="ticket-tear">
-      <div class="tear-hole"></div>
-      <div class="tear-hole" style="margin:0 auto;"></div>
-      <div class="tear-hole"></div>
-    </div>
-    <div class="ticket-footer">
-      <div class="ticket-notif-box">
-        <div class="ticket-notif-text">
-          💳 Vui lòng thanh toán để xác nhận số của bạn nhé!<br/>
-          <span style="opacity:0.7;font-size:0.75rem;">Số thứ tự sẽ được cấp sau khi nhân viên xác nhận.</span>
-        </div>
-      </div>
-    </div>
+<!-- Pending ticket -->
+<div class="ticket" id="pending-ticket">
+  <div class="pending-badge">
+    <span>⏳</span>
+    <span>Chờ xác nhận thanh toán</span>
   </div>
-
-  <!-- CONFIRMED -->
-  <div class="ticket" id="confirmed-ticket" style="display:none;">
-    <div class="ticket-header">
-      <div class="ticket-logo">FilmNoir</div>
-      <div class="ticket-studio-tag">Self Booth Studio</div>
-    </div>
-    <div class="ticket-body">
-      <div class="ticket-eyebrow">Số thứ tự của bạn</div>
-      <div class="ticket-number-display" id="ticket-num">—</div>
-      <div class="ticket-name-display" id="ticket-name-confirmed">—</div>
-      <div style="margin-top:10px;">
-        <div class="ticket-room-tag">
-          <span id="ticket-room-confirmed">—</span>
-        </div>
-      </div>
-    </div>
-    <div class="ticket-tear">
-      <div class="tear-hole"></div>
-      <div class="tear-hole" style="margin:0 auto;"></div>
-      <div class="tear-hole"></div>
-    </div>
-    <div class="ticket-footer">
-      <div id="ticket-notif"></div>
-    </div>
+  <div class="ticket-name" id="ticket-name">—</div>
+  <div class="ticket-room" id="ticket-room">—</div>
+  <div id="ticket-payment-display" style="font-size:9px;letter-spacing:2px;color:var(--gray);margin-top:6px;font-family:'Montserrat',sans-serif;"></div>
+  <div class="ticket-perforation">
+    <div class="ticket-perf-hole"></div>
+    <div class="ticket-perf-hole"></div>
+    <div class="ticket-perf-hole"></div>
+    <div class="ticket-perf-hole"></div>
+    <div class="ticket-perf-hole"></div>
   </div>
-
+  <div style="background:linear-gradient(135deg,var(--wine-dark),var(--wine));color:var(--beige);padding:16px 18px;border-radius:var(--radius-sm);font-family:'Montserrat',sans-serif;font-size:0.8rem;letter-spacing:0.5px;line-height:1.8;text-align:center;">
+    💳 Vui lòng thanh toán để xác nhận số của bạn nhé!<br/>
+    <span style="font-size:0.72rem;opacity:0.85;">Số thứ tự sẽ được cấp sau khi nhân viên xác nhận.</span>
+  </div>
 </div>
+
+<!-- Confirmed ticket -->
+<div class="ticket fade-in" id="confirmed-ticket" style="display:none;">
+  <div class="ticket-eyebrow">Số Thứ Tự Của Bạn</div>
+  <div class="ticket-number" id="ticket-num">—</div>
+  <div class="ticket-perforation">
+    <div class="ticket-perf-hole"></div>
+    <div class="ticket-perf-hole"></div>
+    <div class="ticket-perf-hole"></div>
+    <div class="ticket-perf-hole"></div>
+    <div class="ticket-perf-hole"></div>
+  </div>
+  <div class="ticket-name" id="ticket-name-confirmed">—</div>
+  <div class="ticket-room" id="ticket-room-confirmed">—</div>
+  <div id="ticket-notif" style="margin-top:12px;"></div>
+</div>
+
 <br/>
-<button class="btn btn-ghost" onclick="resetForm()" style="display:block;width:100%;max-width:480px;margin:0 auto;">← Đăng Ký Thêm</button>
+<button class="btn btn-ghost" onclick="resetForm()">← Đăng Ký Thêm</button>
 ```
 
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════
-     TAB · CHECK
-══════════════════════════════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════
+     TAB: CHECK
+═══════════════════════════════════════════════════════════════ -->
 
 <div id="tab-check" class="tab-content" style="display:none;">
-  <div class="section-divider"><span class="divider-glyph">Tra cứu &amp; huỷ lịch</span></div>
-  <div class="card fade-up">
-    <div class="card-eyebrow">Tra cứu</div>
+  <div class="ornament">◈</div>
+  <div class="card fade-in">
     <div class="card-title">Kiểm Tra &amp; Huỷ Lịch</div>
     <div id="msg-check"></div>
     <div class="info-box">
       Nhập số điện thoại đã đăng ký để xem số thứ tự của bạn.<br/>
-      <span style="font-size:0.88rem;color:var(--ash);">Để huỷ lịch, bấm <strong style="color:var(--burgundy);font-style:normal;">✕ Huỷ Lượt</strong> sau khi tra cứu.</span>
+      <span style="font-size:9px;letter-spacing:1px;color:var(--gray);">Để huỷ lịch, bấm <strong style="color:var(--wine);">✕ Huỷ Lượt</strong> sau khi tra cứu.</span>
     </div>
     <div class="field">
-      <label class="field-label">Số Điện Thoại</label>
-      <input class="field-input" type="tel" id="chk-phone" placeholder="Nhập số đã đăng ký"/>
+      <label>Số Điện Thoại</label>
+      <input type="tel" id="chk-phone" placeholder="Nhập số đã đăng ký"/>
     </div>
     <button class="btn btn-primary" onclick="checkQueue()">Kiểm Tra</button>
 
 ```
-<div id="check-result" style="margin-top:32px;display:none;" class="fade-up">
-  <div class="ticket-wrap">
-    <div class="ticket">
-      <div class="ticket-header">
-        <div class="ticket-logo">FilmNoir</div>
-        <div class="ticket-studio-tag">Self Booth Studio</div>
-      </div>
-      <div class="ticket-body">
-        <div class="ticket-eyebrow">Số thứ tự của bạn</div>
-        <div class="ticket-number-display" id="chk-num">—</div>
-        <div class="ticket-name-display" id="chk-name">—</div>
-        <div style="margin-top:10px;">
-          <div class="ticket-room-tag">
-            <span id="chk-room">—</span>
-          </div>
-        </div>
-        <div style="margin-top:16px;font-family:var(--f-sans);font-size:8.5px;letter-spacing:1.5px;color:var(--ash);">
-          Đang phục vụ:&nbsp;<strong style="color:var(--burgundy);" id="chk-current">–</strong>
-          &nbsp;&nbsp;·&nbsp;&nbsp;
-          Còn chờ:&nbsp;<strong style="color:var(--burgundy);" id="chk-wait">–</strong>&nbsp;lượt
-        </div>
-      </div>
-      <div class="ticket-tear">
-        <div class="tear-hole"></div>
-        <div class="tear-hole" style="margin:0 auto;"></div>
-        <div class="tear-hole"></div>
-      </div>
-      <div class="ticket-footer">
-        <div id="chk-notif"></div>
-      </div>
+<div id="check-result" style="margin-top:24px;display:none;" class="fade-in">
+  <div class="ticket">
+    <div class="ticket-eyebrow">Số Thứ Tự Của Bạn</div>
+    <div class="ticket-number" id="chk-num">—</div>
+    <div class="ticket-perforation">
+      <div class="ticket-perf-hole"></div>
+      <div class="ticket-perf-hole"></div>
+      <div class="ticket-perf-hole"></div>
+      <div class="ticket-perf-hole"></div>
+      <div class="ticket-perf-hole"></div>
     </div>
+    <div class="ticket-name" id="chk-name">—</div>
+    <div class="ticket-room" id="chk-room">—</div>
+    <div style="margin-top:14px;font-size:9px;letter-spacing:1.5px;color:var(--gray);">
+      Đang phục vụ: <strong style="color:var(--wine);" id="chk-current">–</strong>
+      &nbsp;&nbsp;·&nbsp;&nbsp;
+      Còn chờ: <strong style="color:var(--wine);" id="chk-wait">–</strong> lượt
+    </div>
+    <div id="chk-notif" style="margin-top:12px;"></div>
   </div>
 
-  <div id="room-change-section" style="margin-top:16px;max-width:480px;margin-left:auto;margin-right:auto;">
+  <br/>
+  <div id="room-change-section">
     <button class="btn btn-danger" onclick="cancelFromCheck()">✕ Huỷ Lượt Của Tôi</button>
-    <button class="btn btn-muted" onclick="showRoomChangeOptions()">⇄ Yêu Cầu Đổi Phòng</button>
+    <button class="btn btn-neutral" onclick="showRoomChangeOptions()">⇄ Yêu Cầu Đổi Phòng</button>
     <div id="room-change-options" style="display:none;margin-top:16px;">
-      <div style="font-family:var(--f-sans);font-size:7.5px;letter-spacing:3px;text-transform:uppercase;color:var(--ash-2);margin-bottom:12px;font-weight:600;">Chọn phòng muốn đổi sang</div>
+      <div style="font-size:9px;letter-spacing:2px;color:var(--gray);margin-bottom:10px;text-transform:uppercase;font-weight:600;">Chọn phòng muốn đổi sang</div>
       <div id="room-change-list" style="display:flex;flex-direction:column;gap:8px;"></div>
       <button class="btn btn-ghost" style="margin-top:12px;" onclick="hideRoomChangeOptions()">← Huỷ</button>
     </div>
@@ -1443,27 +1088,27 @@ h1.brand            { font-size: clamp(3.5rem, 15vw, 7rem); }
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════
-     TAB · QUEUE
-══════════════════════════════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════
+     TAB: QUEUE
+═══════════════════════════════════════════════════════════════ -->
 
 <div id="tab-queue" class="tab-content" style="display:none;">
-  <div class="section-divider"><span class="divider-glyph">Tình trạng hàng chờ</span></div>
+  <div class="ornament">◈</div>
   <div class="rooms-overview" id="queue-overview"></div>
   <div class="room-tabs" id="queue-room-tabs">
-    <button class="active" onclick="switchRoomQueue(0)">Phòng 1 – Star Light</button>
-    <button onclick="switchRoomQueue(1)">Phòng 2 – Heart Garden</button>
-    <button onclick="switchRoomQueue(2)">Phòng 3 – Red Cherry</button>
+    <button class="active" onclick="switchRoomQueue(0)">Phòng 1</button>
+    <button onclick="switchRoomQueue(1)">Phòng 2</button>
+    <button onclick="switchRoomQueue(2)">Phòng 3</button>
   </div>
   <div id="queue-room-detail"></div>
 </div>
 
-<!-- ══════════════════════════════════════════
-     TAB · ADMIN
-══════════════════════════════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════
+     TAB: ADMIN
+═══════════════════════════════════════════════════════════════ -->
 
 <div id="tab-admin" class="tab-content" style="display:none;">
-  <div class="section-divider"><span class="divider-glyph">Quản lý hệ thống</span></div>
+  <div class="ornament">◈</div>
   <div class="rooms-overview" id="admin-overview"></div>
   <div class="room-tabs" id="admin-room-tabs">
     <button class="active" onclick="switchRoomAdmin(0)">Phòng 1</button>
@@ -1471,8 +1116,7 @@ h1.brand            { font-size: clamp(3.5rem, 15vw, 7rem); }
     <button onclick="switchRoomAdmin(2)">Phòng 3</button>
   </div>
 
-  <div class="card fade-up">
-    <div class="card-eyebrow">Điều phối</div>
+  <div class="card fade-in">
     <div class="card-title" id="admin-room-title">—</div>
     <div id="msg-admin"></div>
     <div class="admin-actions">
@@ -1483,52 +1127,54 @@ h1.brand            { font-size: clamp(3.5rem, 15vw, 7rem); }
     <div id="admin-queue-list"></div>
   </div>
 
-  <div class="card fade-up-2">
-    <div class="card-eyebrow">Lịch sử</div>
-    <div class="card-title">Huỷ Lịch Hôm Nay</div>
-    <div id="admin-cancelled-list"><p style="color:var(--ash-2);font-family:var(--f-serif);font-style:italic;">Chưa có lượt huỷ nào hôm nay.</p></div>
+  <!-- Cancelled History -->
+
+  <div class="card fade-in">
+    <div class="card-title">Lịch Sử Huỷ Hôm Nay</div>
+    <div id="admin-cancelled-list"><p style="color:var(--gray);font-style:italic;">Chưa có lượt huỷ nào hôm nay.</p></div>
   </div>
 
-  <!-- Stats lock -->
+  <!-- Stats - locked -->
 
-  <div class="card fade-up-3" id="stats-locked-card">
-    <div class="card-eyebrow">Dữ liệu</div>
+  <div class="card fade-in" id="stats-locked-card">
     <div class="card-title">Thống Kê</div>
-    <div class="stats-lock-area">
-      <span class="stats-lock-icon">📊</span>
-      <div style="font-family:var(--f-sans);font-size:7.5px;letter-spacing:3.5px;color:var(--ash-2);margin-bottom:20px;text-transform:uppercase;font-weight:600;">Nhập mật khẩu để xem thống kê</div>
-      <input class="field-input" type="password" id="stats-pw-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')unlockStats()"/>
-      <div id="stats-pw-error" style="font-size:9px;color:var(--red);margin:8px 0;display:none;letter-spacing:1px;font-family:var(--f-sans);">Mật khẩu không đúng.</div>
-      <button class="btn btn-primary" style="max-width:280px;margin:0 auto;display:flex;" onclick="unlockStats()">Xem Thống Kê</button>
+    <div class="stats-lock-wrap">
+      <div style="font-size:1.5rem;margin-bottom:12px;">📊</div>
+      <div style="font-size:9px;letter-spacing:2px;color:var(--gray);margin-bottom:16px;text-transform:uppercase;font-weight:600;">Nhập mật khẩu để xem thống kê</div>
+      <input type="password" id="stats-pw-input" placeholder="••••••••"
+        onkeydown="if(event.key==='Enter')unlockStats()"/>
+      <div id="stats-pw-error" style="font-size:10px;color:var(--red-cancel);margin:8px 0;display:none;letter-spacing:1px;">Mật khẩu không đúng.</div>
+      <button class="btn btn-primary" onclick="unlockStats()">Xem Thống Kê</button>
     </div>
   </div>
 
-  <!-- Stats content -->
+  <!-- Stats - unlocked -->
 
   <div id="stats-content" style="display:none;">
-    <div class="card fade-up">
-      <div class="card-eyebrow">Tổng quan</div>
+    <div class="card fade-in">
       <div class="card-title">Thống Kê Tổng Quan</div>
-      <div class="stats-grid-3" id="stats-summary"></div>
-      <div class="stats-grid-2" id="stats-payment"></div>
-      <div class="stats-grid-2" id="stats-period" style="margin-bottom:32px;"></div>
 
 ```
+  <div class="stats-grid-3" id="stats-summary"></div>
+  <div class="stats-grid-2" id="stats-payment"></div>
+  <div class="stats-grid-2" id="stats-period" style="margin-bottom:28px;"></div>
+
+  <!-- Filter & export -->
   <div class="filter-bar">
     <div style="flex:1;min-width:140px;">
-      <label class="field-label">Từ ngày</label>
-      <input class="field-input" type="date" id="stats-from"/>
+      <label>Từ ngày</label>
+      <input type="date" id="stats-from"/>
     </div>
     <div style="flex:1;min-width:140px;">
-      <label class="field-label">Đến ngày</label>
-      <input class="field-input" type="date" id="stats-to"/>
+      <label>Đến ngày</label>
+      <input type="date" id="stats-to"/>
     </div>
     <button class="btn btn-primary" style="width:auto;" onclick="filterStats()">🔍 Lọc</button>
-    <button class="btn btn-primary" style="width:auto;background:var(--green);" onclick="exportExcel('filtered')">📥 Xuất Đã Lọc</button>
+    <button class="btn btn-primary" style="width:auto;background:var(--green-ok);" onclick="exportExcel('filtered')">📥 Xuất Đã Lọc</button>
     <button class="btn btn-ghost" style="margin-top:0;" onclick="exportExcel('all')">📥 Xuất Tất Cả</button>
   </div>
 
-  <div class="list-section-heading">Lịch Sử Theo Ngày</div>
+  <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gray);margin-bottom:12px;font-weight:600;">Lịch Sử Theo Ngày</div>
   <div id="stats-daily"></div>
 </div>
 ```
@@ -1536,11 +1182,11 @@ h1.brand            { font-size: clamp(3.5rem, 15vw, 7rem); }
   </div>
 </div>
 
-<!-- MODAL -->
+<!-- ─── MODAL ──────────────────────────────────────────────── -->
 
 <div class="modal-overlay" id="admin-modal" onclick="if(event.target===this)closeAdminModal()">
   <div class="modal-box">
-    <span class="modal-icon">🔒</span>
+    <div class="modal-lock">🔒</div>
     <div class="modal-title">Khu Vực Quản Lý</div>
     <div class="modal-sub">Chỉ dành cho nhân viên FilmNoir</div>
     <input class="modal-input" type="password" id="modal-pw-input" placeholder="••••••••••••"
@@ -1553,7 +1199,11 @@ h1.brand            { font-size: clamp(3.5rem, 15vw, 7rem); }
 
 </main>
 
+<!-- SheetJS -->
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<!-- Firebase -->
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -1569,45 +1219,56 @@ const firebaseConfig = {
   messagingSenderId: "530896508346",
   appId: "1:530896508346:web:7710bde5281bc86ea53983"
 };
-const app = initializeApp(firebaseConfig);
-const db  = getDatabase(app);
 
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// ─── CONSTANTS ────────────────────────────────────────────────
 const ROOMS = [
   { key:'room1', label:'Phòng 1', name:'Star Light' },
   { key:'room2', label:'Phòng 2', name:'Heart Garden' },
   { key:'room3', label:'Phòng 3', name:'Red Cherry' },
 ];
 
-let state = { rooms:[
-  {queue:[],currentServing:0,counter:0},
-  {queue:[],currentServing:0,counter:0},
-  {queue:[],currentServing:0,counter:0},
-]};
-let adminUnlocked=false, activeAdminRoom=0, activeQueueRoom=0, currentTab='book';
+// ─── LOCAL STATE ──────────────────────────────────────────────
+let state = {
+  rooms: [
+    { queue:[], currentServing:0, counter:0 },
+    { queue:[], currentServing:0, counter:0 },
+    { queue:[], currentServing:0, counter:0 },
+  ]
+};
 
-/* ─── LOADING ─── */
-function setLoading(on){
-  const b=document.getElementById('loading-bar');
-  b.style.width=on?'72%':'0%';
-  b.classList.toggle('active',on);
+let adminUnlocked = false;
+let activeAdminRoom = 0;
+let activeQueueRoom = 0;
+let currentTab = 'book';
+
+// ─── LOADING ──────────────────────────────────────────────────
+function setLoading(on) {
+  document.getElementById('loading-bar').style.width = on ? '70%' : '0%';
 }
 
-/* ─── CONNECTION ─── */
-onValue(ref(db,'.info/connected'),snap=>{
-  const el=document.getElementById('conn-status');
-  if(snap.val()){el.textContent='● ONLINE';el.className='conn-online';}
-  else{el.textContent='○ OFFLINE';el.className='conn-offline';}
-  el.id='conn-status';
+// ─── CONNECTION ────────────────────────────────────────────────
+const connRef = ref(db, '.info/connected');
+onValue(connRef, snap => {
+  const el = document.getElementById('conn-status');
+  if(snap.val()) { el.textContent='● ONLINE'; el.className='conn-status conn-online'; }
+  else           { el.textContent='○ OFFLINE'; el.className='conn-status conn-offline'; }
 });
 
-/* ─── DATE ─── */
-function todayKey(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
-function dbPath(){return `filmnoir/${todayKey()}`;}
-const dataRef=()=>ref(db,dbPath());
+// ─── DATE KEY ─────────────────────────────────────────────────
+function todayKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function dbPath() { return `filmnoir/${todayKey()}`; }
+const dataRef = () => ref(db, dbPath());
 
-/* ─── STATS UNLOCK ─── */
-window.unlockStats=function(){
-  if(document.getElementById('stats-pw-input').value==='Filmnoir14@'){
+// ─── STATS ────────────────────────────────────────────────────
+window.unlockStats = function() {
+  const pw = document.getElementById('stats-pw-input').value;
+  if(pw === 'Filmnoir14@') {
     document.getElementById('stats-locked-card').style.display='none';
     document.getElementById('stats-content').style.display='block';
     renderStats();
@@ -1618,196 +1279,357 @@ window.unlockStats=function(){
   }
 };
 
-let allStatsData={}, allCustomerData={};
+let allStatsData = {};
+let allCustomerData = {};
 
-async function renderStats(){
-  const [ss,cs]=await Promise.all([get(ref(db,'filmnoir/stats')),get(ref(db,'filmnoir/customers'))]);
-  allStatsData=ss.val()||{}; allCustomerData=cs.val()||{};
-  let cash=0,transfer=0;
-  const td=await get(ref(db,dbPath())); const tdd=td.val()||{};
-  ROOMS.forEach(r=>{const q=tdd[r.key]?.queue?Object.values(tdd[r.key].queue):[];q.forEach(e=>{if(e.payment==='cash')cash++;else if(e.payment==='transfer')transfer++;});});
-  Object.values(allCustomerData).forEach(dd=>Object.values(dd).forEach(c=>{if(c.status!=='approved')return;if(c.payment==='cash')cash++;else if(c.payment==='transfer')transfer++;}));
-  renderStatsUI(allStatsData); renderPayment(cash,transfer);
+async function renderStats() {
+  const statsSnap = await get(ref(db, 'filmnoir/stats'));
+  allStatsData = statsSnap.val() || {};
+  const custSnap = await get(ref(db, 'filmnoir/customers'));
+  allCustomerData = custSnap.val() || {};
+
+  let cash = 0, transfer = 0;
+  const todaySnap = await get(ref(db, `${dbPath()}`));
+  const todayData = todaySnap.val() || {};
+  ROOMS.forEach(r => {
+    const queue = todayData[r.key] && todayData[r.key].queue ? Object.values(todayData[r.key].queue) : [];
+    queue.forEach(e => {
+      if(e.payment==='cash') cash++;
+      else if(e.payment==='transfer') transfer++;
+    });
+  });
+  Object.values(allCustomerData).forEach(dayData => {
+    Object.values(dayData).forEach(c => {
+      if(c.status !== 'approved') return;
+      if(c.payment==='cash') cash++;
+      else if(c.payment==='transfer') transfer++;
+    });
+  });
+
+  renderStatsUI(allStatsData);
+  renderPaymentStatsDirect(cash, transfer);
 }
 
-window.filterStats=function(){
-  const from=document.getElementById('stats-from').value, to=document.getElementById('stats-to').value;
-  if(!from&&!to){renderStatsUI(allStatsData);return;}
-  const f={};
-  Object.entries(allStatsData).forEach(([d,r])=>{if((!from||d>=from)&&(!to||d<=to))f[d]=r;});
-  renderStatsUI(f,true);
+window.filterStats = function() {
+  const from = document.getElementById('stats-from').value;
+  const to   = document.getElementById('stats-to').value;
+  if(!from && !to) { renderStatsUI(allStatsData); return; }
+  const filtered = {};
+  Object.entries(allStatsData).forEach(([day,rooms]) => {
+    if((!from||day>=from)&&(!to||day<=to)) filtered[day]=rooms;
+  });
+  renderStatsUI(filtered, true);
 };
 
-function renderPayment(cash,transfer){
-  const el=document.getElementById('stats-payment'); if(!el)return;
-  const total=cash+transfer;
-  el.innerHTML=`
-    <div class="stat-card"><span class="stat-icon">💵</span><div class="stat-value">${cash}</div><div class="stat-label">Tiền mặt${total>0?' · '+Math.round(cash/total*100)+'%':''}</div></div>
-    <div class="stat-card"><span class="stat-icon">📱</span><div class="stat-value">${transfer}</div><div class="stat-label">Chuyển khoản${total>0?' · '+Math.round(transfer/total*100)+'%':''}</div></div>`;
+function renderPaymentStatsDirect(cash, transfer) {
+  const el = document.getElementById('stats-payment');
+  if(!el) return;
+  const total = cash + transfer;
+  el.innerHTML = `
+    <div class="stat-box">
+      <div class="stat-icon">💵</div>
+      <div class="stat-value">${cash}</div>
+      <div class="stat-label">Tiền mặt${total>0?' · '+Math.round(cash/total*100)+'%':''}</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-icon">📱</div>
+      <div class="stat-value">${transfer}</div>
+      <div class="stat-label">Chuyển khoản${total>0?' · '+Math.round(transfer/total*100)+'%':''}</div>
+    </div>
+  `;
 }
 
-function renderStatsUI(data,isFiltered=false){
-  const sEl=document.getElementById('stats-summary'),pEl=document.getElementById('stats-period'),dEl=document.getElementById('stats-daily');
-  if(!data||!Object.keys(data).length){sEl.innerHTML='';pEl.innerHTML='';dEl.innerHTML='<p style="color:var(--ash-2);font-family:var(--f-serif);font-style:italic;">Chưa có dữ liệu.</p>';return;}
-  const days=Object.entries(data).sort((a,b)=>b[0].localeCompare(a[0]));
-  let ta=0,tc=0; const rt={room1:0,room2:0,room3:0}; const wm={},mm={};
-  days.forEach(([day,rooms])=>{
-    Object.entries(rooms).forEach(([k,s])=>{ta+=s.approved||0;tc+=s.cancelled||0;rt[k]=(rt[k]||0)+(s.approved||0);});
-    const d=new Date(day),mon=new Date(d);mon.setDate(d.getDate()-((d.getDay()+6)%7));
+function renderStatsUI(data, isFiltered=false) {
+  const summaryEl = document.getElementById('stats-summary');
+  const periodEl  = document.getElementById('stats-period');
+  const dailyEl   = document.getElementById('stats-daily');
+
+  if(!data || !Object.keys(data).length) {
+    summaryEl.innerHTML=''; periodEl.innerHTML='';
+    dailyEl.innerHTML='<p style="color:var(--gray);font-style:italic;">Chưa có dữ liệu trong khoảng thời gian này.</p>';
+    return;
+  }
+
+  const days = Object.entries(data).sort((a,b)=>b[0].localeCompare(a[0]));
+  let totalApproved=0, totalCancelled=0;
+  const roomTotals = {room1:0,room2:0,room3:0};
+  const weeklyMap={}, monthlyMap={};
+
+  days.forEach(([day,rooms]) => {
+    Object.entries(rooms).forEach(([roomKey,stats]) => {
+      totalApproved  += stats.approved||0;
+      totalCancelled += stats.cancelled||0;
+      roomTotals[roomKey] = (roomTotals[roomKey]||0)+(stats.approved||0);
+    });
+    const d=new Date(day);
+    const mon=new Date(d); mon.setDate(d.getDate()-((d.getDay()+6)%7));
     const wk=mon.toISOString().slice(0,10);
-    if(!wm[wk])wm[wk]={approved:0,cancelled:0};
-    Object.values(rooms).forEach(s=>{wm[wk].approved+=s.approved||0;wm[wk].cancelled+=s.cancelled||0;});
+    if(!weeklyMap[wk]) weeklyMap[wk]={approved:0,cancelled:0};
+    Object.values(rooms).forEach(s=>{weeklyMap[wk].approved+=s.approved||0;weeklyMap[wk].cancelled+=s.cancelled||0;});
     const mk=day.slice(0,7);
-    if(!mm[mk])mm[mk]={approved:0,cancelled:0};
-    Object.values(rooms).forEach(s=>{mm[mk].approved+=s.approved||0;mm[mk].cancelled+=s.cancelled||0;});
+    if(!monthlyMap[mk]) monthlyMap[mk]={approved:0,cancelled:0};
+    Object.values(rooms).forEach(s=>{monthlyMap[mk].approved+=s.approved||0;monthlyMap[mk].cancelled+=s.cancelled||0;});
   });
-  const topRoom=ROOMS[Object.values(rt).indexOf(Math.max(...Object.values(rt)))];
-  sEl.innerHTML=`
-    <div class="stat-card"><div class="stat-value">${ta}</div><div class="stat-label">${isFiltered?'Khách (đã lọc)':'Tổng khách'}</div></div>
-    <div class="stat-card"><div class="stat-value red">${tc}</div><div class="stat-label">${isFiltered?'Huỷ (đã lọc)':'Tổng huỷ'}</div></div>
-    <div class="stat-card"><div style="font-family:var(--f-script);font-size:1.6rem;color:var(--burgundy);line-height:1.2;">${topRoom?topRoom.name:'–'}</div><div class="stat-label" style="margin-top:8px;">Phòng hot nhất</div></div>`;
-  const weeks=Object.entries(wm).sort((a,b)=>b[0].localeCompare(a[0])).slice(0,4);
-  const months=Object.entries(mm).sort((a,b)=>b[0].localeCompare(a[0])).slice(0,4);
-  pEl.innerHTML=`
-    <div class="period-card"><div class="period-card-title">Theo tuần</div>${weeks.map(([wk,s])=>`<div class="period-row"><span class="period-row-label">Tuần ${wk}</span><div class="period-row-vals"><span style="color:var(--burgundy);font-weight:600;">✓${s.approved}</span><span style="color:var(--red);">✕${s.cancelled}</span></div></div>`).join('')}</div>
-    <div class="period-card"><div class="period-card-title">Theo tháng</div>${months.map(([mk,s])=>`<div class="period-row"><span class="period-row-label">${mk}</span><div class="period-row-vals"><span style="color:var(--burgundy);font-weight:600;">✓${s.approved}</span><span style="color:var(--red);">✕${s.cancelled}</span></div></div>`).join('')}</div>`;
-  dEl.innerHTML=days.map(([day,rooms])=>{
-    const da=Object.values(rooms).reduce((s,r)=>s+(r.approved||0),0);
-    const dc=Object.values(rooms).reduce((s,r)=>s+(r.cancelled||0),0);
-    return `<div class="day-stat-row">
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
-        <div style="font-size:11px;font-weight:600;color:var(--ink);">${day}</div>
-        <div style="display:flex;gap:14px;align-items:center;">
-          <span style="font-family:var(--f-sans);font-size:9px;color:var(--burgundy);">✓ ${da} khách</span>
-          <span style="font-family:var(--f-sans);font-size:9px;color:var(--red);">✕ ${dc} huỷ</span>
-          <button onclick="exportExcel('day','${day}')" style="font-family:var(--f-sans);font-size:7px;letter-spacing:1px;padding:6px 12px;background:var(--burgundy);color:var(--cream);border:none;border-radius:1px;cursor:pointer;font-weight:700;">↓ Excel</button>
+
+  const topRoom = ROOMS[Object.values(roomTotals).indexOf(Math.max(...Object.values(roomTotals)))];
+
+  summaryEl.innerHTML = `
+    <div class="stat-box"><div class="stat-value big">${totalApproved}</div><div class="stat-label">${isFiltered?'Khách (đã lọc)':'Tổng khách'}</div></div>
+    <div class="stat-box"><div class="stat-value big red">${totalCancelled}</div><div class="stat-label">${isFiltered?'Huỷ (đã lọc)':'Tổng huỷ'}</div></div>
+    <div class="stat-box"><div style="font-family:'Pinyon Script',cursive;font-size:1.5rem;color:var(--wine);line-height:1.2;">${topRoom?topRoom.name:'–'}</div><div class="stat-label" style="margin-top:6px;">Phòng hot nhất</div></div>
+  `;
+
+  const weeks  = Object.entries(weeklyMap).sort((a,b)=>b[0].localeCompare(a[0])).slice(0,4);
+  const months = Object.entries(monthlyMap).sort((a,b)=>b[0].localeCompare(a[0])).slice(0,4);
+
+  periodEl.innerHTML = `
+    <div class="period-box">
+      <div class="period-heading">Theo tuần</div>
+      ${weeks.map(([wk,s])=>`
+        <div class="period-row">
+          <span style="color:var(--ink);">Tuần ${wk}</span>
+          <span><span style="color:var(--wine);">✓${s.approved}</span>&nbsp;<span style="color:var(--red-cancel);">✕${s.cancelled}</span></span>
+        </div>`).join('')}
+    </div>
+    <div class="period-box">
+      <div class="period-heading">Theo tháng</div>
+      ${months.map(([mk,s])=>`
+        <div class="period-row">
+          <span style="color:var(--ink);">${mk}</span>
+          <span><span style="color:var(--wine);">✓${s.approved}</span>&nbsp;<span style="color:var(--red-cancel);">✕${s.cancelled}</span></span>
+        </div>`).join('')}
+    </div>
+  `;
+
+  dailyEl.innerHTML = days.map(([day,rooms]) => {
+    const dayApproved   = Object.values(rooms).reduce((s,r)=>s+(r.approved||0),0);
+    const dayCancelled  = Object.values(rooms).reduce((s,r)=>s+(r.cancelled||0),0);
+    return `
+      <div class="day-stat-box">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+          <div style="font-size:11px;font-weight:600;color:var(--ink);">${day}</div>
+          <div style="display:flex;gap:12px;align-items:center;">
+            <span style="font-size:10px;color:var(--wine);">✓ ${dayApproved} khách</span>
+            <span style="font-size:10px;color:var(--red-cancel);">✕ ${dayCancelled} huỷ</span>
+            <button onclick="exportExcel('day','${day}')" style="font-size:8px;letter-spacing:1px;padding:5px 12px;background:var(--wine);color:var(--beige);border:none;border-radius:var(--radius-sm);cursor:pointer;font-family:'Montserrat',sans-serif;font-weight:600;">↓ Excel</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;margin-top:10px;flex-wrap:wrap;">
+          ${ROOMS.map(r=>`
+            <span style="font-size:9px;color:var(--gray);">
+              ${r.label}: <strong style="color:var(--wine)">${(rooms[r.key]&&rooms[r.key].approved)||0}</strong> · <span style="color:var(--red-cancel);">${(rooms[r.key]&&rooms[r.key].cancelled)||0} huỷ</span>
+            </span>
+          `).join('')}
         </div>
       </div>
-      <div style="display:flex;gap:18px;margin-top:10px;flex-wrap:wrap;">
-        ${ROOMS.map(r=>`<span style="font-family:var(--f-sans);font-size:8.5px;color:var(--ash-2);">${r.label}: <strong style="color:var(--burgundy)">${(rooms[r.key]?.approved)||0}</strong> · <span style="color:var(--red);">${(rooms[r.key]?.cancelled)||0} huỷ</span></span>`).join('')}
-      </div>
-    </div>`;
+    `;
   }).join('');
 }
 
-window.exportExcel=async function(mode,specificDay=''){
-  const fv=document.getElementById('stats-from').value, tv=document.getElementById('stats-to').value;
-  let exportData=allStatsData;
-  if(mode==='day')exportData={[specificDay]:allStatsData[specificDay]||{}};
-  else if(mode==='filtered'){exportData={};Object.entries(allStatsData).forEach(([d,r])=>{if((!fv||d>=fv)&&(!tv||d<=tv))exportData[d]=r;});}
-  const rows=[['Ngày','Phòng 1 – Star Light (Khách)','Phòng 1 (Huỷ)','Phòng 2 – Heart Garden (Khách)','Phòng 2 (Huỷ)','Phòng 3 – Red Cherry (Khách)','Phòng 3 (Huỷ)','Tổng Khách','Tổng Huỷ']];
-  let ga=0,gc=0;
-  const sd=Object.entries(exportData).sort((a,b)=>a[0].localeCompare(b[0]));
-  sd.forEach(([d,r])=>{const r1=r.room1||{},r2=r.room2||{},r3=r.room3||{};const ta=(r1.approved||0)+(r2.approved||0)+(r3.approved||0),tc=(r1.cancelled||0)+(r2.cancelled||0)+(r3.cancelled||0);ga+=ta;gc+=tc;rows.push([d,r1.approved||0,r1.cancelled||0,r2.approved||0,r2.cancelled||0,r3.approved||0,r3.cancelled||0,ta,tc]);});
-  rows.push(['TỔNG CỘNG','','','','','','',ga,gc]);
-  const wr=[['Tuần (Thứ 2)','Tổng Khách','Tổng Huỷ']],wm={};
-  sd.forEach(([d,r])=>{const dt=new Date(d),mn=new Date(dt);mn.setDate(dt.getDate()-((dt.getDay()+6)%7));const wk=mn.toISOString().slice(0,10);if(!wm[wk])wm[wk]={approved:0,cancelled:0};Object.values(r).forEach(s=>{wm[wk].approved+=s.approved||0;wm[wk].cancelled+=s.cancelled||0;});});
-  Object.entries(wm).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([wk,s])=>wr.push([`Tuần ${wk}`,s.approved,s.cancelled]));
-  const mr=[['Tháng','Tổng Khách','Tổng Huỷ']],mm={};
-  sd.forEach(([d,r])=>{const mk=d.slice(0,7);if(!mm[mk])mm[mk]={approved:0,cancelled:0};Object.values(r).forEach(s=>{mm[mk].approved+=s.approved||0;mm[mk].cancelled+=s.cancelled||0;});});
-  Object.entries(mm).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([mk,s])=>mr.push([mk,s.approved,s.cancelled]));
-  const cs=await get(ref(db,'filmnoir/customers'));const cd=cs.val()||{};
-  let cdays=Object.entries(cd).sort((a,b)=>a[0].localeCompare(b[0]));
-  if(mode==='day')cdays=cdays.filter(([d])=>d===specificDay);
-  else if(mode==='filtered')cdays=cdays.filter(([d])=>(!fv||d>=fv)&&(!tv||d<=tv));
-  const ar=[['Ngày','Số TT','Tên Khách','Số Điện Thoại','Phòng','Giờ Duyệt','Thanh Toán']];
-  const cr=[['Ngày','Số TT','Tên Khách','Số Điện Thoại','Phòng','Giờ Huỷ']];
-  cdays.forEach(([d,custs])=>Object.values(custs).forEach(c=>{
-    if(c.status==='approved')ar.push([d,c.num>0?String(c.num).padStart(2,'0'):'–',c.name,c.phone,c.roomName,c.approvedAt||'',c.payment==='cash'?'Tiền mặt':c.payment==='transfer'?'Chuyển khoản':'']);
-    else cr.push([d,c.num>0?String(c.num).padStart(2,'0'):'–',c.name,c.phone,c.roomName,c.cancelledAt||'']);
-  }));
-  const wb=XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(rows),'Theo Ngày');
-  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(wr),'Theo Tuần');
-  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(mr),'Theo Tháng');
-  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(ar),'DS Khách Đã Chụp');
-  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(cr),'DS Khách Đã Huỷ');
-  const lbl=mode==='day'?specificDay:mode==='filtered'?`${fv}_${tv}`:'TatCa';
-  XLSX.writeFile(wb,`FilmNoir_ThongKe_${lbl}.xlsx`);
+window.exportExcel = async function(mode, specificDay='') {
+  const fromVal = document.getElementById('stats-from').value;
+  const toVal   = document.getElementById('stats-to').value;
+  let exportData = allStatsData;
+
+  if(mode==='day') exportData = { [specificDay]: allStatsData[specificDay]||{} };
+  else if(mode==='filtered') {
+    exportData = {};
+    Object.entries(allStatsData).forEach(([day,rooms]) => {
+      if((!fromVal||day>=fromVal)&&(!toVal||day<=toVal)) exportData[day]=rooms;
+    });
+  }
+
+  const rows = [['Ngày','Phòng 1 – Star Light (Khách)','Phòng 1 (Huỷ)','Phòng 2 – Heart Garden (Khách)','Phòng 2 (Huỷ)','Phòng 3 – Red Cherry (Khách)','Phòng 3 (Huỷ)','Tổng Khách','Tổng Huỷ']];
+  let grandApproved=0, grandCancelled=0;
+  const sortedDays = Object.entries(exportData).sort((a,b)=>a[0].localeCompare(b[0]));
+  sortedDays.forEach(([day,rooms])=>{
+    const r1=rooms.room1||{}, r2=rooms.room2||{}, r3=rooms.room3||{};
+    const ta=(r1.approved||0)+(r2.approved||0)+(r3.approved||0);
+    const tc=(r1.cancelled||0)+(r2.cancelled||0)+(r3.cancelled||0);
+    grandApproved+=ta; grandCancelled+=tc;
+    rows.push([day,r1.approved||0,r1.cancelled||0,r2.approved||0,r2.cancelled||0,r3.approved||0,r3.cancelled||0,ta,tc]);
+  });
+  rows.push(['TỔNG CỘNG','','','','','','',grandApproved,grandCancelled]);
+
+  const weekRows=[['Tuần (Thứ 2)','Tổng Khách','Tổng Huỷ']];
+  const weeklyMap={};
+  sortedDays.forEach(([day,rooms])=>{
+    const d=new Date(day); const mon=new Date(d); mon.setDate(d.getDate()-((d.getDay()+6)%7));
+    const wk=mon.toISOString().slice(0,10);
+    if(!weeklyMap[wk]) weeklyMap[wk]={approved:0,cancelled:0};
+    Object.values(rooms).forEach(s=>{weeklyMap[wk].approved+=s.approved||0;weeklyMap[wk].cancelled+=s.cancelled||0;});
+  });
+  Object.entries(weeklyMap).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([wk,s])=>{weekRows.push([`Tuần ${wk}`,s.approved,s.cancelled]);});
+
+  const monthRows=[['Tháng','Tổng Khách','Tổng Huỷ']];
+  const monthlyMap={};
+  sortedDays.forEach(([day,rooms])=>{
+    const mk=day.slice(0,7);
+    if(!monthlyMap[mk]) monthlyMap[mk]={approved:0,cancelled:0};
+    Object.values(rooms).forEach(s=>{monthlyMap[mk].approved+=s.approved||0;monthlyMap[mk].cancelled+=s.cancelled||0;});
+  });
+  Object.entries(monthlyMap).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([mk,s])=>{monthRows.push([mk,s.approved,s.cancelled]);});
+
+  const custSnap = await get(ref(db,'filmnoir/customers'));
+  const custData = custSnap.val()||{};
+  let custDays = Object.entries(custData).sort((a,b)=>a[0].localeCompare(b[0]));
+  if(mode==='day') custDays=custDays.filter(([d])=>d===specificDay);
+  else if(mode==='filtered') custDays=custDays.filter(([d])=>(!fromVal||d>=fromVal)&&(!toVal||d<=toVal));
+
+  const approvedRows=[['Ngày','Số TT','Tên Khách','Số Điện Thoại','Phòng','Giờ Duyệt','Thanh Toán']];
+  const cancelledRows=[['Ngày','Số TT','Tên Khách','Số Điện Thoại','Phòng','Giờ Huỷ']];
+  custDays.forEach(([day,customers])=>{
+    Object.values(customers).forEach(c=>{
+      if(c.status==='approved') {
+        const payLabel = c.payment==='cash'?'Tiền mặt':c.payment==='transfer'?'Chuyển khoản':'';
+        approvedRows.push([day,c.num>0?String(c.num).padStart(2,'0'):'–',c.name,c.phone,c.roomName,c.approvedAt||'',payLabel]);
+      } else {
+        cancelledRows.push([day,c.num>0?String(c.num).padStart(2,'0'):'–',c.name,c.phone,c.roomName,c.cancelledAt||'']);
+      }
+    });
+  });
+
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(rows), 'Theo Ngày');
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(weekRows), 'Theo Tuần');
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(monthRows), 'Theo Tháng');
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(approvedRows), 'DS Khách Đã Chụp');
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(cancelledRows), 'DS Khách Đã Huỷ');
+  const label = mode==='day'?specificDay:mode==='filtered'?`${fromVal}_${toVal}`:'TatCa';
+  XLSX.writeFile(wb, `FilmNoir_ThongKe_${label}.xlsx`);
 };
 
-/* ─── REALTIME ─── */
-function startListening(){
-  onValue(ref(db,`${dbPath()}/cancelled`),snap=>{
-    const data=snap.val();const el=document.getElementById('admin-cancelled-list');if(!el)return;
-    if(!data){el.innerHTML='<p style="color:var(--ash-2);font-family:var(--f-serif);font-style:italic;">Chưa có lượt huỷ nào hôm nay.</p>';return;}
-    el.innerHTML=Object.values(data).reverse().map(e=>`
+// ─── REALTIME LISTENER ─────────────────────────────────────────
+function startListening() {
+  // Cancelled history
+  onValue(ref(db,`${dbPath()}/cancelled`), snap => {
+    const data = snap.val();
+    const el = document.getElementById('admin-cancelled-list');
+    if(!el) return;
+    if(!data) { el.innerHTML='<p style="color:var(--gray);font-style:italic;">Chưa có lượt huỷ nào hôm nay.</p>'; return; }
+    const list = Object.values(data).reverse();
+    el.innerHTML = list.map(entry=>`
       <div class="cancelled-item">
-        <div class="cancelled-num">${e.num>0?String(e.num).padStart(2,'0'):'?'}</div>
+        <div class="cancelled-num">${entry.num>0?String(entry.num).padStart(2,'0'):'?'}</div>
         <div style="flex:1;">
-          <div style="font-size:0.92rem;font-weight:500;">${e.name}</div>
-          <div style="font-family:var(--f-sans);font-size:8px;letter-spacing:1.5px;color:var(--ash-2);margin-top:4px;">${e.phone} · ${e.roomName} · Huỷ lúc ${e.cancelledAt}${e.status==='pending'?' <span style="color:var(--red);">(chưa TT)</span>':' <span style="color:var(--gold);">(đã TT)</span>'}</div>
+          <div style="font-size:0.95rem;font-weight:500;">${entry.name}</div>
+          <div style="font-size:9px;letter-spacing:1.5px;color:var(--gray);margin-top:3px;">
+            ${entry.phone} · ${entry.roomName} · Huỷ lúc ${entry.cancelledAt}
+            ${entry.status==='pending'?'<span style="color:var(--red-cancel);margin-left:6px;">(chưa TT)</span>':'<span style="color:#a07020;margin-left:6px;">(đã TT)</span>'}
+          </div>
         </div>
-      </div>`).join('');
+      </div>
+    `).join('');
   });
-  onValue(dataRef(),snap=>{
-    const data=snap.val();
-    if(!data){state={rooms:[{queue:[],currentServing:0,counter:0},{queue:[],currentServing:0,counter:0},{queue:[],currentServing:0,counter:0}]};}
-    else{state.rooms=ROOMS.map((r,i)=>{const rd=data[r.key]||{};return{queue:rd.queue?Object.values(rd.queue).sort((a,b)=>a.order-b.order):[],currentServing:rd.currentServing||0,counter:rd.counter||0};});}
+
+  // Main data listener
+  onValue(dataRef(), snap => {
+    const data = snap.val();
+    if(!data) {
+      state = { rooms: [
+        {queue:[],currentServing:0,counter:0},
+        {queue:[],currentServing:0,counter:0},
+        {queue:[],currentServing:0,counter:0},
+      ]};
+    } else {
+      state.rooms = ROOMS.map((r,i) => {
+        const rd = data[r.key]||{};
+        return {
+          queue: rd.queue ? Object.values(rd.queue).sort((a,b)=>a.order-b.order) : [],
+          currentServing: rd.currentServing||0,
+          counter: rd.counter||0,
+        };
+      });
+    }
     rerenderCurrentTab();
   });
 }
 
-function rerenderCurrentTab(){
-  if(currentTab==='queue'){renderQueueOverview();renderQueueRoom(activeQueueRoom);}
-  if(currentTab==='admin'){renderAdminOverview();renderAdminRoom(activeAdminRoom);}
+function rerenderCurrentTab() {
+  if(currentTab==='queue') { renderQueueOverview(); renderQueueRoom(activeQueueRoom); }
+  if(currentTab==='admin') { renderAdminOverview(); renderAdminRoom(activeAdminRoom); }
 }
 
-function roomRef(ri){return ref(db,`${dbPath()}/${ROOMS[ri].key}`);}
+// ─── FIREBASE HELPERS ──────────────────────────────────────────
+function roomRef(ri) { return ref(db,`${dbPath()}/${ROOMS[ri].key}`); }
 
-/* ─── MODAL ─── */
-window.showAdminModal=function(){
-  document.getElementById('admin-modal').style.display='flex';
+// ─── MODAL ─────────────────────────────────────────────────────
+window.showAdminModal = function() {
+  const m = document.getElementById('admin-modal');
+  m.style.display='flex';
   document.getElementById('modal-pw-input').value='';
   document.getElementById('modal-pw-error').style.display='none';
   setTimeout(()=>document.getElementById('modal-pw-input').focus(),100);
 };
-window.closeAdminModal=function(){document.getElementById('admin-modal').style.display='none';};
-window.submitAdminPw=function(){
-  if(document.getElementById('modal-pw-input').value==='Filmnoir2610'){adminUnlocked=true;closeAdminModal();doSwitchTab('admin');}
-  else{document.getElementById('modal-pw-error').style.display='block';document.getElementById('modal-pw-input').value='';document.getElementById('modal-pw-input').focus();}
+window.closeAdminModal = function() { document.getElementById('admin-modal').style.display='none'; };
+window.submitAdminPw = function() {
+  const pw = document.getElementById('modal-pw-input').value;
+  if(pw==='Filmnoir2610') { adminUnlocked=true; closeAdminModal(); doSwitchTab('admin'); }
+  else { document.getElementById('modal-pw-error').style.display='block'; document.getElementById('modal-pw-input').value=''; document.getElementById('modal-pw-input').focus(); }
 };
 
-/* ─── TABS ─── */
-window.switchTab=function(tab){if(tab==='admin'&&!adminUnlocked){showAdminModal();return;}doSwitchTab(tab);};
-function doSwitchTab(tab){
+// ─── TABS ───────────────────────────────────────────────────────
+window.switchTab = function(tab) {
+  if(tab==='admin'&&!adminUnlocked) { showAdminModal(); return; }
+  doSwitchTab(tab);
+};
+function doSwitchTab(tab) {
   currentTab=tab;
   document.querySelectorAll('.tab-content').forEach(el=>el.style.display='none');
   document.getElementById('tab-'+tab).style.display='block';
   document.querySelectorAll('nav.tabs button').forEach(btn=>btn.classList.remove('active'));
-  ['book','check','queue','admin'].forEach((t,i)=>{if(t===tab)document.querySelectorAll('nav.tabs button')[i].classList.add('active');});
-  if(tab==='queue'){renderQueueOverview();renderQueueRoom(activeQueueRoom);}
-  if(tab==='admin'){renderAdminOverview();renderAdminRoom(activeAdminRoom);}
-  if(tab==='check')document.getElementById('check-result').style.display='none';
+  ['book','check','queue','admin'].forEach((t,i)=>{
+    if(t===tab) document.querySelectorAll('nav.tabs button')[i].classList.add('active');
+  });
+  if(tab==='queue') { renderQueueOverview(); renderQueueRoom(activeQueueRoom); }
+  if(tab==='admin') { renderAdminOverview(); renderAdminRoom(activeAdminRoom); }
+  if(tab==='check') document.getElementById('check-result').style.display='none';
 }
 
-/* ─── UTILS ─── */
-function roomDisplayName(key){const r=ROOMS.find(r=>r.key===key);return r?`${r.label} – ${r.name}`:key;}
-function getWaitCount(ri,num){return state.rooms[ri].queue.findIndex(q=>q.num===num);}
-function notifMsg(w){
-  if(w===0)return '<div class="ticket-notif-box"><div class="ticket-notif-text">🎬 Đến lượt bạn rồi! Vui lòng vào phòng chụp nhé.</div></div>';
-  const m=w*6,h=Math.floor(m/60),mn=m%60,ts=h>0?`${h} tiếng ${mn} phút`:`${mn} phút`;
-  return `<div class="ticket-notif-box"><div class="ticket-notif-text">${w<=3?`⏳ Còn ${w} người phía trước, chờ khoảng ${ts}. Bạn nên có mặt sẵn nhé!`:`⏳ Còn ${w} người phía trước, chờ khoảng ${ts}.`}</div></div>`;
+// ─── UTILS ─────────────────────────────────────────────────────
+function roomDisplayName(key) {
+  const r=ROOMS.find(r=>r.key===key);
+  return r?`${r.label} – ${r.name}`:key;
+}
+function getWaitCount(ri,num) { return state.rooms[ri].queue.findIndex(q=>q.num===num); }
+function notifMsg(waitCount) {
+  if(waitCount===0) return '<div class="ticket-notif">🎬 Đến lượt bạn rồi! Vui lòng vào phòng chụp nhé.</div>';
+  const minutes=waitCount*6;
+  const hours=Math.floor(minutes/60); const mins=minutes%60;
+  const timeStr=hours>0?`${hours} tiếng ${mins} phút`:`${mins} phút`;
+  if(waitCount<=3) return `<div class="ticket-notif">⏳ Còn ${waitCount} người phía trước, chờ khoảng ${timeStr}. Bạn nên có mặt sẵn nhé!</div>`;
+  return `<div class="ticket-notif">⏳ Còn ${waitCount} người phía trước, chờ khoảng ${timeStr}.</div>`;
 }
 
-/* ─── BOOK ─── */
-window.bookQueue=async function(){
-  const name=document.getElementById('inp-name').value.trim();
-  const phone=document.getElementById('inp-phone').value.trim();
-  const roomKey=document.getElementById('inp-room').value;
-  const msgEl=document.getElementById('msg-book'); msgEl.innerHTML='';
-  if(!name){msgEl.innerHTML='<div class="msg msg-error">Vui lòng nhập họ tên.</div>';return;}
-  if(!phone||phone.length<8){msgEl.innerHTML='<div class="msg msg-error">Vui lòng nhập số điện thoại hợp lệ.</div>';return;}
-  if(!roomKey){msgEl.innerHTML='<div class="msg msg-error">Vui lòng chọn phòng chụp.</div>';return;}
-  const payMethod=document.getElementById('book-payment').value;
-  if(!payMethod){msgEl.innerHTML='<div class="msg msg-error">Vui lòng chọn hình thức thanh toán.</div>';return;}
-  if(state.rooms.flatMap(r=>r.queue).find(q=>q.phone===phone)){msgEl.innerHTML='<div class="msg msg-error">Số điện thoại này đã có trong hàng chờ.</div>';return;}
-  const btn=document.getElementById('btn-book'); btn.disabled=true; btn.innerHTML='<span>⏳</span> Đang xử lý...';
+// ─── BOOK ───────────────────────────────────────────────────────
+window.bookQueue = async function() {
+  const name    = document.getElementById('inp-name').value.trim();
+  const phone   = document.getElementById('inp-phone').value.trim();
+  const roomKey = document.getElementById('inp-room').value;
+  const msgEl   = document.getElementById('msg-book');
+  msgEl.innerHTML='';
+
+  if(!name)                   { msgEl.innerHTML='<div class="msg msg-error">Vui lòng nhập họ tên.</div>'; return; }
+  if(!phone||phone.length<8)  { msgEl.innerHTML='<div class="msg msg-error">Vui lòng nhập số điện thoại hợp lệ.</div>'; return; }
+  if(!roomKey)                { msgEl.innerHTML='<div class="msg msg-error">Vui lòng chọn phòng chụp.</div>'; return; }
+  const payMethod = document.getElementById('book-payment').value;
+  if(!payMethod)              { msgEl.innerHTML='<div class="msg msg-error">Vui lòng chọn hình thức thanh toán.</div>'; return; }
+
+  const allEntries = state.rooms.flatMap(r=>r.queue);
+  if(allEntries.find(q=>q.phone===phone)) {
+    msgEl.innerHTML='<div class="msg msg-error">Số điện thoại này đã có trong hàng chờ.</div>'; return;
+  }
+
+  const btn=document.getElementById('btn-book');
+  btn.disabled=true; btn.textContent='Đang xử lý...';
   setLoading(true);
-  try{
+
+  try {
     const ri=ROOMS.findIndex(r=>r.key===roomKey);
     const id=`e${Date.now()}`;
-    await set(ref(db,`${dbPath()}/${roomKey}/queue/${id}`),{id,num:0,name,phone,time:new Date().toLocaleTimeString('vi-VN'),order:Date.now(),payment:payMethod,status:'pending'});
+    const entry={ id, num:0, name, phone, time:new Date().toLocaleTimeString('vi-VN'), order:Date.now(), payment:payMethod, status:'pending' };
+    await set(ref(db,`${dbPath()}/${roomKey}/queue/${id}`),entry);
+
     document.getElementById('form-card').style.display='none';
     document.getElementById('ticket-wrap').style.display='block';
     document.getElementById('ticket-name').textContent=name;
@@ -1815,252 +1637,341 @@ window.bookQueue=async function(){
     document.getElementById('ticket-payment-display').textContent=payMethod==='cash'?'💵 Tiền mặt':'📱 Chuyển khoản';
     document.getElementById('pending-ticket').style.display='block';
     document.getElementById('confirmed-ticket').style.display='none';
-    onValue(ref(db,`${dbPath()}/${roomKey}/queue/${id}`),snap=>{
-      const data=snap.val(); if(!data)return;
-      if(data.status==='confirmed'&&data.num>0){
+
+    const entryRef=ref(db,`${dbPath()}/${roomKey}/queue/${id}`);
+    onValue(entryRef, snap=>{
+      const data=snap.val();
+      if(!data) return;
+      if(data.status==='confirmed'&&data.num>0) {
         document.getElementById('pending-ticket').style.display='none';
         document.getElementById('confirmed-ticket').style.display='block';
         document.getElementById('ticket-num').textContent=String(data.num).padStart(2,'0');
         document.getElementById('ticket-name-confirmed').textContent=data.name;
         document.getElementById('ticket-room-confirmed').textContent=roomDisplayName(roomKey);
         const confirmed=state.rooms[ri].queue.filter(e=>e.status!=='pending');
-        const wc=confirmed.findIndex(q=>q.id===id);
-        document.getElementById('ticket-notif').innerHTML=notifMsg(wc>=0?wc:0);
+        const waitCount=confirmed.findIndex(q=>q.id===id);
+        document.getElementById('ticket-notif').innerHTML=notifMsg(waitCount>=0?waitCount:0);
       }
     });
-  }catch(e){msgEl.innerHTML='<div class="msg msg-error">Lỗi kết nối. Vui lòng thử lại.</div>';}
-  finally{btn.disabled=false;btn.innerHTML='<span>✦</span> Lấy Số Thứ Tự';setLoading(false);}
+  } catch(e) {
+    msgEl.innerHTML='<div class="msg msg-error">Lỗi kết nối. Vui lòng thử lại.</div>';
+  } finally {
+    btn.disabled=false; btn.textContent='✦ Lấy Số Thứ Tự';
+    setLoading(false);
+  }
 };
 
-window.resetForm=function(){
+window.resetForm = function() {
   document.getElementById('form-card').style.display='block';
   document.getElementById('ticket-wrap').style.display='none';
   ['inp-name','inp-phone'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('inp-room').value='';
   document.getElementById('book-payment').value='';
-  document.getElementById('pay-cash-btn').classList.remove('active');
-  document.getElementById('pay-transfer-btn').classList.remove('active');
+  document.getElementById('pay-cash-btn').classList.remove('selected');
+  document.getElementById('pay-transfer-btn').classList.remove('selected');
   document.getElementById('msg-book').innerHTML='';
 };
 
-window.selectPayment=function(method){
+window.selectPayment = function(method) {
   document.getElementById('book-payment').value=method;
-  document.getElementById('pay-cash-btn').classList.toggle('active',method==='cash');
-  document.getElementById('pay-transfer-btn').classList.toggle('active',method==='transfer');
+  document.getElementById('pay-cash-btn').classList.toggle('selected', method==='cash');
+  document.getElementById('pay-transfer-btn').classList.toggle('selected', method==='transfer');
 };
 
-/* ─── CHECK ─── */
-window.checkQueue=function(){
+// ─── CHECK ──────────────────────────────────────────────────────
+window.checkQueue = function() {
   const phone=document.getElementById('chk-phone').value.trim();
-  const msgEl=document.getElementById('msg-check'); const result=document.getElementById('check-result');
+  const msgEl=document.getElementById('msg-check');
+  const result=document.getElementById('check-result');
   msgEl.innerHTML=''; result.style.display='none';
-  if(!phone){msgEl.innerHTML='<div class="msg msg-error">Nhập số điện thoại để tra cứu.</div>';return;}
-  let fe=null,fr=-1;
-  state.rooms.forEach((room,ri)=>{const e=room.queue.find(q=>q.phone===phone);if(e){fe=e;fr=ri;}});
-  if(!fe){msgEl.innerHTML='<div class="msg msg-error">Không tìm thấy số điện thoại này trong hàng chờ.</div>';return;}
-  const room=state.rooms[fr];
-  document.getElementById('chk-num').textContent=String(fe.num).padStart(2,'0');
-  document.getElementById('chk-name').textContent=fe.name;
-  document.getElementById('chk-room').textContent=roomDisplayName(ROOMS[fr].key);
+
+  if(!phone) { msgEl.innerHTML='<div class="msg msg-error">Nhập số điện thoại để tra cứu.</div>'; return; }
+
+  let foundEntry=null, foundRi=-1;
+  state.rooms.forEach((room,ri)=>{
+    const e=room.queue.find(q=>q.phone===phone);
+    if(e) { foundEntry=e; foundRi=ri; }
+  });
+
+  if(!foundEntry) { msgEl.innerHTML='<div class="msg msg-error">Không tìm thấy số điện thoại này trong hàng chờ.</div>'; return; }
+
+  const room=state.rooms[foundRi];
+  const waitCount=getWaitCount(foundRi,foundEntry.num);
+
+  document.getElementById('chk-num').textContent=String(foundEntry.num).padStart(2,'0');
+  document.getElementById('chk-name').textContent=foundEntry.name;
+  document.getElementById('chk-room').textContent=roomDisplayName(ROOMS[foundRi].key);
   document.getElementById('chk-current').textContent=room.currentServing?String(room.currentServing).padStart(2,'0'):'–';
-  document.getElementById('chk-wait').textContent=getWaitCount(fr,fe.num);
-  document.getElementById('chk-notif').innerHTML=notifMsg(getWaitCount(fr,fe.num));
+  document.getElementById('chk-wait').textContent=waitCount;
+  document.getElementById('chk-notif').innerHTML=notifMsg(waitCount);
   result.style.display='block';
 };
 
-window.showRoomChangeOptions=function(){
+window.showRoomChangeOptions = function() {
   const phone=document.getElementById('chk-phone').value.trim();
-  let fe=null,fr=-1;
-  state.rooms.forEach((room,ri)=>{const e=room.queue.find(q=>q.phone===phone);if(e&&e.status!=='pending'){fe=e;fr=ri;}});
-  if(!fe){document.getElementById('msg-check').innerHTML='<div class="msg msg-error">Chỉ có thể đổi phòng sau khi được duyệt thanh toán.</div>';return;}
-  if(fe.changeRequested){document.getElementById('msg-check').innerHTML='<div class="msg msg-error">Bạn đã gửi yêu cầu đổi phòng rồi, vui lòng chờ nhân viên xác nhận.</div>';return;}
-  const others=ROOMS.filter((_,i)=>i!==fr);
-  document.getElementById('room-change-list').innerHTML=others.map(r=>`
-    <button class="btn-room-change" onclick="submitRoomChange('${fe.id}',${fr},'${r.key}','${r.label} – ${r.name}')">
+  let foundEntry=null, foundRi=-1;
+  state.rooms.forEach((room,ri)=>{
+    const e=room.queue.find(q=>q.phone===phone);
+    if(e&&e.status!=='pending') { foundEntry=e; foundRi=ri; }
+  });
+  if(!foundEntry) { document.getElementById('msg-check').innerHTML='<div class="msg msg-error">Chỉ có thể đổi phòng sau khi được duyệt thanh toán.</div>'; return; }
+  if(foundEntry.changeRequested) { document.getElementById('msg-check').innerHTML='<div class="msg msg-error">Bạn đã gửi yêu cầu đổi phòng rồi, vui lòng chờ nhân viên xác nhận.</div>'; return; }
+  const otherRooms=ROOMS.filter((_,i)=>i!==foundRi);
+  document.getElementById('room-change-list').innerHTML=otherRooms.map(r=>`
+    <button class="btn-room-change" onclick="submitRoomChange('${foundEntry.id}',${foundRi},'${r.key}','${r.label} – ${r.name}')">
       ${r.label} – ${r.name}
-      <span style="font-size:8px;opacity:0.6;display:block;margin-top:2px;letter-spacing:1px;">${state.rooms[ROOMS.findIndex(x=>x.key===r.key)].queue.filter(e=>e.status!=='pending').length} người đang chờ</span>
-    </button>`).join('');
+      <span style="font-size:8px;opacity:0.7;display:block;margin-top:2px;">${state.rooms[ROOMS.findIndex(x=>x.key===r.key)].queue.filter(e=>e.status!=='pending').length} người đang chờ</span>
+    </button>
+  `).join('');
   document.getElementById('room-change-options').style.display='block';
 };
-window.hideRoomChangeOptions=function(){document.getElementById('room-change-options').style.display='none';};
-window.submitRoomChange=async function(eid,fr,tk,tn){
+
+window.hideRoomChangeOptions = function() { document.getElementById('room-change-options').style.display='none'; };
+
+window.submitRoomChange = async function(entryId,fromRi,toRoomKey,toRoomName) {
+  const fromRoomKey=ROOMS[fromRi].key;
   setLoading(true);
-  try{await update(ref(db,`${dbPath()}/${ROOMS[fr].key}/queue/${eid}`),{changeRequested:true,changeToRoom:tk,changeToRoomName:tn,changeRequestedAt:new Date().toLocaleTimeString('vi-VN')});
-  document.getElementById('room-change-options').style.display='none';document.getElementById('check-result').style.display='none';
-  document.getElementById('msg-check').innerHTML=`<div class="msg msg-success" style="line-height:1.8;">✓ Yêu cầu đổi sang <strong>${tn}</strong> đã được gửi.<br/><span style="font-size:0.9rem;">Vui lòng thông báo nhân viên tại quầy để được duyệt.</span></div>`;}
-  catch(e){document.getElementById('msg-check').innerHTML='<div class="msg msg-error">Lỗi. Vui lòng thử lại.</div>';}
+  try {
+    await update(ref(db,`${dbPath()}/${fromRoomKey}/queue/${entryId}`),{changeRequested:true,changeToRoom:toRoomKey,changeToRoomName:toRoomName,changeRequestedAt:new Date().toLocaleTimeString('vi-VN')});
+    document.getElementById('room-change-options').style.display='none';
+    document.getElementById('check-result').style.display='none';
+    document.getElementById('msg-check').innerHTML=`<div class="msg msg-success" style="line-height:1.8;">✓ Yêu cầu đổi sang <strong>${toRoomName}</strong> đã được gửi.<br/><span style="font-size:0.9rem;">Vui lòng thông báo nhân viên tại quầy để được duyệt.</span></div>`;
+  } catch(e) { document.getElementById('msg-check').innerHTML='<div class="msg msg-error">Lỗi. Vui lòng thử lại.</div>'; }
   setLoading(false);
 };
-window.approveRoomChange=async function(fr,eid,tk){
+
+window.approveRoomChange = async function(fromRi,entryId,toRoomKey) {
   setLoading(true);
-  try{const es=await get(ref(db,`${dbPath()}/${ROOMS[fr].key}/queue/${eid}`));const entry=es.val();if(!entry){setLoading(false);return;}
-  await remove(ref(db,`${dbPath()}/${ROOMS[fr].key}/queue/${eid}`));
-  const nid=`e${Date.now()}`;
-  await set(ref(db,`${dbPath()}/${tk}/queue/${nid}`),{...entry,id:nid,order:Date.now(),changeRequested:false,movedFrom:ROOMS[fr].label,num:entry.num});
-  document.getElementById('msg-admin').innerHTML=`<div class="msg msg-success">✓ Đã duyệt đổi phòng cho <strong>${entry.name}</strong> sang ${entry.changeToRoomName}.</div>`;}
-  catch(e){document.getElementById('msg-admin').innerHTML='<div class="msg msg-error">Lỗi. Vui lòng thử lại.</div>';}
+  try {
+    const entrySnap=await get(ref(db,`${dbPath()}/${ROOMS[fromRi].key}/queue/${entryId}`));
+    const entry=entrySnap.val();
+    if(!entry) { setLoading(false); return; }
+    await remove(ref(db,`${dbPath()}/${ROOMS[fromRi].key}/queue/${entryId}`));
+    const newId=`e${Date.now()}`;
+    await set(ref(db,`${dbPath()}/${toRoomKey}/queue/${newId}`),{...entry,id:newId,order:Date.now(),changeRequested:false,movedFrom:ROOMS[fromRi].label,num:entry.num});
+    document.getElementById('msg-admin').innerHTML=`<div class="msg msg-success">✓ Đã duyệt đổi phòng cho <strong>${entry.name}</strong> sang ${entry.changeToRoomName}.</div>`;
+  } catch(e) { document.getElementById('msg-admin').innerHTML='<div class="msg msg-error">Lỗi. Vui lòng thử lại.</div>'; }
   setLoading(false);
 };
-window.cancelFromCheck=async function(){
+
+window.cancelFromCheck = async function() {
   const phone=document.getElementById('chk-phone').value.trim();
-  for(let ri=0;ri<ROOMS.length;ri++){
+  for(let ri=0;ri<ROOMS.length;ri++) {
     const entry=state.rooms[ri].queue.find(q=>q.phone===phone);
-    if(entry){setLoading(true);
-      await runTransaction(ref(db,`filmnoir/stats/${todayKey()}/${ROOMS[ri].key}`),c=>{const cur=c||{approved:0,cancelled:0};return{...cur,cancelled:(cur.cancelled||0)+1};});
+    if(entry) {
+      setLoading(true);
+      await runTransaction(ref(db,`filmnoir/stats/${todayKey()}/${ROOMS[ri].key}`),current=>{
+        const c=current||{approved:0,cancelled:0}; return {...c,cancelled:(c.cancelled||0)+1};
+      });
       await set(ref(db,`filmnoir/customers/${todayKey()}/${entry.id}`),{name:entry.name,phone:entry.phone,room:ROOMS[ri].key,roomName:`${ROOMS[ri].label} – ${ROOMS[ri].name}`,num:entry.num||0,cancelledAt:new Date().toLocaleTimeString('vi-VN'),status:'cancelled'});
       await set(ref(db,`${dbPath()}/cancelled/${entry.id}`),{name:entry.name,phone:entry.phone,room:ROOMS[ri].key,roomName:`${ROOMS[ri].label} – ${ROOMS[ri].name}`,num:entry.num||0,status:entry.status,time:entry.time,cancelledAt:new Date().toLocaleTimeString('vi-VN')});
       await remove(ref(db,`${dbPath()}/${ROOMS[ri].key}/queue/${entry.id}`));
-      setLoading(false);document.getElementById('check-result').style.display='none';
-      document.getElementById('msg-check').innerHTML=`<div class="msg msg-success" style="line-height:1.8;">✓ Lượt của bạn đã được huỷ thành công.<br/><span style="font-size:0.9rem;">Để được hoàn tiền, vui lòng liên hệ nhân viên tại quầy hoặc:</span><br/><span style="font-size:0.85rem;">📞 <a href="tel:0917182226" style="color:var(--burgundy);text-decoration:none;font-weight:600;">0917 182 226</a> &nbsp;·&nbsp; 📷 <a href="https://instagram.com/filmnoir.ptb" target="_blank" style="color:var(--burgundy);text-decoration:none;font-weight:600;">@filmnoir.ptb</a></span></div>`;
+      setLoading(false);
+      document.getElementById('check-result').style.display='none';
+      document.getElementById('msg-check').innerHTML=`<div class="msg msg-success" style="line-height:1.8;">
+        ✓ Lượt của bạn đã được huỷ thành công.<br/>
+        <span style="font-size:0.9rem;">Để được hoàn tiền, vui lòng liên hệ nhân viên tại quầy hoặc:</span><br/>
+        <span style="font-size:0.8rem;">📞 <a href="tel:0917182226" style="color:var(--wine);text-decoration:none;font-weight:600;">0917 182 226</a> &nbsp;·&nbsp; 📷 <a href="https://instagram.com/filmnoir.ptb" target="_blank" style="color:var(--wine);text-decoration:none;font-weight:600;">@filmnoir.ptb</a></span>
+      </div>`;
       return;
     }
   }
 };
 
-/* ─── QUEUE TAB ─── */
-function renderQueueOverview(){
+// ─── QUEUE TAB ──────────────────────────────────────────────────
+function renderQueueOverview() {
   document.getElementById('queue-overview').innerHTML=ROOMS.map((r,i)=>{
-    const room=state.rooms[i],confirmed=room.queue.filter(e=>e.status!=='pending');
-    return `<div class="room-card ${i===activeQueueRoom?'selected':''}" onclick="switchRoomQueue(${i})">
-      <div class="room-card-label">${r.label}</div>
-      <div class="room-card-name">${r.name}</div>
-      <div class="room-card-number">${confirmed.length}</div>
-      <div class="room-card-sub">đang chờ</div>
-      <div class="room-card-serving">Đang phục vụ: <strong style="color:var(--burgundy)">${room.currentServing?String(room.currentServing).padStart(2,'0'):'–'}</strong></div>
+    const room=state.rooms[i];
+    const confirmed=room.queue.filter(e=>e.status!=='pending');
+    return `<div class="room-overview-card ${i===activeQueueRoom?'selected':''}" onclick="switchRoomQueue(${i})">
+      <div class="room-label">${r.label}</div>
+      <div class="room-name">${r.name}</div>
+      <div class="room-count">${confirmed.length}</div>
+      <div class="room-sub">đang chờ</div>
+      <div class="room-serving">Đang phục vụ: <strong style="color:var(--wine)">${room.currentServing?String(room.currentServing).padStart(2,'0'):'–'}</strong></div>
     </div>`;
   }).join('');
 }
-window.switchRoomQueue=function(ri){
+
+window.switchRoomQueue = function(ri) {
   activeQueueRoom=ri;
-  document.querySelectorAll('#queue-room-tabs button').forEach((b,i)=>b.classList.toggle('active',i===ri));
-  renderQueueOverview();renderQueueRoom(ri);
+  document.querySelectorAll('#queue-room-tabs button').forEach((btn,i)=>btn.classList.toggle('active',i===ri));
+  renderQueueOverview(); renderQueueRoom(ri);
 };
-function renderQueueRoom(ri){
-  const room=state.rooms[ri]; const el=document.getElementById('queue-room-detail');
+
+function renderQueueRoom(ri) {
+  const room=state.rooms[ri];
+  const el=document.getElementById('queue-room-detail');
   const confirmed=room.queue.filter(e=>e.status!=='pending');
-  if(!confirmed.length){el.innerHTML=`<div class="card fade-up"><p style="color:var(--ash-2);font-family:var(--f-serif);font-style:italic;">Phòng ${ROOMS[ri].name} chưa có ai trong hàng chờ.</p></div>`;return;}
-  el.innerHTML=`<div class="card fade-up">${confirmed.map((entry,idx)=>{
-    let cls='',badge='';
+  if(!confirmed.length) {
+    el.innerHTML=`<div class="card fade-in"><p style="color:var(--gray);font-style:italic;">Phòng ${ROOMS[ri].name} chưa có ai trong hàng chờ.</p></div>`;
+    return;
+  }
+  el.innerHTML=`<div class="card fade-in">${confirmed.map((entry,idx)=>{
+    let cls='', badge='';
     if(idx===0){cls='current';badge='<span class="badge badge-now">Tiếp Theo</span>';}
     else if(idx<=2){cls='almost';badge='<span class="badge badge-soon">Sắp Tới</span>';}
     return `<div class="queue-item ${cls}">
       <div class="q-num">${String(entry.num).padStart(2,'0')}</div>
-      <div class="q-info"><div class="q-name">${entry.name}</div><div class="q-meta">${entry.phone} &nbsp;·&nbsp; ${entry.time}</div></div>
+      <div class="q-info">
+        <div class="q-name">${entry.name}</div>
+        <div class="q-detail">${entry.phone} · ${entry.time}</div>
+      </div>
       ${badge}
     </div>`;
   }).join('')}</div>`;
 }
 
-/* ─── ADMIN TAB ─── */
-function renderAdminOverview(){
+// ─── ADMIN TAB ──────────────────────────────────────────────────
+function renderAdminOverview() {
   document.getElementById('admin-overview').innerHTML=ROOMS.map((r,i)=>{
     const room=state.rooms[i];
-    const pc=room.queue.filter(e=>e.status==='pending').length;
-    const cc=room.queue.filter(e=>e.status!=='pending').length;
-    return `<div class="room-card ${i===activeAdminRoom?'selected':''}" onclick="switchRoomAdmin(${i})">
-      <div class="room-card-label">${r.label}</div>
-      <div class="room-card-name">${r.name}</div>
-      <div class="room-card-number">${cc}</div>
-      <div class="room-card-sub">hàng chờ chính thức</div>
-      ${pc>0?`<div style="font-family:var(--f-sans);font-size:8px;color:var(--red);margin-top:4px;">⏳ ${pc} chờ duyệt</div>`:''}
-      <div class="room-card-serving">Phục vụ: <strong style="color:var(--burgundy)">${room.currentServing?String(room.currentServing).padStart(2,'0'):'–'}</strong> · Tổng: <strong style="color:var(--burgundy)">${room.counter}</strong></div>
+    const pendingCount=room.queue.filter(e=>e.status==='pending').length;
+    const confirmedCount=room.queue.filter(e=>e.status!=='pending').length;
+    return `<div class="room-overview-card ${i===activeAdminRoom?'selected':''}" onclick="switchRoomAdmin(${i})">
+      <div class="room-label">${r.label}</div>
+      <div class="room-name">${r.name}</div>
+      <div class="room-count">${confirmedCount}</div>
+      <div class="room-sub">hàng chờ chính thức</div>
+      ${pendingCount>0?`<div style="font-size:9px;color:var(--red-cancel);margin-top:4px;font-family:'Montserrat',sans-serif;">⏳ ${pendingCount} chờ duyệt</div>`:''}
+      <div class="room-serving">Phục vụ: <strong style="color:var(--wine)">${room.currentServing?String(room.currentServing).padStart(2,'0'):'–'}</strong> · Tổng: <strong style="color:var(--wine)">${room.counter}</strong></div>
     </div>`;
   }).join('');
 }
-window.switchRoomAdmin=function(ri){
+
+window.switchRoomAdmin = function(ri) {
   activeAdminRoom=ri;
-  document.querySelectorAll('#admin-room-tabs button').forEach((b,i)=>b.classList.toggle('active',i===ri));
+  document.querySelectorAll('#admin-room-tabs button').forEach((btn,i)=>btn.classList.toggle('active',i===ri));
   document.getElementById('msg-admin').innerHTML='';
-  renderAdminOverview();renderAdminRoom(ri);
+  renderAdminOverview(); renderAdminRoom(ri);
 };
-function renderAdminRoom(ri){
-  document.getElementById('admin-room-title').textContent=`${ROOMS[ri].label} – ${ROOMS[ri].name}`;
+
+function renderAdminRoom(ri) {
+  const r=ROOMS[ri];
+  document.getElementById('admin-room-title').textContent=`${r.label} – ${r.name}`;
   const room=state.rooms[ri];
   const pending=room.queue.filter(e=>e.status==='pending');
   const confirmed=room.queue.filter(e=>e.status!=='pending');
-  const allCR=state.rooms.flatMap((room,rIdx)=>room.queue.filter(e=>e.changeRequested).map(e=>({...e,fromRi:rIdx})));
-  let ph='';
-  if(allCR.length){
-    ph+=`<div class="list-section-heading" style="color:var(--gold);">⇄ Yêu Cầu Đổi Phòng <span style="background:var(--gold-light);color:var(--gold);padding:2px 8px;border-radius:10px;font-size:7px;">${allCR.length}</span></div>`+
-    allCR.map(e=>`<div class="change-request-item">
-      <div class="q-num" style="color:var(--gold);">${String(e.num).padStart(2,'0')}</div>
-      <div class="q-info" style="flex:1;"><div class="q-name">${e.name}</div><div class="q-meta">${e.phone} · ${ROOMS[e.fromRi].label} → ${e.changeToRoomName} · ${e.changeRequestedAt}</div></div>
-      <button class="btn-success" onclick="approveRoomChange(${e.fromRi},'${e.id}','${e.changeToRoom}')">✓ Duyệt</button>
-      <button class="btn-sm-outline" onclick="cancelRoomChange(${e.fromRi},'${e.id}')">✕</button>
-    </div>`).join('');
+
+  const allChangeRequests=state.rooms.flatMap((room,rIdx)=>
+    room.queue.filter(e=>e.changeRequested).map(e=>({...e,fromRi:rIdx}))
+  );
+
+  const pendingEl=document.getElementById('admin-pending-list');
+  let pendingHTML='';
+
+  if(allChangeRequests.length) {
+    pendingHTML+=`<div class="pending-section-title" style="color:#a07020;">⇄ Yêu Cầu Đổi Phòng (${allChangeRequests.length})</div>`+
+      allChangeRequests.map(entry=>`
+        <div class="change-request-item">
+          <div class="q-num" style="color:#a07020;">${String(entry.num).padStart(2,'0')}</div>
+          <div class="q-info" style="flex:1;">
+            <div class="q-name">${entry.name}</div>
+            <div class="q-detail">${entry.phone} · ${ROOMS[entry.fromRi].label} → ${entry.changeToRoomName} · ${entry.changeRequestedAt}</div>
+          </div>
+          <button class="btn-approve" onclick="approveRoomChange(${entry.fromRi},'${entry.id}','${entry.changeToRoom}')">✓ Duyệt</button>
+          <button class="btn-remove" onclick="cancelRoomChange(${entry.fromRi},'${entry.id}')">✕</button>
+        </div>`).join('');
   }
-  if(pending.length){
-    ph+=`<div class="list-section-heading" style="margin-top:${allCR.length?'16px':'0'};color:var(--red);">⏳ Chờ Xác Nhận Thanh Toán <span style="background:rgba(160,40,40,0.08);color:var(--red);padding:2px 8px;border-radius:10px;font-size:7px;">${pending.length}</span></div>`+
-    pending.map(e=>`<div class="admin-queue-item" style="border-color:rgba(160,40,40,0.2);background:rgba(160,40,40,0.03);">
-      <div class="q-num" style="color:var(--red);">?</div>
-      <div class="q-info" style="flex:1;"><div class="q-name">${e.name}</div><div class="q-meta">${e.phone} · ${e.time} · ${e.payment==='cash'?'💵 Tiền mặt':e.payment==='transfer'?'📱 CK':''}</div></div>
-      <button class="btn-success" onclick="approveEntry(${ri},'${e.id}')">✓ Duyệt</button>
-      <button class="btn-sm-outline" onclick="cancelEntry(${ri},'${e.id}',${e.num})">Huỷ</button>
-    </div>`).join('');
+
+  if(pending.length) {
+    pendingHTML+=`<div class="pending-section-title" style="margin-top:${allChangeRequests.length?'16px':'0'};">⏳ Chờ Xác Nhận Thanh Toán (${pending.length})</div>`+
+      pending.map(entry=>`
+        <div class="admin-queue-item" style="border-color:#e8b4b4;background:#fff8f8;">
+          <div class="q-num" style="color:var(--red-cancel);">?</div>
+          <div class="q-info" style="flex:1;">
+            <div class="q-name">${entry.name}</div>
+            <div class="q-detail">${entry.phone} · ${entry.time} · ${entry.payment==='cash'?'💵 Tiền mặt':entry.payment==='transfer'?'📱 CK':''}</div>
+          </div>
+          <button class="btn-approve" onclick="approveEntry(${ri},'${entry.id}')">✓ Duyệt</button>
+          <button class="btn-remove" onclick="cancelEntry(${ri},'${entry.id}',${entry.num})">Huỷ</button>
+        </div>`).join('');
   }
-  document.getElementById('admin-pending-list').innerHTML=ph||'';
+
+  pendingEl.innerHTML=pendingHTML||'';
+
   const listEl=document.getElementById('admin-queue-list');
-  if(!confirmed.length){listEl.innerHTML='<p style="color:var(--ash-2);font-family:var(--f-serif);font-style:italic;">Hàng chờ phòng này đang trống.</p>';return;}
-  listEl.innerHTML=`<div class="list-section-heading">✓ Hàng Chờ Chính Thức <span style="background:var(--burgundy-ghost);color:var(--burgundy);padding:2px 8px;border-radius:10px;font-size:7px;">${confirmed.length}</span></div>`+
-  confirmed.map((e,idx)=>`<div class="admin-queue-item">
-    <div class="q-num">${String(e.num).padStart(2,'0')}</div>
-    <div class="q-info" style="flex:1;"><div class="q-name">${e.name}</div><div class="q-meta">${e.phone} · ${e.time}</div></div>
-    ${idx===0?`<button class="btn-sm-wine" onclick="serveNext()">Phục vụ →</button>`:''}
-    <button class="btn-sm-outline" onclick="cancelEntry(${ri},'${e.id}',${e.num})">Huỷ</button>
-  </div>`).join('');
+  if(!confirmed.length) {
+    listEl.innerHTML='<p style="color:var(--gray);font-style:italic;">Hàng chờ phòng này đang trống.</p>';
+    return;
+  }
+  listEl.innerHTML=`<div class="queue-section-title">✓ Hàng Chờ Chính Thức (${confirmed.length})</div>`+
+    confirmed.map((entry,idx)=>`
+      <div class="admin-queue-item">
+        <div class="q-num">${String(entry.num).padStart(2,'0')}</div>
+        <div class="q-info" style="flex:1;">
+          <div class="q-name">${entry.name}</div>
+          <div class="q-detail">${entry.phone} · ${entry.time}</div>
+        </div>
+        ${idx===0?`<button class="btn-serve" onclick="serveNext()">Phục vụ →</button>`:''}
+        <button class="btn-remove" onclick="cancelEntry(${ri},'${entry.id}',${entry.num})">Huỷ</button>
+      </div>`).join('');
 }
 
-window.approveEntry=async function(ri,id){
+window.approveEntry = async function(ri,id) {
   setLoading(true);
-  try{
-    const ed=state.rooms[ri].queue.find(e=>e.id===id);if(!ed){setLoading(false);return;}
-    const cr=ref(db,`${dbPath()}/${ROOMS[ri].key}/counter`);let nn;
-    await runTransaction(cr,c=>{nn=(c||0)+1;return nn;});
-    await update(ref(db,`${dbPath()}/${ROOMS[ri].key}/queue/${id}`),{status:'confirmed',num:nn});
-    await runTransaction(ref(db,`filmnoir/stats/${todayKey()}/${ROOMS[ri].key}`),c=>{const cur=c||{approved:0,cancelled:0};return{...cur,approved:(cur.approved||0)+1};});
-    await set(ref(db,`filmnoir/customers/${todayKey()}/${id}`),{name:ed.name,phone:ed.phone,room:ROOMS[ri].key,roomName:`${ROOMS[ri].label} – ${ROOMS[ri].name}`,num:nn,payment:ed.payment||'',approvedAt:new Date().toLocaleTimeString('vi-VN'),status:'approved'});
-    document.getElementById('msg-admin').innerHTML=`<div class="msg msg-success">✓ Đã duyệt! Cấp số <strong>${String(nn).padStart(2,'0')}</strong> cho khách.</div>`;
-  }catch(e){document.getElementById('msg-admin').innerHTML='<div class="msg msg-error">Lỗi. Vui lòng thử lại.</div>';}
+  try {
+    const entryData=state.rooms[ri].queue.find(e=>e.id===id);
+    if(!entryData) { setLoading(false); return; }
+    const counterRef=ref(db,`${dbPath()}/${ROOMS[ri].key}/counter`);
+    let newNum;
+    await runTransaction(counterRef,current=>{ newNum=(current||0)+1; return newNum; });
+    await update(ref(db,`${dbPath()}/${ROOMS[ri].key}/queue/${id}`),{status:'confirmed',num:newNum});
+    await runTransaction(ref(db,`filmnoir/stats/${todayKey()}/${ROOMS[ri].key}`),current=>{
+      const c=current||{approved:0,cancelled:0}; return {...c,approved:(c.approved||0)+1};
+    });
+    await set(ref(db,`filmnoir/customers/${todayKey()}/${id}`),{name:entryData.name,phone:entryData.phone,room:ROOMS[ri].key,roomName:`${ROOMS[ri].label} – ${ROOMS[ri].name}`,num:newNum,payment:entryData.payment||'',approvedAt:new Date().toLocaleTimeString('vi-VN'),status:'approved'});
+    document.getElementById('msg-admin').innerHTML=`<div class="msg msg-success">✓ Đã duyệt! Cấp số <strong>${String(newNum).padStart(2,'0')}</strong> cho khách.</div>`;
+  } catch(e) {
+    document.getElementById('msg-admin').innerHTML='<div class="msg msg-error">Lỗi. Vui lòng thử lại.</div>';
+  }
   setLoading(false);
 };
-window.serveNext=async function(){
+
+window.serveNext = async function() {
   const room=state.rooms[activeAdminRoom];
   const confirmed=room.queue.filter(e=>e.status!=='pending');
-  if(!confirmed.length){document.getElementById('msg-admin').innerHTML='<div class="msg msg-error">Không có ai trong hàng chờ chính thức.</div>';return;}
-  const served=confirmed[0];setLoading(true);
-  try{
+  if(!confirmed.length) { document.getElementById('msg-admin').innerHTML='<div class="msg msg-error">Không có ai trong hàng chờ chính thức.</div>'; return; }
+  const served=confirmed[0];
+  setLoading(true);
+  try {
     await update(roomRef(activeAdminRoom),{currentServing:served.num});
     await remove(ref(db,`${dbPath()}/${ROOMS[activeAdminRoom].key}/queue/${served.id}`));
     document.getElementById('msg-admin').innerHTML=`<div class="msg msg-success">Đang phục vụ số <strong>${String(served.num).padStart(2,'0')}</strong> – ${served.name}</div>`;
-  }catch(e){document.getElementById('msg-admin').innerHTML='<div class="msg msg-error">Lỗi. Vui lòng thử lại.';}
+  } catch(e) { document.getElementById('msg-admin').innerHTML='<div class="msg msg-error">Lỗi. Vui lòng thử lại.</div>'; }
   setLoading(false);
 };
-window.cancelRoomChange=async function(ri,id){
+
+window.cancelRoomChange = async function(ri,id) {
   setLoading(true);
   await update(ref(db,`${dbPath()}/${ROOMS[ri].key}/queue/${id}`),{changeRequested:false,changeToRoom:null,changeToRoomName:null,changeRequestedAt:null});
   setLoading(false);
   document.getElementById('msg-admin').innerHTML='<div class="msg msg-error">Đã từ chối yêu cầu đổi phòng.</div>';
 };
-window.cancelEntry=async function(ri,id,num){
+
+window.cancelEntry = async function(ri,id,num) {
   setLoading(true);
   await remove(ref(db,`${dbPath()}/${ROOMS[ri].key}/queue/${id}`));
   setLoading(false);
 };
-window.resetRoom=async function(){
+
+window.resetRoom = async function() {
   const r=ROOMS[activeAdminRoom];
-  if(!confirm(`Reset toàn bộ hàng chờ ${r.label} – ${r.name}?`))return;
+  if(!confirm(`Reset toàn bộ hàng chờ ${r.label} – ${r.name}?`)) return;
   setLoading(true);
   await set(roomRef(activeAdminRoom),{queue:{},currentServing:0,counter:0});
   setLoading(false);
   document.getElementById('msg-admin').innerHTML=`<div class="msg msg-success">Đã reset hàng chờ ${r.label}.</div>`;
 };
 
-/* ─── MIDNIGHT RESET ─── */
-function scheduleMidnightReset(){
-  const now=new Date(),midnight=new Date(now);midnight.setHours(24,0,5,0);
-  setTimeout(()=>{rerenderCurrentTab();scheduleMidnightReset();},midnight-now);
+// ─── MIDNIGHT RESET ────────────────────────────────────────────
+function scheduleMidnightReset() {
+  const now=new Date();
+  const midnight=new Date(now); midnight.setHours(24,0,5,0);
+  setTimeout(()=>{ rerenderCurrentTab(); scheduleMidnightReset(); }, midnight-now);
 }
 
+// ─── INIT ──────────────────────────────────────────────────────
 startListening();
 scheduleMidnightReset();
 </script>
